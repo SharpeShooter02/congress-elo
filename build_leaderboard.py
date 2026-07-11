@@ -43,18 +43,12 @@ OUT_JS         = Path(__file__).with_name("data.js")
 OUT_JSON       = Path(__file__).with_name("data.json")
 CACHE_DIR      = Path(__file__).with_name("_cache"); CACHE_DIR.mkdir(exist_ok=True)
 
-# Each chamber tries its sources in order until one returns data. The GitHub-hosted
-# mirrors (raw.githubusercontent.com) are primary — reliable and keyless — with the
-# old Stock Watcher S3 buckets kept as fallbacks in case they come back.
-HOUSE_URLS = [
-    "https://raw.githubusercontent.com/noodleslove/House-of-Representative-Analysis-I/main/data/all_transactions.json",
-    "https://house-stock-watcher-data.s3-us-west-2.amazonaws.com/data/all_transactions.json",
-]
-SENATE_URLS = [
-    "https://raw.githubusercontent.com/timothycarambat/senate-stock-watcher-data/master/aggregate/all_transactions.json",
-    "https://senate-stock-watcher-data.s3-us-west-2.amazonaws.com/aggregate/all_transactions.json",
-]
-LEG_URL    = "https://unitedstates.github.io/congress-legislators/legislators-current.json"
+# Data sources — keyless, GitHub-hosted, and reachable from the Action:
+#   House  — CSV snapshot from a public House-trades dataset (parsed with pandas)
+#   Senate — JSON that the upstream repo keeps current
+HOUSE_CSV_URL   = "https://raw.githubusercontent.com/noodleslove/House-of-Representative-Analysis-I/main/data/all_transactions.csv"
+SENATE_JSON_URL = "https://raw.githubusercontent.com/timothycarambat/senate-stock-watcher-data/master/aggregate/all_transactions.json"
+LEG_URL         = "https://unitedstates.github.io/congress-legislators/legislators-current.json"
 
 # ----------------------------- deps -------------------------------
 try:
@@ -127,30 +121,74 @@ def clean_ticker(tk):
     return tk
 
 
+def sval(v):
+    """Coerce a possibly-NaN/None cell (pandas or JSON) to a clean string."""
+    if v is None: return ""
+    s = str(v).strip()
+    return "" if s.lower() == "nan" else s
+
+
+def extract_name(row):
+    """Member name across schemas: a single field (representative / senator / name),
+    first_name + last_name (Senate JSON), or an 'office' string like
+    'Doe, Jane (Senator)'."""
+    for k in ("representative", "senator", "name", "member"):
+        v = sval(row.get(k))
+        if v:
+            return v
+    fn, ln = sval(row.get("first_name")), sval(row.get("last_name"))
+    if fn or ln:
+        return f"{fn} {ln}".strip()
+    off = sval(row.get("office"))
+    if off:
+        base = off.split("(")[0].strip()            # drop "(Senator)" suffix
+        if "," in base:                             # "Last, First" -> "First Last"
+            last, first = base.split(",", 1)
+            return f"{first.strip()} {last.strip()}".strip()
+        return base
+    return ""
+
+
+def normalize_rows(rows, chamber):
+    """Turn raw House/Senate records into the common trade shape."""
+    out = []
+    for row in rows:
+        tk    = clean_ticker(sval(row.get("ticker")))
+        side  = norm_type(sval(row.get("type")))
+        tdate = parse_date(sval(row.get("transaction_date")))
+        if not (tk and side and tdate): continue
+        if tdate.isoformat() < START_DATE: continue
+        name = extract_name(row).replace("Hon. ", "").strip()
+        if not name: continue
+        out.append({"name": name, "chamber": chamber, "ticker": tk,
+                    "side": side, "date": tdate, "amount": sval(row.get("amount"))})
+    return out
+
+
 def load_trades():
     trades = []
-    for chamber, urls, cache, name_key in [
-        ("House",  HOUSE_URLS,  "house.json",  "representative"),
-        ("Senate", SENATE_URLS, "senate.json", "senator"),
-    ]:
-        log(f"[trades] {chamber}")
-        rows = fetch_json_any(urls, cache)
-        if not rows:
-            log(f"  !! no {chamber} data from any source; skipping this chamber")
-            continue
-        for row in rows:
-            tk = clean_ticker(row.get("ticker"))
-            side = norm_type(row.get("type"))
-            tdate = parse_date(row.get("transaction_date"))
-            if not (tk and side and tdate): continue
-            if tdate.isoformat() < START_DATE: continue
-            name = (row.get(name_key) or "").strip()
-            name = name.replace("Hon. ", "").strip()
-            if not name: continue
-            trades.append({
-                "name": name, "chamber": chamber, "ticker": tk,
-                "side": side, "date": tdate, "amount": row.get("amount", ""),
-            })
+
+    # House — CSV snapshot, parsed with pandas
+    log("[trades] House")
+    try:
+        cache = CACHE_DIR / "house.csv"
+        if cache.exists() and (time.time() - cache.stat().st_mtime) < 24 * 3600:
+            hdf = pd.read_csv(cache)
+        else:
+            hdf = pd.read_csv(HOUSE_CSV_URL)
+            hdf.to_csv(cache, index=False)
+        trades += normalize_rows(hdf.to_dict("records"), "House")
+    except Exception as e:
+        log(f"  !! House load failed ({e}); continuing without House")
+
+    # Senate — JSON, kept current upstream
+    log("[trades] Senate")
+    try:
+        rows = fetch_json(SENATE_JSON_URL, "senate.json")
+        trades += normalize_rows(rows, "Senate")
+    except Exception as e:
+        log(f"  !! Senate load failed ({e}); continuing without Senate")
+
     log(f"[trades] usable trades: {len(trades)}")
     return trades
 
