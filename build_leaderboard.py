@@ -43,8 +43,17 @@ OUT_JS         = Path(__file__).with_name("data.js")
 OUT_JSON       = Path(__file__).with_name("data.json")
 CACHE_DIR      = Path(__file__).with_name("_cache"); CACHE_DIR.mkdir(exist_ok=True)
 
-HOUSE_URL  = "https://house-stock-watcher-data.s3-us-west-2.amazonaws.com/data/all_transactions.json"
-SENATE_URL = "https://senate-stock-watcher-data.s3-us-west-2.amazonaws.com/aggregate/all_transactions.json"
+# Each chamber tries its sources in order until one returns data. The GitHub-hosted
+# mirrors (raw.githubusercontent.com) are primary — reliable and keyless — with the
+# old Stock Watcher S3 buckets kept as fallbacks in case they come back.
+HOUSE_URLS = [
+    "https://raw.githubusercontent.com/noodleslove/House-of-Representative-Analysis-I/main/data/all_transactions.json",
+    "https://house-stock-watcher-data.s3-us-west-2.amazonaws.com/data/all_transactions.json",
+]
+SENATE_URLS = [
+    "https://raw.githubusercontent.com/timothycarambat/senate-stock-watcher-data/master/aggregate/all_transactions.json",
+    "https://senate-stock-watcher-data.s3-us-west-2.amazonaws.com/aggregate/all_transactions.json",
+]
 LEG_URL    = "https://unitedstates.github.io/congress-legislators/legislators-current.json"
 
 # ----------------------------- deps -------------------------------
@@ -68,6 +77,31 @@ def fetch_json(url, cache_name, max_age_h=24):
     data = r.json()
     cache.write_text(json.dumps(data))
     return data
+
+
+def fetch_json_any(urls, cache_name, max_age_h=24):
+    """Try each candidate URL in order; return JSON from the first that works.
+    Returns [] if every source fails (caller decides whether that's fatal)."""
+    cache = CACHE_DIR / cache_name
+    if cache.exists() and (time.time() - cache.stat().st_mtime) < max_age_h * 3600:
+        try:
+            return json.loads(cache.read_text())
+        except Exception:
+            pass
+    for url in urls:
+        try:
+            log(f"  downloading {url} ...")
+            r = requests.get(url, timeout=90, headers={"User-Agent": "elo-leaderboard/1.0"})
+            r.raise_for_status()
+            data = r.json()
+            if data:
+                cache.write_text(json.dumps(data))
+                return data
+            log("    (empty response, trying next source)")
+        except Exception as e:
+            host = url.split("/")[2] if "//" in url else url
+            log(f"    x {host}: {e}")
+    return []
 
 
 def norm_type(t):
@@ -95,15 +129,14 @@ def clean_ticker(tk):
 
 def load_trades():
     trades = []
-    for chamber, url, cache, name_key in [
-        ("House",  HOUSE_URL,  "house.json",  "representative"),
-        ("Senate", SENATE_URL, "senate.json", "senator"),
+    for chamber, urls, cache, name_key in [
+        ("House",  HOUSE_URLS,  "house.json",  "representative"),
+        ("Senate", SENATE_URLS, "senate.json", "senator"),
     ]:
         log(f"[trades] {chamber}")
-        try:
-            rows = fetch_json(url, cache)
-        except Exception as e:
-            log(f"  !! could not load {chamber} data: {e}")
+        rows = fetch_json_any(urls, cache)
+        if not rows:
+            log(f"  !! no {chamber} data from any source; skipping this chamber")
             continue
         for row in rows:
             tk = clean_ticker(row.get("ticker"))
