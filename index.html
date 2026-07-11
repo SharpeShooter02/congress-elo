@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Congressional Trading ELO</title>
+<style>
+  :root{
+    --bg:#0e1117; --panel:#161b22; --panel2:#1c232d; --line:#2a323d;
+    --txt:#e6edf3; --muted:#9aa7b4; --accent:#4c8dff; --win:#3fb950; --loss:#f85149;
+    --amber:#e3b341; --dem:#5b8def; --rep:#f0656a; --ind:#b07cf0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px;}
+  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.3px;}
+  .sub{color:var(--muted);margin:0 0 18px;max-width:760px;}
+  .badge{display:inline-block;background:rgba(227,179,65,.15);color:var(--amber);
+    border:1px solid rgba(227,179,65,.4);border-radius:999px;padding:3px 12px;
+    font-size:12px;font-weight:600;letter-spacing:.4px;margin-bottom:14px;text-transform:uppercase;}
+  .toolbar{display:flex;align-items:center;gap:12px;margin:0 2px 14px;flex-wrap:wrap;}
+  .marketline{color:var(--muted);font-size:13px;margin:0;}
+  .marketline b{color:var(--txt);}
+  .upd{color:var(--muted);font-size:12px;}
+  button.reload{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+    border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;}
+  button.reload:hover{border-color:var(--accent);color:var(--accent);}
+  button.reload:disabled{opacity:.5;cursor:default;}
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:end;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+  .ctl{display:flex;flex-direction:column;gap:5px;}
+  .ctl label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+  select,input[type=range]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+    border-radius:8px;padding:7px 10px;font-size:14px;}
+  .rangeval{color:var(--accent);font-weight:600;}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;overflow:hidden;}
+  th,td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th:nth-child(2),td:nth-child(2){text-align:left;}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel2);}
+  th.sorted{color:var(--accent);}
+  th .arrow{font-size:9px;opacity:.8;}
+  tbody tr:hover{background:var(--panel2);}
+  tbody tr:last-child td{border-bottom:none;}
+  .rank{color:var(--muted);width:38px;}
+  .name{font-weight:600;}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;}
+  .D{background:rgba(91,141,239,.16);color:var(--dem);}
+  .R{background:rgba(240,101,106,.16);color:var(--rep);}
+  .I{background:rgba(176,124,240,.16);color:var(--ind);}
+  .elo{font-weight:700;font-variant-numeric:tabular-nums;}
+  .pos{color:var(--win);} .neg{color:var(--loss);}
+  .num{font-variant-numeric:tabular-nums;}
+  .top1 .elo{color:var(--amber);}
+  details{margin-top:20px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px 18px;}
+  summary{cursor:pointer;padding:12px 0;font-weight:600;}
+  details p,details li{color:var(--muted);font-size:14px;}
+  code{background:var(--panel2);padding:1px 6px;border-radius:5px;color:var(--txt);font-size:13px;}
+  .foot{margin-top:22px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:16px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="badge" id="badge">Sample data · prototype</div>
+  <h1>Congressional Trading ELO</h1>
+  <p class="sub">Each disclosed trade is scored as a head-to-head <b>match against the S&amp;P 500</b>: a buy that outperforms the market over the holding window wins; a sell that dodges underperformance wins. Ratings start at 1500 and move by a margin-weighted ELO update. The market is a fixed 1500-rated opponent, so a member climbs only by <i>consistently beating it</i>.</p>
+
+  <div class="toolbar">
+    <p class="marketline">Fixed opponent — <b>S&amp;P 500 = 1500 ELO</b>. Above 1500 beats the market more often than not.</p>
+    <button class="reload" id="reload" title="Fetch the latest published data.json">⟳ Reload data</button>
+    <span class="upd" id="updated"></span>
+  </div>
+
+  <div class="controls">
+    <div class="ctl">
+      <label>Chamber</label>
+      <select id="chamber"><option>All</option><option>House</option><option>Senate</option></select>
+    </div>
+    <div class="ctl">
+      <label>Party</label>
+      <select id="party"><option>All</option><option value="D">Democrat</option><option value="R">Republican</option><option value="I">Independent</option></select>
+    </div>
+    <div class="ctl">
+      <label>Min. trades: <span class="rangeval" id="mtv">5</span></label>
+      <input type="range" id="mintrades" min="1" max="40" value="5">
+    </div>
+    <div class="ctl">
+      <label>Sort by</label>
+      <select id="sortsel">
+        <option value="elo">ELO rating</option>
+        <option value="winrate">Win % vs S&amp;P</option>
+        <option value="avgexcess">Avg excess return</option>
+        <option value="trades">Trades</option>
+      </select>
+    </div>
+  </div>
+
+  <table id="tbl">
+    <thead><tr>
+      <th data-k="rank" class="rank">#</th>
+      <th data-k="name">Member</th>
+      <th data-k="party">Party</th>
+      <th data-k="chamber">Chamber</th>
+      <th data-k="elo" class="sorted">ELO <span class="arrow">▼</span></th>
+      <th data-k="trades">Trades</th>
+      <th data-k="record">W–L–T</th>
+      <th data-k="winrate">Win % vs S&amp;P</th>
+      <th data-k="avgexcess">Avg excess</th>
+    </tr></thead>
+    <tbody id="body"></tbody>
+  </table>
+
+  <details>
+    <summary>Methodology &amp; hosting</summary>
+    <p><b>The match.</b> For every disclosed trade we take the traded stock's return over a fixed holding window (default 30 trading days) and subtract the S&amp;P 500's return over the exact same window — the <i>excess return</i>. For a <code>Purchase</code>, positive excess = win; for a <code>Sale</code>, negative excess (sold before relative weakness) = win. ±0.5% is a tie.</p>
+    <p><b>Rating update.</b> ELO with the market fixed at 1500: <code>E = 1/(1+10^((1500−R)/400))</code>, margin multiplier <code>m = min(1+ln(1+|excess%|), 3)</code>, and <code>R += 32·m·(S−E)</code> with S = 1/0.5/0. Trades replay in chronological order.</p>
+    <p><b>Data flow.</b> <code>build_leaderboard.py</code> (run locally or in GitHub Actions) pulls Stock Watcher trades + yfinance EOD prices, computes the ELO, and writes <code>data.json</code> + <code>data.js</code>. This page fetches <code>data.json</code> when hosted (Reload button pulls the latest), and falls back to <code>data.js</code> for local <code>file://</code> opens, or to synthetic sample data if neither is present.</p>
+  </details>
+
+  <div class="foot" id="foot">Prototype · showing synthetic sample data until a real dataset is present.</div>
+</div>
+
+<!-- Local fallback: build_leaderboard.py writes data.js for file:// opens. Ignored when hosted (data.json wins). -->
+<script src="data.js" onerror="void 0"></script>
+<script>
+// ---------- seeded RNG (mulberry32) for sample fallback ----------
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function gauss(r){var u=0,v=0;while(u===0)u=r();while(v===0)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const FIRST=["Alpha","Blair","Cory","Dana","Ellis","Faye","Grant","Harper","Ira","Jules","Kerry","Lane","Morgan","Nadia","Owen","Paige","Quinn","Reese","Sasha","Tate","Uma","Vance","Wren","Xander","Yael","Zora","Beck","Cleo","Devin","Frost"];
+const LAST=["Harmon","Vance","Okafor","Reyes","Sloan","Bright","Calder","Dunmore","Espinoza","Fenwick","Grady","Holt","Ingram","Janssen","Keller","Larkin","Mercer","Nolan","Orsini","Prewitt","Quill","Ramsey","Stroud","Thorne","Underhill","Voss","Whitlock","Yarrow","Zheng","Ackerly"];
+const CHAMBERS=["House","Senate"];
+function buildSample(seed){
+  const r=rng(seed), members=[];
+  for(let i=0;i<30;i++){
+    const skill=gauss(r)*1.6, nTrades=3+Math.floor(r()*38);
+    const party=r()<.46?"D":(r()<.92?"R":"I");
+    members.push({id:i,name:(i%2?"Sen. ":"Rep. ")+FIRST[i%FIRST.length]+" "+LAST[(i*7)%LAST.length],
+      party,chamber:CHAMBERS[i%2],skill,nTrades,elo:1500,wins:0,losses:0,ties:0,sumExcess:0,matches:0});
+  }
+  const all=[];
+  members.forEach(m=>{for(let t=0;t<m.nTrades;t++){all.push({m,excess:m.skill+gauss(r)*4.5,isBuy:r()<.7,day:Math.floor(r()*730)});}});
+  all.sort((a,b)=>a.day-b.day);
+  const MARKET=1500,K=32,BAND=0.5;
+  all.forEach(tr=>{const m=tr.m;let eff=tr.isBuy?tr.excess:-tr.excess;let S=eff>BAND?1:(eff<-BAND?0:0.5);
+    const E=1/(1+Math.pow(10,(MARKET-m.elo)/400));const mov=Math.min(1+Math.log(1+Math.abs(eff)),3);
+    m.elo+=K*mov*(S-E);if(S===1)m.wins++;else if(S===0)m.losses++;else m.ties++;m.sumExcess+=tr.excess;m.matches++;});
+  members.forEach(m=>{m.winrate=m.matches?m.wins/m.matches*100:0;m.avgexcess=m.matches?m.sumExcess/m.matches:0;m.elo=Math.round(m.elo);});
+  return members;
+}
+
+// ---------- data loading: data.json (hosted) -> data.js (local) -> sample ----------
+let DATA=[], IS_REAL=false;
+async function loadData(){
+  try{
+    const r=await fetch("data.json?t="+Date.now(),{cache:"no-store"});
+    if(r.ok){const j=await r.json();
+      if(j&&Array.isArray(j.members)&&j.members.length) return {members:j.members,generated:j.generated,src:"json"};}
+  }catch(e){/* not hosted / no file */}
+  if(Array.isArray(window.REAL_DATA)&&window.REAL_DATA.length)
+    return {members:window.REAL_DATA,generated:(window.REAL_META||{}).generated,src:"js"};
+  return {members:buildSample(20260709),generated:null,src:"sample"};
+}
+function applyState(res){
+  IS_REAL = res.src!=="sample";
+  DATA = res.members;
+  const b=document.getElementById("badge"), upd=document.getElementById("updated"), foot=document.getElementById("foot");
+  if(IS_REAL){
+    b.textContent="Live data · "+DATA.length+" members";
+    b.style.color="var(--win)"; b.style.borderColor="rgba(63,185,80,.4)"; b.style.background="rgba(63,185,80,.14)";
+    upd.textContent = res.generated ? ("Updated "+new Date(res.generated).toLocaleString()) : "";
+    foot.textContent = "Live vs-S&P ELO · data from Stock Watcher + yfinance, rebuilt by the pipeline.";
+  } else {
+    b.textContent="Sample data · prototype";
+    b.style.color=""; b.style.borderColor=""; b.style.background="";
+    upd.textContent="";
+    foot.textContent="Prototype · showing synthetic sample data until a real dataset is present.";
+  }
+}
+
+// ---------- rendering ----------
+const PARTY_NAME={D:"Dem",R:"Rep",I:"Ind"};
+function partyName(p){return PARTY_NAME[p]||"—";}
+let sortKey="elo", sortDir=-1;
+function fmtPct(x){const s=(x>=0?"+":"")+Number(x).toFixed(1)+"%";return `<span class="${x>=0?'pos':'neg'} num">${s}</span>`;}
+function render(){
+  const chamber=document.getElementById("chamber").value;
+  const party=document.getElementById("party").value;
+  const mint=+document.getElementById("mintrades").value;
+  let rows=DATA.filter(m=>(chamber==="All"||m.chamber===chamber)&&(party==="All"||m.party===party)&&m.matches>=mint);
+  rows.sort((a,b)=>{let av=a[sortKey],bv=b[sortKey];
+    if(typeof av==="string"){av=av.toLowerCase();bv=(bv||"").toLowerCase();return sortDir*(av<bv?-1:av>bv?1:0);}
+    return sortDir*((av||0)-(bv||0));});
+  const body=document.getElementById("body");
+  body.innerHTML=rows.map((m,i)=>`
+    <tr class="${i===0&&sortKey==='elo'&&sortDir===-1?'top1':''}">
+      <td class="rank">${i+1}</td>
+      <td class="name">${m.name}</td>
+      <td><span class="pill ${m.party||''}">${partyName(m.party)}</span></td>
+      <td>${m.chamber}</td>
+      <td class="elo">${m.elo}</td>
+      <td class="num">${m.matches}</td>
+      <td class="num">${m.wins}–${m.losses}–${m.ties}</td>
+      <td class="num">${Number(m.winrate).toFixed(0)}%</td>
+      <td>${fmtPct(m.avgexcess)}</td>
+    </tr>`).join("")||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:26px">No members match these filters.</td></tr>`;
+  document.querySelectorAll("#tbl th").forEach(th=>{
+    const k=th.dataset.k; th.classList.toggle("sorted",k===sortKey);
+    const a=th.querySelector(".arrow"); if(a)a.remove();
+    if(k===sortKey){const s=document.createElement("span");s.className="arrow";s.textContent=sortDir<0?" ▼":" ▲";th.appendChild(s);}
+  });
+}
+
+// ---------- events ----------
+document.querySelectorAll("#tbl th").forEach(th=>{
+  th.addEventListener("click",()=>{
+    let k=th.dataset.k; if(k==="rank")return;
+    if(k==="trades")k="matches"; if(k==="record")k="wins";
+    if(k===sortKey)sortDir*=-1; else {sortKey=k; sortDir=(k==="name"||k==="party"||k==="chamber")?1:-1;}
+    render();
+  });
+});
+document.getElementById("sortsel").addEventListener("change",e=>{sortKey=e.target.value==="trades"?"matches":e.target.value;sortDir=-1;render();});
+["chamber","party"].forEach(id=>document.getElementById(id).addEventListener("change",render));
+document.getElementById("mintrades").addEventListener("input",e=>{document.getElementById("mtv").textContent=e.target.value;render();});
+document.getElementById("reload").addEventListener("click",async()=>{
+  const btn=document.getElementById("reload"); btn.disabled=true; const old=btn.textContent; btn.textContent="⟳ Loading…";
+  applyState(await loadData()); render();
+  btn.textContent=old; btn.disabled=false;
+});
+
+// ---------- init ----------
+(async()=>{ applyState(await loadData()); render(); })();
+</script>
+</body>
+</html>

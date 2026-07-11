@@ -1,0 +1,6 @@
+_cache/
+__pycache__/
+*.pyc
+
+# redundant original (index.html is the served copy)
+congress_elo_leaderboard.html

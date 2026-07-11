@@ -1,0 +1,6 @@
+title: Congressional Trading ELO
+description: A vs-S&P ELO leaderboard of congressional stock trades.
+# GitHub Pages serves the static HTML as-is. These files must not be stripped:
+keep_files:
+  - data.js
+  - data.json
