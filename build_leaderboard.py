@@ -48,8 +48,10 @@ CACHE_DIR      = Path(__file__).with_name("_cache"); CACHE_DIR.mkdir(exist_ok=Tr
 #   trades.json — every disclosed transaction (filer_id, ticker, transaction_type,
 #                 transaction_date, amount_range_label, ...)
 #   filers.json — filer directory (id -> full_name, chamber, branch, party)
-KADOA_TRADES_URL = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data/trades.json"
 KADOA_FILERS_URL = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data/filers.json"
+# Per-filer files hold each member's FULL trade history, with kadoa's own
+# excess-vs-market return already computed per trade ({id} = a filer id).
+KADOA_FILER_URL  = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data/filer/{id}.json"
 LEG_URL          = "https://unitedstates.github.io/congress-legislators/legislators-current.json"
 
 # ----------------------------- deps -------------------------------
@@ -168,46 +170,51 @@ def normalize_rows(rows, chamber):
 
 
 def load_trades():
-    # Filer directory: filer_id -> {full_name, chamber, branch, party, ...}
+    # 1. Enumerate Congress filers from the directory
     log("[trades] loading filer directory")
-    filers = {}
     try:
-        for f in fetch_json(KADOA_FILERS_URL, "kadoa_filers.json"):
-            fid = sval(f.get("id"))
-            if fid:
-                filers[fid] = f
+        filers = fetch_json(KADOA_FILERS_URL, "kadoa_filers.json")
     except Exception as e:
-        log(f"  !! filer directory load failed ({e})")
+        sys.exit(f"Could not load filer directory: {e}")
+    congress = []
+    for f in filers:
+        fid = sval(f.get("id"))
+        chamber = (sval(f.get("chamber")) or (fid.split("_", 1)[0] if fid else "")).lower()
+        if fid and chamber in ("house", "senate"):
+            congress.append((fid, f, chamber))
+    log(f"[trades] {len(congress)} Congress filers to pull")
 
-    log("[trades] loading transactions")
-    try:
-        raw = fetch_json(KADOA_TRADES_URL, "kadoa_trades.json")
-    except Exception as e:
-        log(f"  !! transactions load failed ({e})")
-        return []
-
+    # 2. Pull each filer's full history; score off kadoa's own excess-vs-market return
     trades = []
-    for row in raw:
-        fid = sval(row.get("filer_id"))
-        f = filers.get(fid, {})
-        # chamber from the trade, the filer record, or the filer_id prefix
-        chamber = (sval(row.get("chamber")) or sval(f.get("chamber"))
-                   or (fid.split("_", 1)[0] if fid else "")).lower()
-        if chamber not in ("house", "senate"):
-            continue  # Congress only (skip executive-branch / OGE filers)
-        tk    = clean_ticker(sval(row.get("ticker")))
-        side  = norm_type(sval(row.get("transaction_type")) or sval(row.get("type")))
-        tdate = parse_date(sval(row.get("transaction_date")) or sval(row.get("date")))
-        if not (tk and side and tdate): continue
-        if tdate.isoformat() < START_DATE: continue
-        name = extract_name(f) or extract_name(row)
-        if not name: continue
-        trades.append({
-            "name": name, "chamber": chamber.capitalize(),
-            "ticker": tk, "side": side, "date": tdate,
-            "amount": sval(row.get("amount_range_label")) or sval(row.get("amount")),
-            "party": sval(f.get("party")) or sval(row.get("party")),
-        })
+    for i, (fid, f, chamber) in enumerate(congress, 1):
+        name  = extract_name(f)
+        party = sval(f.get("party"))
+        try:
+            doc = fetch_json(KADOA_FILER_URL.format(id=fid), f"filer_{fid}.json")
+        except Exception as e:
+            log(f"  x {fid}: {e}")
+            continue
+        rows = doc.get("trades", []) if isinstance(doc, dict) else (doc or [])
+        for row in rows:
+            side  = norm_type(sval(row.get("transaction_type")) or sval(row.get("type")))
+            tdate = parse_date(sval(row.get("transaction_date")) or sval(row.get("date")))
+            if not (side and tdate): continue
+            if tdate.isoformat() < START_DATE: continue
+            exc = row.get("excess_since")          # kadoa's excess return vs market
+            if exc is None: continue
+            try:
+                exc = float(exc)
+            except (TypeError, ValueError):
+                continue
+            trades.append({
+                "name": name or extract_name(row), "chamber": chamber.capitalize(),
+                "party": party, "ticker": clean_ticker(sval(row.get("ticker"))) or "",
+                "side": side, "date": tdate,
+                "amount": sval(row.get("amount_range_label")) or sval(row.get("amount")),
+                "excess": exc,
+            })
+        if i % 25 == 0:
+            log(f"  {i}/{len(congress)} filers · {len(trades)} trades so far")
     log(f"[trades] usable trades: {len(trades)}")
     return trades
 
@@ -290,31 +297,13 @@ def match_party(name, pmap):
 def build():
     trades = load_trades()
     if not trades:
-        sys.exit("No trades loaded — check KADOA_TRADES_URL / KADOA_FILERS_URL in CONFIG.")
-
-    start = (min(t["date"] for t in trades) - dt.timedelta(days=7)).isoformat()
-    end   = (dt.date.today() + dt.timedelta(days=1)).isoformat()
-    prices = download_prices([t["ticker"] for t in trades], start, end)
-    spx = prices.get("^GSPC")
-    if spx is None or len(spx) == 0:
-        sys.exit("Could not fetch S&P 500 (^GSPC) prices.")
+        sys.exit("No trades loaded — check the kadoa filer URLs in CONFIG.")
 
     pmap = load_party_map()
 
-    # score each trade -> excess return vs S&P over the same window
-    scored = []
-    for t in trades:
-        s = prices.get(t["ticker"])
-        r_stock, d0, d1 = ret_over_window(s, t["date"], HOLDING_DAYS)
-        if r_stock is None: continue
-        # S&P return over the SAME calendar window
-        sp0 = spx.index.searchsorted(d0); sp1 = spx.index.searchsorted(d1)
-        if sp1 >= len(spx) or sp0 >= len(spx): continue
-        r_spx = float(spx.iloc[sp1]) / float(spx.iloc[sp0]) - 1.0
-        excess = (r_stock - r_spx) * 100.0            # percentage points
-        scored.append({**t, "entry": d0, "excess": excess})
-
-    scored.sort(key=lambda x: x["entry"])
+    # Each trade already carries kadoa's excess-vs-market return (percentage points),
+    # so replay the ELO directly in chronological order — no price download needed.
+    scored = sorted(trades, key=lambda t: t["date"])
     log(f"[elo] scored trades: {len(scored)}")
 
     members = {}
