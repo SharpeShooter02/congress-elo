@@ -38,6 +38,7 @@ MARKET_ELO     = 1500    # fixed rating of the S&P 500 opponent
 ELO_DIV        = 700     # rating scale: larger = more spread top-to-bottom (chess = 400)
 TIE_BAND_PCT   = 0.5     # |excess| below this = a tie
 MIN_TRADES     = 1       # members with fewer scored trades are dropped from output
+FLAG_PCT       = 15.0    # a "sharp call": beat the market by this much within ~30 days
 START_DATE     = "2012-01-01"   # kadoa history starts ~2012 — include all of it
 
 # Time-decay weights for a trade's edge: an abnormal move that shows up within a
@@ -363,9 +364,12 @@ def build():
     scored = []
     for t in sorted(trades, key=lambda x: x["date"]):
         comps = []  # (weight, excess in percentage points)
+        ex30 = None
         if t["ret30"] is not None:
             s = spx_window_return(spx, t["date"], 30)
-            if s is not None: comps.append((W_30D, t["ret30"] - s))
+            if s is not None:
+                ex30 = t["ret30"] - s
+                comps.append((W_30D, ex30))
         if t["ret1y"] is not None:
             s = spx_window_return(spx, t["date"], 365)
             if s is not None: comps.append((W_1Y, t["ret1y"] - s))
@@ -375,7 +379,7 @@ def build():
             if s is not None: comps.append((W_SINCE, t["retsince"] - s))
         if not comps: continue
         wsum = sum(w for w, _ in comps)
-        scored.append({**t, "excess": sum(w * e for w, e in comps) / wsum})
+        scored.append({**t, "excess": sum(w * e for w, e in comps) / wsum, "ex30": ex30})
     log(f"[elo] scored trades: {len(scored)}")
 
     members = {}
@@ -387,7 +391,8 @@ def build():
                             "elo": 1500.0, "wins": 0, "losses": 0, "ties": 0,
                             "matches": 0, "sumExcess": 0.0,
                             "nb": 0, "bw": 0, "bsum": 0.0,   # buys:  count, wins, sum eff
-                            "ns": 0, "sw": 0, "ssum": 0.0}   # sells: count, wins, sum eff
+                            "ns": 0, "sw": 0, "ssum": 0.0,   # sells: count, wins, sum eff
+                            "sharp": 0, "top": []}           # sharp = fast big wins; top = trades
         return members[key]
 
     for t in scored:
@@ -406,6 +411,12 @@ def build():
             m["nb"] += 1; m["bw"] += S == 1.0; m["bsum"] += eff
         else:
             m["ns"] += 1; m["sw"] += S == 1.0; m["ssum"] += eff
+        eff30 = None
+        if t.get("ex30") is not None:
+            eff30 = t["ex30"] if t["side"] == "buy" else -t["ex30"]
+        is_sharp = eff30 is not None and eff30 >= FLAG_PCT   # beat market 15%+ within a month
+        if is_sharp: m["sharp"] += 1
+        m["top"].append((eff, t.get("ticker", ""), t["side"], t["date"].isoformat(), is_sharp))
 
     out = []
     for m in members.values():
@@ -423,6 +434,11 @@ def build():
             "n_sells": m["ns"],
             "sell_winrate": round(m["sw"] / m["ns"] * 100, 1) if m["ns"] else 0,
             "sell_avgexcess": round(m["ssum"] / m["ns"], 2) if m["ns"] else 0,
+            "sharp": m["sharp"],
+            "top_trades": [
+                {"ticker": tk or "—", "side": sd, "excess": round(e, 1), "date": dstr, "sharp": bool(sh)}
+                for e, tk, sd, dstr, sh in sorted(m["top"], key=lambda x: -x[0])[:3]
+            ],
         })
     out.sort(key=lambda x: -x["elo"])
 

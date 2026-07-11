@@ -58,13 +58,22 @@
   details p,details li{color:var(--muted);font-size:14px;}
   code{background:var(--panel2);padding:1px 6px;border-radius:5px;color:var(--txt);font-size:13px;}
   .foot{margin-top:22px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:16px;}
+  tr.mrow{cursor:pointer;}
+  tr.mrow td.rank::before{content:"▸";color:var(--muted);font-size:10px;margin-right:5px;}
+  tr.mrow.open td.rank::before{content:"▾";color:var(--accent);}
+  tr.detail td{background:var(--panel2);padding:0;}
+  .detailwrap{padding:11px 16px;font-size:13px;color:var(--muted);text-align:left;white-space:normal;}
+  .detailwrap .tt{display:inline-block;background:var(--panel);border:1px solid var(--line);
+    border-radius:8px;padding:4px 10px;margin:3px 6px 3px 0;color:var(--txt);font-size:12px;}
+  .detailwrap .tt .s{color:var(--muted);}
+  .flag{font-size:11px;color:var(--amber);font-weight:600;white-space:nowrap;margin-left:5px;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="badge" id="badge">Sample data · prototype</div>
   <h1>Congressional Trading ELO</h1>
-  <p class="sub">Every disclosed trade is scored as a head-to-head <b>match against the S&amp;P 500</b>: a buy that beats the market wins, and a <b>well-timed sell</b> — one made before the stock lags the market — also wins. Each trade's edge is <b>time-decayed</b> (a move within weeks counts far more than one that takes years), so quick, repeatable correctness rises to the top. Ratings start at 1500 against a fixed 1500-rated market. The <b>Buys</b> and <b>Sells</b> columns split each member's record, so you can see whether a rating comes from buying skill or from selling ahead of declines.</p>
+  <p class="sub">Every disclosed trade is scored as a head-to-head <b>match against the S&amp;P 500</b>: a buy that beats the market wins, and a <b>well-timed sell</b> — one made before the stock lags the market — also wins. Each trade's edge is <b>time-decayed</b> (a move within weeks counts far more than one that takes years), so quick, repeatable correctness rises to the top. Ratings start at 1500 against a fixed 1500-rated market. The <b>Buys</b> and <b>Sells</b> columns split each member's record, so you can see whether a rating comes from buying skill or from selling ahead of declines. <b>Click any row</b> to reveal the specific trades carrying that rating. A <b>🚩</b> marks members who've made <b>sharp calls</b> — trades that beat the market 15%+ within a month, a flag for scrutiny (not proof).</p>
 
   <div class="toolbar">
     <p class="marketline">Fixed opponent — <b>S&amp;P 500 = 1500 ELO</b>. Above 1500 beats the market more often than not.</p>
@@ -90,6 +99,7 @@
       <select id="sortsel">
         <option value="elo">ELO rating</option>
         <option value="winrate">Win % vs S&amp;P</option>
+        <option value="sharp">Suspicious calls (🚩)</option>
         <option value="sell_winrate">Sell timing (win %)</option>
         <option value="buy_winrate">Buy timing (win %)</option>
         <option value="avgexcess">Avg excess return</option>
@@ -119,6 +129,7 @@
     <summary>Methodology &amp; hosting</summary>
     <p><b>The match.</b> Each disclosed trade's return is compared to the S&amp;P 500's over the same period — the <i>excess return</i> — blended across the ~30-day, ~1-year, and full holding windows and <b>time-decayed</b> so fast moves count most and slow buy-and-holds count least. For a <code>Purchase</code>, positive excess = win; for a <code>Sale</code>, the stock lagging the market afterward = win. ±0.5% is a tie.</p>
     <p><b>Rating update.</b> ELO with the market fixed at 1500: <code>E = 1/(1+10^((1500−R)/700))</code>, margin multiplier <code>m = min(1+ln(1+|excess%|), 4.5)</code>, and <code>R += 32·m·(S−E)</code> with S = 1/0.5/0. Trades replay in chronological order. The <b>Buys</b>/<b>Sells</b> columns split each record by trade direction, so a mediocre buyer who sells with suspicious timing is visible at a glance.</p>
+    <p><b>Sharp calls 🚩.</b> A trade is flagged a <i>sharp call</i> when it beat the S&amp;P by 15%+ within about a month of the disclosure — fast, decisive correctness of the kind non-public information tends to produce (e.g. a Department of Energy official selling an energy stock right before it slid). The 🚩 next to a name counts how many they've made. Treat it as a <b>statistical flag worth a closer look, not proof of wrongdoing</b> — fast wins also come from skill, luck, or public news.</p>
     <p><b>Data flow.</b> <code>build_leaderboard.py</code> (run in GitHub Actions) pulls the open <a href="https://github.com/kadoa-org/congress-trading-monitor">Congress Trading Monitor</a> dataset — House, Senate, and executive-branch filings — computes the ELO, and writes <code>data.json</code> + <code>data.js</code>. This page fetches <code>data.json</code> when hosted (Reload pulls the latest), falling back to <code>data.js</code> for local opens or synthetic sample data.</p>
   </details>
 
@@ -187,6 +198,19 @@ const PARTY_NAME={D:"Dem",R:"Rep",I:"Ind"};
 function partyName(p){return PARTY_NAME[p]||"—";}
 let sortKey="elo", sortDir=-1;
 function fmtPct(x){const s=(x>=0?"+":"")+Number(x).toFixed(1)+"%";return `<span class="${x>=0?'pos':'neg'} num">${s}</span>`;}
+function topHtml(m){
+  const tt=(m.top_trades||[]);
+  if(!tt.length) return "No graded trades to show.";
+  const chips=tt.map(t=>{
+    const side=t.side==="sell"?"SELL":"BUY";
+    const sign=t.excess>=0?"+":"";
+    const cls=t.excess>=0?"pos":"neg";
+    const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short"}):"";
+    const flag=t.sharp?" 🚩":"";
+    return `<span class="tt">${side} <b>${t.ticker}</b> <span class="${cls}">${sign}${Number(t.excess).toFixed(0)}%</span>${flag} <span class="s">${d}</span></span>`;
+  }).join("");
+  return `Biggest trades vs the market — the ones carrying this rating: ${chips}`;
+}
 function render(){
   const chamber=document.getElementById("chamber").value;
   const party=document.getElementById("party").value;
@@ -197,9 +221,9 @@ function render(){
     return sortDir*((av||0)-(bv||0));});
   const body=document.getElementById("body");
   body.innerHTML=rows.map((m,i)=>`
-    <tr class="${i===0&&sortKey==='elo'&&sortDir===-1?'top1':''}">
+    <tr class="mrow ${i===0&&sortKey==='elo'&&sortDir===-1?'top1':''}">
       <td class="rank">${i+1}</td>
-      <td class="name">${m.name}</td>
+      <td class="name">${m.name}${m.sharp?`<span class="flag" title="${m.sharp} sharp call${m.sharp>1?'s':''}: beat the market 15%+ within a month of the trade — flagged for scrutiny, not proof">🚩${m.sharp}</span>`:''}</td>
       <td><span class="pill ${m.party||''}">${partyName(m.party)}</span></td>
       <td>${m.chamber}</td>
       <td class="elo">${m.elo}</td>
@@ -209,7 +233,8 @@ function render(){
       <td class="num">${m.n_buys||0} · ${Number(m.buy_winrate||0).toFixed(0)}%</td>
       <td class="num">${m.n_sells||0} · ${Number(m.sell_winrate||0).toFixed(0)}%</td>
       <td>${fmtPct(m.avgexcess)}</td>
-    </tr>`).join("")||`<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:26px">No members match these filters.</td></tr>`;
+    </tr>
+    <tr class="detail" style="display:none"><td colspan="11"><div class="detailwrap">${topHtml(m)}</div></td></tr>`).join("")||`<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:26px">No members match these filters.</td></tr>`;
   document.querySelectorAll("#tbl th").forEach(th=>{
     const k=th.dataset.k; th.classList.toggle("sorted",k===sortKey);
     const a=th.querySelector(".arrow"); if(a)a.remove();
@@ -233,6 +258,17 @@ document.getElementById("reload").addEventListener("click",async()=>{
   const btn=document.getElementById("reload"); btn.disabled=true; const old=btn.textContent; btn.textContent="⟳ Loading…";
   applyState(await loadData()); render();
   btn.textContent=old; btn.disabled=false;
+});
+
+// expand/collapse a member row to reveal their biggest trades
+document.getElementById("body").addEventListener("click",e=>{
+  const tr=e.target.closest("tr.mrow"); if(!tr)return;
+  const det=tr.nextElementSibling;
+  if(det&&det.classList.contains("detail")){
+    const show=det.style.display==="none";
+    det.style.display=show?"":"none";
+    tr.classList.toggle("open",show);
+  }
 });
 
 // ---------- init ----------
