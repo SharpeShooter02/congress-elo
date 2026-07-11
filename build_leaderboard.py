@@ -33,8 +33,9 @@ from pathlib import Path
 # ----------------------------- CONFIG -----------------------------
 HOLDING_DAYS   = 30      # trading days held before measuring the trade's return
 K              = 32      # ELO sensitivity
-MOV_CAP        = 2.0     # max margin-of-victory multiplier (lower = steadier, less jackpot)
+MOV_CAP        = 4.5     # max margin-of-victory multiplier (keeps ~5–50% excesses distinct; trims only extreme outliers)
 MARKET_ELO     = 1500    # fixed rating of the S&P 500 opponent
+ELO_DIV        = 700     # rating scale: larger = more spread top-to-bottom (chess = 400)
 TIE_BAND_PCT   = 0.5     # |excess| below this = a tie
 MIN_TRADES     = 1       # members with fewer scored trades are dropped from output
 START_DATE     = "2012-01-01"   # kadoa history starts ~2012 — include all of it
@@ -393,7 +394,7 @@ def build():
         m = M(t["name"], t["chamber"], t.get("party", ""))
         eff = t["excess"] if t["side"] == "buy" else -t["excess"]  # sells win when stock lags
         S = 1.0 if eff > TIE_BAND_PCT else (0.0 if eff < -TIE_BAND_PCT else 0.5)
-        E = 1.0 / (1.0 + 10 ** ((MARKET_ELO - m["elo"]) / 400.0))
+        E = 1.0 / (1.0 + 10 ** ((MARKET_ELO - m["elo"]) / ELO_DIV))
         mov = min(1.0 + math.log(1 + abs(eff)), MOV_CAP)   # margin-of-victory multiplier
         m["elo"] += K * mov * (S - E)
         m["wins"]   += S == 1.0
