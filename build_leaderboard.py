@@ -43,12 +43,14 @@ OUT_JS         = Path(__file__).with_name("data.js")
 OUT_JSON       = Path(__file__).with_name("data.json")
 CACHE_DIR      = Path(__file__).with_name("_cache"); CACHE_DIR.mkdir(exist_ok=True)
 
-# Data sources — keyless, GitHub-hosted, and reachable from the Action:
-#   House  — CSV snapshot from a public House-trades dataset (parsed with pandas)
-#   Senate — JSON that the upstream repo keeps current
-HOUSE_CSV_URL   = "https://raw.githubusercontent.com/noodleslove/House-of-Representative-Analysis-I/main/data/all_transactions.csv"
-SENATE_JSON_URL = "https://raw.githubusercontent.com/timothycarambat/senate-stock-watcher-data/master/aggregate/all_transactions.json"
-LEG_URL         = "https://unitedstates.github.io/congress-legislators/legislators-current.json"
+# Data source — kadoa-org/congress-trading-monitor: a daily-updated, keyless,
+# open dataset that aggregates the House Clerk, Senate eFD, and OGE disclosures.
+#   trades.json — every disclosed transaction (filer_id, ticker, transaction_type,
+#                 transaction_date, amount_range_label, ...)
+#   filers.json — filer directory (id -> full_name, chamber, branch, party)
+KADOA_TRADES_URL = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data/trades.json"
+KADOA_FILERS_URL = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data/filers.json"
+LEG_URL          = "https://unitedstates.github.io/congress-legislators/legislators-current.json"
 
 # ----------------------------- deps -------------------------------
 try:
@@ -132,7 +134,7 @@ def extract_name(row):
     """Member name across schemas: a single field (representative / senator / name),
     first_name + last_name (Senate JSON), or an 'office' string like
     'Doe, Jane (Senator)'."""
-    for k in ("representative", "senator", "name", "member"):
+    for k in ("full_name", "representative", "senator", "name", "member"):
         v = sval(row.get(k))
         if v:
             return v
@@ -166,29 +168,46 @@ def normalize_rows(rows, chamber):
 
 
 def load_trades():
+    # Filer directory: filer_id -> {full_name, chamber, branch, party, ...}
+    log("[trades] loading filer directory")
+    filers = {}
+    try:
+        for f in fetch_json(KADOA_FILERS_URL, "kadoa_filers.json"):
+            fid = sval(f.get("id"))
+            if fid:
+                filers[fid] = f
+    except Exception as e:
+        log(f"  !! filer directory load failed ({e})")
+
+    log("[trades] loading transactions")
+    try:
+        raw = fetch_json(KADOA_TRADES_URL, "kadoa_trades.json")
+    except Exception as e:
+        log(f"  !! transactions load failed ({e})")
+        return []
+
     trades = []
-
-    # House — CSV snapshot, parsed with pandas
-    log("[trades] House")
-    try:
-        cache = CACHE_DIR / "house.csv"
-        if cache.exists() and (time.time() - cache.stat().st_mtime) < 24 * 3600:
-            hdf = pd.read_csv(cache)
-        else:
-            hdf = pd.read_csv(HOUSE_CSV_URL)
-            hdf.to_csv(cache, index=False)
-        trades += normalize_rows(hdf.to_dict("records"), "House")
-    except Exception as e:
-        log(f"  !! House load failed ({e}); continuing without House")
-
-    # Senate — JSON, kept current upstream
-    log("[trades] Senate")
-    try:
-        rows = fetch_json(SENATE_JSON_URL, "senate.json")
-        trades += normalize_rows(rows, "Senate")
-    except Exception as e:
-        log(f"  !! Senate load failed ({e}); continuing without Senate")
-
+    for row in raw:
+        fid = sval(row.get("filer_id"))
+        f = filers.get(fid, {})
+        # chamber from the trade, the filer record, or the filer_id prefix
+        chamber = (sval(row.get("chamber")) or sval(f.get("chamber"))
+                   or (fid.split("_", 1)[0] if fid else "")).lower()
+        if chamber not in ("house", "senate"):
+            continue  # Congress only (skip executive-branch / OGE filers)
+        tk    = clean_ticker(sval(row.get("ticker")))
+        side  = norm_type(sval(row.get("transaction_type")) or sval(row.get("type")))
+        tdate = parse_date(sval(row.get("transaction_date")) or sval(row.get("date")))
+        if not (tk and side and tdate): continue
+        if tdate.isoformat() < START_DATE: continue
+        name = extract_name(f) or extract_name(row)
+        if not name: continue
+        trades.append({
+            "name": name, "chamber": chamber.capitalize(),
+            "ticker": tk, "side": side, "date": tdate,
+            "amount": sval(row.get("amount_range_label")) or sval(row.get("amount")),
+            "party": sval(f.get("party")) or sval(row.get("party")),
+        })
     log(f"[trades] usable trades: {len(trades)}")
     return trades
 
@@ -271,7 +290,7 @@ def match_party(name, pmap):
 def build():
     trades = load_trades()
     if not trades:
-        sys.exit("No trades loaded — check the Stock Watcher URLs in CONFIG.")
+        sys.exit("No trades loaded — check KADOA_TRADES_URL / KADOA_FILERS_URL in CONFIG.")
 
     start = (min(t["date"] for t in trades) - dt.timedelta(days=7)).isoformat()
     end   = (dt.date.today() + dt.timedelta(days=1)).isoformat()
@@ -299,17 +318,17 @@ def build():
     log(f"[elo] scored trades: {len(scored)}")
 
     members = {}
-    def M(name, chamber):
+    def M(name, chamber, party=""):
         key = (name, chamber)
         if key not in members:
             members[key] = {"name": name, "chamber": chamber,
-                            "party": match_party(name, pmap),
+                            "party": party or match_party(name, pmap),
                             "elo": 1500.0, "wins": 0, "losses": 0, "ties": 0,
                             "matches": 0, "sumExcess": 0.0}
         return members[key]
 
     for t in scored:
-        m = M(t["name"], t["chamber"])
+        m = M(t["name"], t["chamber"], t.get("party", ""))
         eff = t["excess"] if t["side"] == "buy" else -t["excess"]  # sells win when stock lags
         S = 1.0 if eff > TIE_BAND_PCT else (0.0 if eff < -TIE_BAND_PCT else 0.5)
         E = 1.0 / (1.0 + 10 ** ((MARKET_ELO - m["elo"]) / 400.0))
