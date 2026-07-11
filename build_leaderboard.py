@@ -33,6 +33,7 @@ from pathlib import Path
 # ----------------------------- CONFIG -----------------------------
 HOLDING_DAYS   = 30      # trading days held before measuring the trade's return
 K              = 32      # ELO sensitivity
+MOV_CAP        = 2.0     # max margin-of-victory multiplier (lower = steadier, less jackpot)
 MARKET_ELO     = 1500    # fixed rating of the S&P 500 opponent
 TIE_BAND_PCT   = 0.5     # |excess| below this = a tie
 MIN_TRADES     = 1       # members with fewer scored trades are dropped from output
@@ -383,7 +384,9 @@ def build():
             members[key] = {"name": name, "chamber": chamber,
                             "party": party or match_party(name, pmap),
                             "elo": 1500.0, "wins": 0, "losses": 0, "ties": 0,
-                            "matches": 0, "sumExcess": 0.0}
+                            "matches": 0, "sumExcess": 0.0,
+                            "nb": 0, "bw": 0, "bsum": 0.0,   # buys:  count, wins, sum eff
+                            "ns": 0, "sw": 0, "ssum": 0.0}   # sells: count, wins, sum eff
         return members[key]
 
     for t in scored:
@@ -391,13 +394,17 @@ def build():
         eff = t["excess"] if t["side"] == "buy" else -t["excess"]  # sells win when stock lags
         S = 1.0 if eff > TIE_BAND_PCT else (0.0 if eff < -TIE_BAND_PCT else 0.5)
         E = 1.0 / (1.0 + 10 ** ((MARKET_ELO - m["elo"]) / 400.0))
-        mov = min(1.0 + math.log(1 + abs(eff)), 3.0)   # margin-of-victory multiplier
+        mov = min(1.0 + math.log(1 + abs(eff)), MOV_CAP)   # margin-of-victory multiplier
         m["elo"] += K * mov * (S - E)
         m["wins"]   += S == 1.0
         m["losses"] += S == 0.0
         m["ties"]   += S == 0.5
         m["matches"] += 1
         m["sumExcess"] += eff          # direction-adjusted, so avg matches win rate
+        if t["side"] == "buy":
+            m["nb"] += 1; m["bw"] += S == 1.0; m["bsum"] += eff
+        else:
+            m["ns"] += 1; m["sw"] += S == 1.0; m["ssum"] += eff
 
     out = []
     for m in members.values():
@@ -409,6 +416,12 @@ def build():
             "losses": int(m["losses"]), "ties": int(m["ties"]),
             "winrate": round(m["wins"] / m["matches"] * 100, 1),
             "avgexcess": round(m["sumExcess"] / m["matches"], 2),
+            "n_buys": m["nb"],
+            "buy_winrate": round(m["bw"] / m["nb"] * 100, 1) if m["nb"] else 0,
+            "buy_avgexcess": round(m["bsum"] / m["nb"], 2) if m["nb"] else 0,
+            "n_sells": m["ns"],
+            "sell_winrate": round(m["sw"] / m["ns"] * 100, 1) if m["ns"] else 0,
+            "sell_avgexcess": round(m["ssum"] / m["ns"], 2) if m["ns"] else 0,
         })
     out.sort(key=lambda x: -x["elo"])
 
