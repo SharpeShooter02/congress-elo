@@ -524,7 +524,15 @@ def build():
     out.sort(key=lambda x: -x["elo"])
 
     generated = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
-    flagged_top = sorted(flagged, key=lambda x: -x["excess"])[:250]
+    # Keep the 700 most RECENT sharp trades (any magnitude) AND the 700 BIGGEST all-time,
+    # so the front end can sort by recency or magnitude without losing small recent beats.
+    by_recent = sorted(flagged, key=lambda x: x["date"], reverse=True)[:700]
+    by_mag    = sorted(flagged, key=lambda x: -x["excess"])[:700]
+    seen = set(); flagged_top = []
+    for f in by_recent + by_mag:
+        k = (f["name"], f["ticker"], f["date"], f["excess"])
+        if k in seen: continue
+        seen.add(k); flagged_top.append(f)
     earliest = min((t["date"] for t in scored), default=None)
     earliest_iso = earliest.isoformat() if earliest else ""
     meta = {"generated": generated, "earliest": earliest_iso}

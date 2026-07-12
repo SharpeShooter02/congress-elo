@@ -72,16 +72,21 @@
   .av{width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:7px;object-fit:cover;background:var(--panel2);border:1px solid var(--line);}
   .detailwrap .comm{margin-top:9px;color:var(--muted);}
   .detailwrap .comm b{color:var(--txt);}
-  .fcols{display:flex;gap:22px;flex-wrap:wrap;}
-  .fcol{flex:1;min-width:300px;}
+  .fcols{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;}
+  .fcol{flex:1;min-width:320px;}
   .fh{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 10px;}
-  .fitem{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:8px;}
-  .fitem .av{width:34px;height:34px;margin:0;flex:none;}
-  .fmeta{color:var(--muted);font-size:13px;margin-top:2px;}
+  .fitem{display:flex;gap:11px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:9px;}
+  .fitem .av{width:36px;height:36px;margin:0;flex:none;}
+  .av.avph{display:inline-flex;align-items:center;justify-content:center;background:var(--panel2);color:var(--muted);font-size:14px;font-weight:600;}
+  .fmain{min-width:0;flex:1;}
+  .fname{font-size:14px;line-height:1.35;}
+  .fch{color:var(--muted);font-size:13px;}
+  .fmeta{color:var(--muted);font-size:13px;margin-top:3px;line-height:1.4;}
   .fmeta b{color:var(--txt);}
-  .fsec{color:var(--txt);font-size:12px;margin-top:3px;}
-  .fcomm{color:var(--muted);font-size:11px;margin-top:3px;}
-  .fcomm b{color:var(--muted);text-transform:uppercase;letter-spacing:.3px;}
+  .fsec{color:var(--txt);font-size:12px;margin-top:5px;}
+  .fcomm{color:var(--muted);font-size:11.5px;margin-top:5px;line-height:1.5;}
+  .fcomm .lbl{text-transform:uppercase;letter-spacing:.4px;font-size:10px;opacity:.75;margin-right:5px;}
+  .fcomm.dim{opacity:.6;}
 </style>
 </head>
 <body>
@@ -148,6 +153,10 @@
   <div id="flaggedwrap" style="margin-top:30px">
     <h2 style="font-size:19px;margin:0 0 4px">🚩 Sharpest trades</h2>
     <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b>. Each shows the member, <b>what the company does</b>, and <b>every committee they currently sit on</b> — so you can judge for yourself whether they had a hand in the industries they were trading. A flag for scrutiny, not proof.</p>
+    <div class="ctl" style="margin:0 0 14px;max-width:200px">
+      <label>Sort</label>
+      <select id="fsort"><option value="mag">Biggest beat</option><option value="recent">Most recent</option></select>
+    </div>
     <div class="fcols">
       <div class="fcol">
         <h3 class="fh">Last 12 months</h3>
@@ -237,20 +246,25 @@ function applyState(res){
 const PARTY_NAME={D:"DEM",R:"Rep"};
 function partyName(p){return PARTY_NAME[p]||"Unlisted";}
 function partyCls(p){return (p==="D"||p==="R")?p:"U";}
-let sortKey="elo", sortDir=-1, shownMembers=20, shownRecent=20, shownAll=20, DATA_EARLIEST="";
+let sortKey="elo", sortDir=-1, shownMembers=20, shownRecent=20, shownAll=20, DATA_EARLIEST="", fSort="mag";
 function fmtPct(x){const s=(x>=0?"+":"")+Number(x).toFixed(1)+"%";return `<span class="${x>=0?'pos':'neg'} num">${s}</span>`;}
 function fitemHtml(t){
   const side=t.side==="sell"?"SOLD":"BOUGHT";
   const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short"}):"";
-  const av=t.photo?`<img class="av" src="${t.photo}" loading="lazy" alt="" onerror="this.style.display='none'">`:"";
+  const initial=((t.name||"?").trim()[0]||"?").toUpperCase();
+  const av=t.photo
+    ? `<img class="av" src="${t.photo}" loading="lazy" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'av avph',textContent:'${initial}'}))">`
+    : `<div class="av avph">${initial}</div>`;
   const co=t.company?`${t.company} (${t.ticker})`:`${t.ticker}`;
   const sect=[t.sector,t.industry].filter(Boolean).join(" · ");
   const sectLine=sect?`<div class="fsec">🏢 ${sect}</div>`:"";
   const cm=(t.committees||[]);
-  const comm=cm.length?`<div class="fcomm"><b>Committees:</b> ${cm.join(" · ")}</div>`:`<div class="fcomm" style="opacity:.6"><b>Committees:</b> — (not a current member)</div>`;
+  const comm=cm.length
+    ? `<div class="fcomm"><span class="lbl">Committees</span>${cm.join(" · ")}</div>`
+    : `<div class="fcomm dim"><span class="lbl">Committees</span>— not a current member</div>`;
   return `<div class="fitem">${av}<div class="fmain">
-    <div><b>${t.name}</b> <span class="pill ${partyCls(t.party)}">${partyName(t.party)}</span> · ${t.chamber}</div>
-    <div class="fmeta">${side} <b>${co}</b> <span class="pos">+${Number(t.excess).toFixed(0)}%</span> vs market within a month · ${d}</div>
+    <div class="fname"><b>${t.name}</b> <span class="pill ${partyCls(t.party)}">${partyName(t.party)}</span> <span class="fch">· ${t.chamber}</span></div>
+    <div class="fmeta">${side} <b>${co}</b> <span class="pos">+${Number(t.excess).toFixed(0)}%</span> vs S&amp;P · ${d}</div>
     ${sectLine}${comm}</div></div>`;
 }
 function renderFlist(el, arr, shown, btnId){
@@ -265,9 +279,14 @@ function renderFlagged(){
   if(rangeEl) rangeEl.textContent = DATA_EARLIEST ? "· data since "+new Date(DATA_EARLIEST).toLocaleDateString(undefined,{year:"numeric",month:"short"}) : "";
   if(!FLAGGED.length){ rEl.innerHTML=aEl.innerHTML='<span style="color:var(--muted)">No flagged trades yet — rebuild the data.</span>'; return; }
   const cutoff=Date.now()-365*864e5;
-  const recent=FLAGGED.filter(t=>new Date(t.date).getTime()>=cutoff);
+  const recent=sortFlagged(FLAGGED.filter(t=>new Date(t.date).getTime()>=cutoff));
   renderFlist(rEl, recent, shownRecent, "moreRecent");
-  renderFlist(aEl, FLAGGED, shownAll, "moreAll");
+  renderFlist(aEl, sortFlagged(FLAGGED), shownAll, "moreAll");
+}
+function sortFlagged(arr){
+  return arr.slice().sort((a,b)=> fSort==="recent"
+    ? (new Date(b.date)-new Date(a.date)) || (b.excess-a.excess)
+    : (b.excess-a.excess) || (new Date(b.date)-new Date(a.date)));
 }
 function detailHtml(m){
   const tt=(m.top_trades||[]);
@@ -341,6 +360,7 @@ document.getElementById("mintrades").addEventListener("input",e=>{document.getEl
 document.getElementById("moreMembers").addEventListener("click",()=>{shownMembers+=20;render();});
 document.getElementById("moreRecent").addEventListener("click",()=>{shownRecent+=20;renderFlagged();});
 document.getElementById("moreAll").addEventListener("click",()=>{shownAll+=20;renderFlagged();});
+document.getElementById("fsort").addEventListener("change",e=>{fSort=e.target.value;shownRecent=20;shownAll=20;renderFlagged();});
 document.getElementById("reload").addEventListener("click",async()=>{
   const btn=document.getElementById("reload"); btn.disabled=true; const old=btn.textContent; btn.textContent="⟳ Loading…";
   applyState(await loadData()); render();
