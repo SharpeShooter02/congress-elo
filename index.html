@@ -77,7 +77,9 @@
   .fitem .av{width:34px;height:34px;margin:0;flex:none;}
   .fmeta{color:var(--muted);font-size:13px;margin-top:2px;}
   .fmeta b{color:var(--txt);}
+  .fsec{color:var(--txt);font-size:12px;margin-top:3px;}
   .fcomm{color:var(--muted);font-size:11px;margin-top:3px;}
+  .fcomm b{color:var(--muted);text-transform:uppercase;letter-spacing:.3px;}
 </style>
 </head>
 <body>
@@ -138,7 +140,7 @@
 
   <div id="flaggedwrap" style="margin-top:30px">
     <h2 style="font-size:19px;margin:0 0 4px">🚩 Sketchiest trades</h2>
-    <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b> (not disclosed) — the sharpest, most suspiciously-timed calls. A flag for scrutiny, not proof.</p>
+    <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b> (not disclosed). Each shows the member, <b>what the company does</b>, and <b>every committee they currently sit on</b> — so you can judge for yourself whether they had a hand in the industries they were trading. A flag for scrutiny, not proof.</p>
     <div class="fcols">
       <div class="fcol"><h3 class="fh">Recent — last 12 months</h3><div id="fRecent"></div></div>
       <div class="fcol"><h3 class="fh">Earlier</h3><div id="fPast"></div></div>
@@ -224,12 +226,15 @@ function fitemHtml(t){
   const side=t.side==="sell"?"SOLD":"BOUGHT";
   const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short"}):"";
   const av=t.photo?`<img class="av" src="${t.photo}" loading="lazy" alt="" onerror="this.style.display='none'">`:"";
+  const co=t.company?`${t.company} (${t.ticker})`:`${t.ticker}`;
+  const sect=[t.sector,t.industry].filter(Boolean).join(" · ");
+  const sectLine=sect?`<div class="fsec">🏢 ${sect}</div>`:"";
   const cm=(t.committees||[]);
-  const comm=cm.length?`<div class="fcomm">${cm.slice(0,3).join(" · ")}</div>`:"";
+  const comm=cm.length?`<div class="fcomm"><b>Committees:</b> ${cm.join(" · ")}</div>`:`<div class="fcomm" style="opacity:.6"><b>Committees:</b> — (not a current member)</div>`;
   return `<div class="fitem">${av}<div class="fmain">
     <div><b>${t.name}</b> <span class="pill ${t.party||''}">${partyName(t.party)}</span> · ${t.chamber}</div>
-    <div class="fmeta">${side} <b>${t.ticker}</b> <span class="pos">+${Number(t.excess).toFixed(0)}%</span> vs market within a month · ${d}</div>
-    ${comm}</div></div>`;
+    <div class="fmeta">${side} <b>${co}</b> <span class="pos">+${Number(t.excess).toFixed(0)}%</span> vs market within a month · ${d}</div>
+    ${sectLine}${comm}</div></div>`;
 }
 function renderFlagged(){
   const rEl=document.getElementById("fRecent"), pEl=document.getElementById("fPast");

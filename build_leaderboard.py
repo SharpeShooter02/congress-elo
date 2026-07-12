@@ -46,8 +46,10 @@ START_DATE     = "2012-01-01"   # kadoa history starts ~2012 — include all of 
 # (years), least — but never zero. This makes FAST correctness (the insider-
 # trading tell) dominate the ELO while slow buy-and-hold still counts a little.
 W_30D   = 1.00   # edge visible within ~a month
-W_1Y    = 0.40   # visible within ~a year
-W_SINCE = 0.10   # only over the full (multi-year) holding period
+W_1Y    = 0.30   # visible within ~a year
+W_SINCE = 0.05   # only over the full (multi-year) holding period
+EXCESS_CAP = 50.0  # clamp each horizon's excess before blending, so a multi-year hold's
+                   # giant "since" return can't dominate the rating despite its low weight
 WEIGHT_BY_AMOUNT = False
 TAG_PARTY      = True    # look up party from congress-legislators (best-effort)
 OUT_JS         = Path(__file__).with_name("data.js")
@@ -67,6 +69,13 @@ LEG_URL          = "https://unitedstates.github.io/congress-legislators/legislat
 # Committee assignments (current members), keyed by bioguide id — no scraping.
 COMMITTEES_URL           = "https://unitedstates.github.io/congress-legislators/committees-current.json"
 COMMITTEE_MEMBERSHIP_URL = "https://unitedstates.github.io/congress-legislators/committee-membership-current.json"
+# Ticker -> sector/industry (keyless, nightly-updated) so a trade can be read next
+# to what the company actually does.
+TICKER_SECTOR_URLS = [
+    "https://raw.githubusercontent.com/rreichel3/US-Stock-Symbols/main/nasdaq/nasdaq_full_tickers.json",
+    "https://raw.githubusercontent.com/rreichel3/US-Stock-Symbols/main/nyse/nyse_full_tickers.json",
+    "https://raw.githubusercontent.com/rreichel3/US-Stock-Symbols/main/amex/amex_full_tickers.json",
+]
 
 # ----------------------------- deps -------------------------------
 try:
@@ -249,6 +258,7 @@ def load_trades():
                 "amount": sval(row.get("amount_range_label")) or sval(row.get("amount")),
                 "ret30": r30, "ret1y": r1y, "retsince": rsince,
                 "photo": photo, "bioguide": bg,
+                "company": sval(row.get("asset_name")).split("(")[0].split("[")[0].strip(),
             })
         if i % 40 == 0:
             log(f"  {i}/{len(roster)} filers · {len(trades)} trades so far")
@@ -372,6 +382,23 @@ def load_committees():
     return out
 
 
+def load_ticker_sectors():
+    """ticker -> {'sector':..., 'industry':...} from public exchange listings."""
+    out = {}
+    for url in TICKER_SECTOR_URLS:
+        fname = url.rsplit("/", 1)[-1]
+        try:
+            rows = fetch_json(url, "sectors_" + fname, max_age_h=24 * 7)
+        except Exception as e:
+            log(f"[sectors] {fname} skip ({e})"); continue
+        for r in (rows or []):
+            sym = sval(r.get("symbol")).upper()
+            if sym:
+                out[sym] = {"sector": sval(r.get("sector")), "industry": sval(r.get("industry"))}
+    log(f"[sectors] {len(out)} tickers with sector/industry")
+    return out
+
+
 # ---------------------------- ELO ---------------------------------
 def build():
     trades = load_trades()
@@ -397,20 +424,21 @@ def build():
     today = dt.date.today()
     scored = []
     for t in sorted(trades, key=lambda x: x["date"]):
-        comps = []  # (weight, excess in percentage points)
-        ex30 = None
+        clamp = lambda x: max(-EXCESS_CAP, min(EXCESS_CAP, x))  # tame giant multi-year gains
+        comps = []  # (weight, clamped excess in percentage points)
+        ex30 = None  # raw (uncapped) 30-day excess — used for the honest sharp-call flag
         if t["ret30"] is not None:
             s = spx_window_return(spx, t["date"], 30)
             if s is not None:
                 ex30 = t["ret30"] - s
-                comps.append((W_30D, ex30))
+                comps.append((W_30D, clamp(ex30)))
         if t["ret1y"] is not None:
             s = spx_window_return(spx, t["date"], 365)
-            if s is not None: comps.append((W_1Y, t["ret1y"] - s))
+            if s is not None: comps.append((W_1Y, clamp(t["ret1y"] - s)))
         if t["retsince"] is not None:
             horizon = max((today - t["date"]).days, 1)
             s = spx_window_return(spx, t["date"], horizon)
-            if s is not None: comps.append((W_SINCE, t["retsince"] - s))
+            if s is not None: comps.append((W_SINCE, clamp(t["retsince"] - s)))
         if not comps: continue
         wsum = sum(w for w, _ in comps)
         scored.append({**t, "excess": sum(w * e for w, e in comps) / wsum, "ex30": ex30})
@@ -431,6 +459,7 @@ def build():
         return members[key]
 
     committees = load_committees()
+    sectors = load_ticker_sectors()
     flagged = []   # individual sharp-call trades, for the "sketchiest trades" lists
 
     for t in scored:
@@ -457,9 +486,12 @@ def build():
         is_sharp = eff30 is not None and eff30 >= FLAG_PCT   # beat market 15%+ within a month
         if is_sharp:
             m["sharp"] += 1
+            si = sectors.get((t.get("ticker") or "").upper(), {})
             flagged.append({
                 "name": t["name"], "party": t.get("party", ""), "chamber": t["chamber"],
                 "photo": t.get("photo", ""), "ticker": t.get("ticker", "") or "—",
+                "company": t.get("company", ""),
+                "sector": si.get("sector", ""), "industry": si.get("industry", ""),
                 "side": t["side"], "date": t["date"].isoformat(), "excess": round(eff30, 1),
                 "committees": committees.get(t.get("bioguide", ""), []),
             })
