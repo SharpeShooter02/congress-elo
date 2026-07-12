@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-11T20:18:11+00:00",
+ "generated": "2026-07-12T03:09:05+00:00",
  "holding_days": 30,
  "trades_scored": 41846,
  "members": [
@@ -43,7 +43,9 @@
      "date": "2021-01-28",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001186.jpg",
+   "committees": []
   },
   {
    "name": "Daniel Goldman",
@@ -85,6 +87,11 @@
      "date": "2023-04-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000599.jpg",
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Homeland Security"
    ]
   },
   {
@@ -127,6 +134,13 @@
      "date": "2023-09-21",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000618.jpg",
+   "committees": [
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on the Budget"
    ]
   },
   {
@@ -169,7 +183,9 @@
      "date": "2019-03-25",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000479.jpg",
+   "committees": []
   },
   {
    "name": "Brad Ashford",
@@ -211,7 +227,9 @@
      "date": "2015-04-12",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/A000373.jpg",
+   "committees": []
   },
   {
    "name": "Bryan Bedford",
@@ -253,7 +271,9 @@
      "date": "2026-02-18",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Christopher A Wright",
@@ -295,7 +315,9 @@
      "date": "2025-04-15",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Bryan George Steil",
@@ -337,6 +359,13 @@
      "date": "2019-07-12",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001213.jpg",
+   "committees": [
+    "Joint Committee on Printing",
+    "Joint Committee of Congress on the Library",
+    "House Committee on Financial Services",
+    "House Committee on House Administration"
    ]
   },
   {
@@ -379,6 +408,11 @@
      "date": "2025-03-31",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001229.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -421,7 +455,9 @@
      "date": "2018-12-17",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000475.jpg",
+   "committees": []
   },
   {
    "name": "Patty Murray",
@@ -463,6 +499,13 @@
      "date": "2017-06-15",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001111.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on the Budget",
+    "Senate Committee on Veterans' Affairs"
    ]
   },
   {
@@ -505,6 +548,11 @@
      "date": "2025-06-04",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001234.jpg",
+   "committees": [
+    "House Committee on Veterans' Affairs",
+    "House Committee on Small Business"
    ]
   },
   {
@@ -547,6 +595,11 @@
      "date": "2017-08-14",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000609.jpg",
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -589,7 +642,9 @@
      "date": "2018-08-03",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001105.jpg",
+   "committees": []
   },
   {
    "name": "John B. Larson",
@@ -631,6 +686,10 @@
      "date": "2019-12-18",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000557.jpg",
+   "committees": [
+    "House Committee on Ways and Means"
    ]
   },
   {
@@ -673,7 +732,9 @@
      "date": "2021-06-29",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Greg Stanton",
@@ -715,6 +776,12 @@
      "date": "2023-09-26",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001211.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -757,7 +824,9 @@
      "date": "2021-01-04",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Bruce Westerman",
@@ -799,6 +868,11 @@
      "date": "2025-03-03",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000821.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Transportation and Infrastructure"
    ]
   },
   {
@@ -841,6 +915,11 @@
      "date": "2023-02-15",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000472.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -883,6 +962,11 @@
      "date": "2013-08-16",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S000250.jpg",
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Financial Services"
    ]
   },
   {
@@ -925,7 +1009,9 @@
      "date": "2015-07-30",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000554.jpg",
+   "committees": []
   },
   {
    "name": "Chris Van Hollen",
@@ -967,6 +1053,13 @@
      "date": "2017-02-17",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/V000128.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on the Budget"
    ]
   },
   {
@@ -1009,7 +1102,9 @@
      "date": "2016-08-11",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000583.jpg",
+   "committees": []
   },
   {
    "name": "Donald Sternoff Beyer Jr",
@@ -1051,6 +1146,11 @@
      "date": "2019-11-26",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001292.jpg",
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means"
    ]
   },
   {
@@ -1093,6 +1193,13 @@
      "date": "2026-03-27",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000479.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Homeland Security and Governmental Affairs",
+    "Commission on Security and Cooperation in Europe"
    ]
   },
   {
@@ -1135,7 +1242,9 @@
      "date": "2023-06-19",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Patrick Fallon",
@@ -1177,6 +1286,12 @@
      "date": "2021-02-23",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000246.jpg",
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Oversight and Government Reform",
+    "House Permanent Select Committee on Intelligence"
    ]
   },
   {
@@ -1219,7 +1334,9 @@
      "date": "2023-11-01",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000483.jpg",
+   "committees": []
   },
   {
    "name": "Donald J Trump",
@@ -1261,7 +1378,9 @@
      "date": "2025-08-29",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Brian Mast",
@@ -1303,6 +1422,11 @@
      "date": "2021-02-09",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -1345,7 +1469,9 @@
      "date": "2019-03-05",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000616.jpg",
+   "committees": []
   },
   {
    "name": "Scott A Kupor",
@@ -1387,7 +1513,9 @@
      "date": "2025-07-19",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "John Curtis",
@@ -1429,6 +1557,13 @@
      "date": "2020-03-27",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001114.jpg",
+   "committees": [
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Small Business and Entrepreneurship"
    ]
   },
   {
@@ -1471,7 +1606,9 @@
      "date": "2023-07-06",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001248.jpg",
+   "committees": []
   },
   {
    "name": "Greg Landsman",
@@ -1513,6 +1650,10 @@
      "date": "2024-10-15",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000601.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -1555,6 +1696,11 @@
      "date": "2026-05-05",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001291.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Science, Space, and Technology"
    ]
   },
   {
@@ -1597,7 +1743,9 @@
      "date": "2020-10-22",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001078.jpg",
+   "committees": []
   },
   {
    "name": "Thomas R Tillis",
@@ -1639,6 +1787,14 @@
      "date": "2015-02-13",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000476.jpg",
+   "committees": [
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Finance",
+    "Senate Committee on the Judiciary",
+    "Senate Committee on Veterans' Affairs",
+    "Commission on Security and Cooperation in Europe"
    ]
   },
   {
@@ -1681,6 +1837,11 @@
      "date": "2021-10-22",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/A000372.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Committee on Education and Workforce"
    ]
   },
   {
@@ -1723,6 +1884,11 @@
      "date": "2020-12-30",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S000185.jpg",
+   "committees": [
+    "House Committee on Education and Workforce",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -1765,7 +1931,9 @@
      "date": "2025-03-25",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Daniel S Sullivan",
@@ -1807,6 +1975,13 @@
      "date": "2022-11-30",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001198.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Veterans' Affairs"
    ]
   },
   {
@@ -1849,6 +2024,11 @@
      "date": "2020-06-29",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000480.jpg",
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Financial Services"
    ]
   },
   {
@@ -1891,6 +2071,11 @@
      "date": "2025-04-10",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000032.jpg",
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Financial Services"
    ]
   },
   {
@@ -1933,7 +2118,9 @@
      "date": "2019-02-26",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000441.jpg",
+   "committees": []
   },
   {
    "name": "Eric S Lander",
@@ -1975,7 +2162,9 @@
      "date": "2021-06-10",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "John Phelan",
@@ -2017,7 +2206,9 @@
      "date": "2026-01-08",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Susie Lee",
@@ -2059,6 +2250,11 @@
      "date": "2021-01-13",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000590.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -2101,6 +2297,15 @@
      "date": "2025-05-20",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001236.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Appropriations",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Rules and Administration",
+    "Senate Committee on Veterans' Affairs",
+    "Commission on Security and Cooperation in Europe"
    ]
   },
   {
@@ -2143,7 +2348,9 @@
      "date": "2026-02-10",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Cheri Bustos",
@@ -2185,7 +2392,9 @@
      "date": "2019-10-18",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001286.jpg",
+   "committees": []
   },
   {
    "name": "Valerie Hoyle",
@@ -2227,6 +2436,11 @@
      "date": "2024-10-29",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001094.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Transportation and Infrastructure"
    ]
   },
   {
@@ -2269,6 +2483,10 @@
      "date": "2019-09-19",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000609.jpg",
+   "committees": [
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -2311,7 +2529,9 @@
      "date": "2025-03-28",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Nicholas V. Taylor",
@@ -2353,7 +2573,9 @@
      "date": "2022-11-28",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000479.jpg",
+   "committees": []
   },
   {
    "name": "Terri A. Sewell",
@@ -2395,6 +2617,12 @@
      "date": "2026-03-25",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001185.jpg",
+   "committees": [
+    "Joint Committee on Printing",
+    "House Committee on Ways and Means",
+    "House Committee on House Administration"
    ]
   },
   {
@@ -2437,6 +2665,11 @@
      "date": "2024-09-26",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000486.jpg",
+   "committees": [
+    "House Committee on Financial Services",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -2479,6 +2712,13 @@
      "date": "2023-04-11",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000622.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Veterans' Affairs"
    ]
   },
   {
@@ -2521,6 +2761,15 @@
      "date": "2020-03-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M000934.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Appropriations",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Indian Affairs",
+    "Senate Committee on Veterans' Affairs",
+    "Senate Select Committee on Intelligence"
    ]
   },
   {
@@ -2563,7 +2812,9 @@
      "date": "2022-05-09",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "John W Hickenlooper",
@@ -2605,6 +2856,13 @@
      "date": "2025-05-19",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H000273.jpg",
+   "committees": [
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Energy and Natural Resources",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Small Business and Entrepreneurship"
    ]
   },
   {
@@ -2647,7 +2905,9 @@
      "date": "2022-10-24",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Thomas H. Kean",
@@ -2689,6 +2949,11 @@
      "date": "2023-01-27",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000398.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -2731,7 +2996,9 @@
      "date": "2021-10-07",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Thomas H Tuberville",
@@ -2773,6 +3040,14 @@
      "date": "2023-04-03",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000278.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Armed Services",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs",
+    "Senate Special Committee on Aging"
    ]
   },
   {
@@ -2815,7 +3090,9 @@
      "date": "2015-01-21",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000535.jpg",
+   "committees": []
   },
   {
    "name": "James Comer",
@@ -2857,6 +3134,11 @@
      "date": "2025-01-02",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001108.jpg",
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Education and Workforce"
    ]
   },
   {
@@ -2899,6 +3181,15 @@
      "date": "2025-01-22",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001244.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Homeland Security and Governmental Affairs",
+    "Senate Committee on the Judiciary",
+    "Joint Economic Committee",
+    "Senate Special Committee on Aging"
    ]
   },
   {
@@ -2941,7 +3232,9 @@
      "date": "2018-11-26",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/Y000062.jpg",
+   "committees": []
   },
   {
    "name": "Stephen I Miran",
@@ -2983,7 +3276,9 @@
      "date": "2025-06-09",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Rick Larsen",
@@ -3025,6 +3320,10 @@
      "date": "2025-01-07",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000560.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure"
    ]
   },
   {
@@ -3067,6 +3366,11 @@
      "date": "2020-03-25",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001120.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Permanent Select Committee on Intelligence"
    ]
   },
   {
@@ -3109,6 +3413,10 @@
      "date": "2019-07-08",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000295.jpg",
+   "committees": [
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -3151,7 +3459,9 @@
      "date": "2022-06-17",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000197.jpg",
+   "committees": []
   },
   {
    "name": "David B. McKinley",
@@ -3193,7 +3503,9 @@
      "date": "2021-09-16",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001180.jpg",
+   "committees": []
   },
   {
    "name": "April McClain Delaney",
@@ -3235,7 +3547,9 @@
      "date": "2025-02-27",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000620.jpg",
+   "committees": []
   },
   {
    "name": "William Cassidy",
@@ -3277,6 +3591,13 @@
      "date": "2015-08-27",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001075.jpg",
+   "committees": [
+    "Senate Committee on Energy and Natural Resources",
+    "Senate Committee on Finance",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs"
    ]
   },
   {
@@ -3319,7 +3640,9 @@
      "date": "2020-06-03",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Frank Kendall",
@@ -3361,7 +3684,9 @@
      "date": "2021-09-30",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Jennifer Granholm",
@@ -3403,7 +3728,9 @@
      "date": "2023-05-18",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Thomas H. Kean Jr",
@@ -3445,6 +3772,11 @@
      "date": "2026-04-14",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000398.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -3487,7 +3819,9 @@
      "date": "2015-12-11",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000413.jpg",
+   "committees": []
   },
   {
    "name": "John James",
@@ -3529,6 +3863,10 @@
      "date": "2023-11-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000307.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -3571,6 +3909,11 @@
      "date": "2025-02-07",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000798.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Education and Workforce"
    ]
   },
   {
@@ -3613,6 +3956,12 @@
      "date": "2026-05-13",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000614.jpg",
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Rules",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -3655,6 +4004,10 @@
      "date": "2021-01-22",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S000929.jpg",
+   "committees": [
+    "Joint Economic Committee"
    ]
   },
   {
@@ -3690,7 +4043,9 @@
      "date": "2025-05-12",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Theodore E. Deutch",
@@ -3725,7 +4080,9 @@
      "date": "2019-06-03",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000610.jpg",
+   "committees": []
   },
   {
    "name": "Lois Frankel",
@@ -3767,6 +4124,10 @@
      "date": "2014-05-12",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000462.jpg",
+   "committees": [
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -3809,6 +4170,10 @@
      "date": "2024-11-08",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000376.jpg",
+   "committees": [
+    "House Committee on Ways and Means"
    ]
   },
   {
@@ -3844,6 +4209,10 @@
      "date": "2026-04-07",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001227.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -3886,6 +4255,13 @@
      "date": "2017-10-17",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000622.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Veterans' Affairs"
    ]
   },
   {
@@ -3928,7 +4304,9 @@
      "date": "2025-03-24",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Tom Malinowski",
@@ -3970,7 +4348,9 @@
      "date": "2019-04-04",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001203.jpg",
+   "committees": []
   },
   {
    "name": "Gilbert Cisneros",
@@ -4012,6 +4392,11 @@
      "date": "2019-04-09",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
    ]
   },
   {
@@ -4054,6 +4439,10 @@
      "date": "2020-10-29",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/E000296.jpg",
+   "committees": [
+    "House Committee on Ways and Means"
    ]
   },
   {
@@ -4096,7 +4485,9 @@
      "date": "2025-04-28",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Tom Rice",
@@ -4138,7 +4529,9 @@
      "date": "2020-03-09",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000597.jpg",
+   "committees": []
   },
   {
    "name": "Susan A. Davis",
@@ -4180,7 +4573,9 @@
      "date": "2020-02-11",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000598.jpg",
+   "committees": []
   },
   {
    "name": "Abigail Spanberger",
@@ -4222,7 +4617,9 @@
      "date": "2024-06-04",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001209.jpg",
+   "committees": []
   },
   {
    "name": "Cecilia Rouse",
@@ -4264,7 +4661,9 @@
      "date": "2021-04-23",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Bradley S. Schneider",
@@ -4306,6 +4705,11 @@
      "date": "2021-12-10",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001190.jpg",
+   "committees": [
+    "House Committee on Ways and Means",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -4348,6 +4752,12 @@
      "date": "2025-06-03",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001327.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture",
+    "House Committee on Small Business"
    ]
   },
   {
@@ -4390,6 +4800,11 @@
      "date": "2014-12-24",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001066.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -4432,7 +4847,9 @@
      "date": "2015-08-25",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H000636.jpg",
+   "committees": []
   },
   {
    "name": "Jim McDermott",
@@ -4474,7 +4891,9 @@
      "date": "2015-12-11",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M000404.jpg",
+   "committees": []
   },
   {
    "name": "Adewale Adeyemo",
@@ -4516,7 +4935,9 @@
      "date": "2021-04-21",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "K. Michael Conaway",
@@ -4558,7 +4979,9 @@
      "date": "2014-03-14",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001062.jpg",
+   "committees": []
   },
   {
    "name": "Ron L Wyden",
@@ -4600,6 +5023,14 @@
      "date": "2020-06-26",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000779.jpg",
+   "committees": [
+    "Senate Committee on Energy and Natural Resources",
+    "Senate Committee on Finance",
+    "Senate Committee on the Budget",
+    "Joint Committee on Taxation",
+    "Senate Select Committee on Intelligence"
    ]
   },
   {
@@ -4642,7 +5073,9 @@
      "date": "2020-04-02",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000616.jpg",
+   "committees": []
   },
   {
    "name": "Max Miller",
@@ -4684,6 +5117,11 @@
      "date": "2023-10-06",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001222.jpg",
+   "committees": [
+    "House Committee on Ways and Means",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -4726,6 +5164,10 @@
      "date": "2016-02-19",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000617.jpg",
+   "committees": [
+    "House Committee on Ways and Means"
    ]
   },
   {
@@ -4768,7 +5210,9 @@
      "date": "2020-06-26",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001185.jpg",
+   "committees": []
   },
   {
    "name": "Janet L Yellen",
@@ -4810,7 +5254,9 @@
      "date": "2021-02-09",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Katharine MacGregor",
@@ -4852,7 +5298,9 @@
      "date": "2025-07-31",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Sean Duffy",
@@ -4894,7 +5342,9 @@
      "date": "2025-02-11",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "John F Reed",
@@ -4936,6 +5386,13 @@
      "date": "2014-03-28",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000122.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Armed Services",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Select Committee on Intelligence"
    ]
   },
   {
@@ -4971,6 +5428,13 @@
      "date": "2024-01-26",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000359.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on the Budget",
+    "Senate Committee on the Judiciary"
    ]
   },
   {
@@ -5013,7 +5477,9 @@
      "date": "2025-03-27",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Richard Dean McCormick",
@@ -5055,7 +5521,9 @@
      "date": "2025-11-05",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M000371.jpg",
+   "committees": []
   },
   {
    "name": "Tom Thomas Graves Jr.",
@@ -5083,7 +5551,9 @@
      "date": "2016-03-16",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000560.jpg",
+   "committees": []
   },
   {
    "name": "Rick Scott",
@@ -5111,6 +5581,14 @@
      "date": "2023-12-20",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001217.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Homeland Security and Governmental Affairs",
+    "Senate Committee on the Budget",
+    "Senate Special Committee on Aging"
    ]
   },
   {
@@ -5139,6 +5617,11 @@
      "date": "2024-05-22",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000562.jpg",
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Financial Services"
    ]
   },
   {
@@ -5181,6 +5664,11 @@
      "date": "2025-05-14",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000490.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture"
    ]
   },
   {
@@ -5223,6 +5711,11 @@
      "date": "2016-02-18",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000397.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on the Judiciary"
    ]
   },
   {
@@ -5251,7 +5744,9 @@
      "date": "2020-11-19",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001156.jpg",
+   "committees": []
   },
   {
    "name": "Jeff Duncan",
@@ -5286,7 +5781,9 @@
      "date": "2023-08-25",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000615.jpg",
+   "committees": []
   },
   {
    "name": "Roger F Wicker",
@@ -5328,6 +5825,15 @@
      "date": "2018-04-23",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000437.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Rules and Administration",
+    "Senate Select Committee on Intelligence",
+    "Commission on Security and Cooperation in Europe"
    ]
   },
   {
@@ -5356,6 +5862,10 @@
      "date": "2015-07-27",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/V000131.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -5398,6 +5908,11 @@
      "date": "2025-11-06",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000309.jpg",
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -5426,6 +5941,13 @@
      "date": "2022-05-05",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000250.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Finance",
+    "Senate Select Committee on Intelligence"
    ]
   },
   {
@@ -5468,6 +5990,13 @@
      "date": "2017-09-08",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001047.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Rules and Administration"
    ]
   },
   {
@@ -5510,6 +6039,10 @@
      "date": "2021-10-28",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001216.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -5552,6 +6085,12 @@
      "date": "2021-04-23",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000597.jpg",
+   "committees": [
+    "House Committee on Homeland Security",
+    "House Committee on Financial Services",
+    "House Committee on Ethics"
    ]
   },
   {
@@ -5594,6 +6133,13 @@
      "date": "2019-09-05",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001206.jpg",
+   "committees": [
+    "Joint Committee on Printing",
+    "Joint Committee of Congress on the Library",
+    "House Committee on Appropriations",
+    "House Committee on House Administration"
    ]
   },
   {
@@ -5636,6 +6182,12 @@
      "date": "2023-01-11",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000591.jpg",
+   "committees": [
+    "House Committee on Appropriations",
+    "House Committee on Homeland Security",
+    "House Committee on Ethics"
    ]
   },
   {
@@ -5664,6 +6216,11 @@
      "date": "2024-11-15",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000589.jpg",
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Armed Services"
    ]
   },
   {
@@ -5692,7 +6249,9 @@
      "date": "2026-06-01",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "John R Curtis",
@@ -5720,6 +6279,13 @@
      "date": "2026-06-02",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001114.jpg",
+   "committees": [
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Small Business and Entrepreneurship"
    ]
   },
   {
@@ -5762,6 +6328,13 @@
      "date": "2014-09-11",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001075.jpg",
+   "committees": [
+    "Senate Committee on Energy and Natural Resources",
+    "Senate Committee on Finance",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs"
    ]
   },
   {
@@ -5804,7 +6377,9 @@
      "date": "2019-05-22",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001206.jpg",
+   "committees": []
   },
   {
    "name": "Lisa O Monaco",
@@ -5846,7 +6421,9 @@
      "date": "2021-07-15",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Stephanie Murphy",
@@ -5888,7 +6465,9 @@
      "date": "2018-01-04",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001202.jpg",
+   "committees": []
   },
   {
    "name": "Guy Reschenthaler",
@@ -5916,6 +6495,10 @@
      "date": "2025-04-24",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000610.jpg",
+   "committees": [
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -5944,6 +6527,11 @@
      "date": "2021-01-20",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000273.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Rules"
    ]
   },
   {
@@ -5986,6 +6574,12 @@
      "date": "2021-03-31",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001091.jpg",
+   "committees": [
+    "House Committee on Appropriations",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party",
+    "House Committee on Ethics"
    ]
   },
   {
@@ -6014,7 +6608,9 @@
      "date": "2021-09-24",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001104.jpg",
+   "committees": []
   },
   {
    "name": "Mikie Sherrill",
@@ -6056,7 +6652,9 @@
      "date": "2020-02-20",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001207.jpg",
+   "committees": []
   },
   {
    "name": "Paul R Lawrence",
@@ -6084,7 +6682,9 @@
      "date": "2025-05-08",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "John A. Boehner",
@@ -6126,7 +6726,9 @@
      "date": "2014-12-26",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B000589.jpg",
+   "committees": []
   },
   {
    "name": "Stephanie Bice",
@@ -6154,6 +6756,11 @@
      "date": "2021-08-06",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B000740.jpg",
+   "committees": [
+    "House Committee on Appropriations",
+    "House Committee on House Administration"
    ]
   },
   {
@@ -6196,6 +6803,13 @@
      "date": "2015-01-30",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000622.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Veterans' Affairs"
    ]
   },
   {
@@ -6238,7 +6852,9 @@
      "date": "2025-05-29",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Daniel Webster",
@@ -6266,6 +6882,12 @@
      "date": "2025-02-26",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000806.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Science, Space, and Technology"
    ]
   },
   {
@@ -6308,6 +6930,11 @@
      "date": "2024-10-31",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000375.jpg",
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -6336,6 +6963,12 @@
      "date": "2023-10-31",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000298.jpg",
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Foreign Affairs",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -6378,6 +7011,13 @@
      "date": "2020-03-17",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000800.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Finance",
+    "Senate Committee on Rules and Administration",
+    "Senate Committee on the Judiciary"
    ]
   },
   {
@@ -6420,6 +7060,11 @@
      "date": "2024-07-18",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001103.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -6462,6 +7107,11 @@
      "date": "2020-12-23",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001080.jpg",
+   "committees": [
+    "House Committee on Ways and Means",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -6504,7 +7154,9 @@
      "date": "2021-03-25",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000579.jpg",
+   "committees": []
   },
   {
    "name": "Mark Alford",
@@ -6546,6 +7198,11 @@
      "date": "2026-03-16",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/A000379.jpg",
+   "committees": [
+    "House Committee on Appropriations",
+    "House Committee on Small Business"
    ]
   },
   {
@@ -6588,6 +7245,13 @@
      "date": "2017-10-27",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001198.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Finance",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on the Budget"
    ]
   },
   {
@@ -6630,6 +7294,11 @@
      "date": "2025-03-24",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000830.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on Armed Services"
    ]
   },
   {
@@ -6672,6 +7341,11 @@
      "date": "2023-01-23",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000488.jpg",
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Homeland Security"
    ]
   },
   {
@@ -6714,6 +7388,10 @@
      "date": "2025-07-28",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/A000055.jpg",
+   "committees": [
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -6756,7 +7434,9 @@
      "date": "2022-04-25",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Sheri Biggs",
@@ -6798,6 +7478,12 @@
      "date": "2025-03-18",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001325.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on Homeland Security",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -6840,7 +7526,9 @@
      "date": "2022-06-17",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Katherine M. Clark",
@@ -6882,7 +7570,9 @@
      "date": "2014-09-17",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001101.jpg",
+   "committees": []
   },
   {
    "name": "Howard Lutnick",
@@ -6924,7 +7614,9 @@
      "date": "2025-10-06",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Ron Estes",
@@ -6966,6 +7658,12 @@
      "date": "2022-07-19",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/E000298.jpg",
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -7008,7 +7706,9 @@
      "date": "2021-08-16",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Cindy Axne",
@@ -7050,7 +7750,9 @@
      "date": "2019-05-10",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/A000378.jpg",
+   "committees": []
   },
   {
    "name": "Alan S. Lowenthal",
@@ -7092,7 +7794,9 @@
      "date": "2020-03-19",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "committees": []
   },
   {
    "name": "Greg Gianforte",
@@ -7134,7 +7838,9 @@
      "date": "2018-12-21",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000584.jpg",
+   "committees": []
   },
   {
    "name": "Deborah K. Ross",
@@ -7176,6 +7882,12 @@
      "date": "2021-04-27",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000305.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on the Judiciary",
+    "House Committee on Ethics"
    ]
   },
   {
@@ -7218,6 +7930,11 @@
      "date": "2015-06-23",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000608.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -7260,7 +7977,9 @@
      "date": "2020-09-01",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000588.jpg",
+   "committees": []
   },
   {
    "name": "Brian Higgins",
@@ -7295,7 +8014,9 @@
      "date": "2020-09-04",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001038.jpg",
+   "committees": []
   },
   {
    "name": "Scott DesJarlais",
@@ -7330,6 +8051,11 @@
      "date": "2025-10-28",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000616.jpg",
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services"
    ]
   },
   {
@@ -7372,7 +8098,9 @@
      "date": "2025-02-11",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Jackie Speier",
@@ -7414,7 +8142,9 @@
      "date": "2018-07-30",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001175.jpg",
+   "committees": []
   },
   {
    "name": "Ed Perlmutter",
@@ -7456,7 +8186,9 @@
      "date": "2022-11-01",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000593.jpg",
+   "committees": []
   },
   {
    "name": "Mary Gay Scanlon",
@@ -7498,6 +8230,11 @@
      "date": "2021-02-12",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001205.jpg",
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Rules"
    ]
   },
   {
@@ -7540,6 +8277,13 @@
      "date": "2023-11-08",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001203.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Finance",
+    "Senate Committee on Indian Affairs"
    ]
   },
   {
@@ -7575,6 +8319,11 @@
      "date": "2025-09-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000483.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Science, Space, and Technology"
    ]
   },
   {
@@ -7603,6 +8352,13 @@
      "date": "2025-01-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000405.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on the Judiciary",
+    "House Committee on Homeland Security",
+    "House Committee on Ethics"
    ]
   },
   {
@@ -7645,6 +8401,13 @@
      "date": "2019-01-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000383.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Energy and Natural Resources",
+    "Senate Committee on Veterans' Affairs",
+    "Senate Select Committee on Intelligence"
    ]
   },
   {
@@ -7687,6 +8450,10 @@
      "date": "2025-08-08",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S000510.jpg",
+   "committees": [
+    "House Committee on Armed Services"
    ]
   },
   {
@@ -7729,6 +8496,13 @@
      "date": "2019-02-04",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001303.jpg",
+   "committees": [
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Health, Education, Labor, and Pensions"
    ]
   },
   {
@@ -7764,7 +8538,9 @@
      "date": "2019-01-14",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/V000108.jpg",
+   "committees": []
   },
   {
    "name": "Emily Randall",
@@ -7806,6 +8582,11 @@
      "date": "2025-01-06",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000621.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Oversight and Government Reform"
    ]
   },
   {
@@ -7848,7 +8629,9 @@
      "date": "2025-04-28",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "John Cornyn",
@@ -7883,6 +8666,16 @@
      "date": "2017-02-01",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001056.jpg",
+   "committees": [
+    "Senate Committee on Finance",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on the Budget",
+    "Senate Committee on the Judiciary",
+    "Joint Committee on Taxation",
+    "Senate Select Committee on Intelligence",
+    "United States Senate Caucus on International Narcotics Control"
    ]
   },
   {
@@ -7925,6 +8718,10 @@
      "date": "2021-09-02",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001082.jpg",
+   "committees": [
+    "House Committee on Ways and Means"
    ]
   },
   {
@@ -7967,7 +8764,9 @@
      "date": "2018-04-11",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/Y000063.jpg",
+   "committees": []
   },
   {
    "name": "Nuria Fernandez",
@@ -8009,7 +8808,9 @@
      "date": "2023-09-05",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Markwayne Mullin",
@@ -8051,7 +8852,9 @@
      "date": "2024-01-02",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001190.jpg",
+   "committees": []
   },
   {
    "name": "Morgan McGarvey",
@@ -8093,6 +8896,12 @@
      "date": "2024-06-06",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001220.jpg",
+   "committees": [
+    "House Committee on Veterans' Affairs",
+    "House Committee on Small Business",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -8135,7 +8944,9 @@
      "date": "2021-03-31",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000591.jpg",
+   "committees": []
   },
   {
    "name": "Laurel Lee",
@@ -8177,6 +8988,12 @@
      "date": "2023-12-29",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000597.jpg",
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Energy and Commerce",
+    "House Committee on House Administration"
    ]
   },
   {
@@ -8219,7 +9036,9 @@
      "date": "2014-03-28",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001182.jpg",
+   "committees": []
   },
   {
    "name": "Frank Pallone Jr.",
@@ -8261,6 +9080,10 @@
      "date": "2021-08-11",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000034.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -8303,7 +9126,9 @@
      "date": "2025-05-14",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Bob Gibbs",
@@ -8345,7 +9170,9 @@
      "date": "2019-01-08",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000563.jpg",
+   "committees": []
   },
   {
    "name": "Katie Britt",
@@ -8387,6 +9214,14 @@
      "date": "2025-04-14",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001319.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Rules and Administration",
+    "Senate Committee on the Judiciary",
+    "Commission on Security and Cooperation in Europe"
    ]
   },
   {
@@ -8429,6 +9264,11 @@
      "date": "2016-11-14",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000624.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -8464,6 +9304,13 @@
      "date": "2025-04-21",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000393.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on the Budget",
+    "Senate Committee on the Judiciary"
    ]
   },
   {
@@ -8506,6 +9353,17 @@
      "date": "2022-06-23",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000463.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Appropriations",
+    "Senate Committee on Armed Services",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Rules and Administration",
+    "Joint Committee on Printing",
+    "Joint Committee of Congress on the Library",
+    "Senate Select Committee on Ethics"
    ]
   },
   {
@@ -8548,7 +9406,9 @@
      "date": "2021-11-24",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001200.jpg",
+   "committees": []
   },
   {
    "name": "Tony Wied",
@@ -8590,6 +9450,12 @@
      "date": "2026-02-19",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000829.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture",
+    "House Committee on Small Business"
    ]
   },
   {
@@ -8632,7 +9498,9 @@
      "date": "2016-06-15",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/N000182.jpg",
+   "committees": []
   },
   {
    "name": "Matthew Robert Van Epps",
@@ -8674,6 +9542,11 @@
      "date": "2026-06-16",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/V000139.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on Homeland Security"
    ]
   },
   {
@@ -8716,6 +9589,10 @@
      "date": "2019-07-08",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001201.jpg",
+   "committees": [
+    "House Committee on Ways and Means"
    ]
   },
   {
@@ -8758,7 +9635,9 @@
      "date": "2022-07-15",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001135.jpg",
+   "committees": []
   },
   {
    "name": "Adam B Schiff",
@@ -8786,6 +9665,13 @@
      "date": "2025-09-22",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001150.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Small Business and Entrepreneurship",
+    "Senate Committee on the Judiciary"
    ]
   },
   {
@@ -8828,6 +9714,10 @@
      "date": "2014-06-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001148.jpg",
+   "committees": [
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -8870,7 +9760,9 @@
      "date": "2022-11-08",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000020.jpg",
+   "committees": []
   },
   {
    "name": "Joe Courtney",
@@ -8912,6 +9804,11 @@
      "date": "2020-10-09",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001069.jpg",
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Education and Workforce"
    ]
   },
   {
@@ -8954,7 +9851,9 @@
      "date": "2017-08-15",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000294.jpg",
+   "committees": []
   },
   {
    "name": "Christopher A Coons",
@@ -8996,6 +9895,14 @@
      "date": "2018-10-24",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001088.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Small Business and Entrepreneurship",
+    "Senate Committee on the Judiciary",
+    "Senate Select Committee on Ethics"
    ]
   },
   {
@@ -9038,6 +9945,10 @@
      "date": "2025-12-01",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001055.jpg",
+   "committees": [
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -9066,7 +9977,9 @@
      "date": "2014-10-27",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000570.jpg",
+   "committees": []
   },
   {
    "name": "Cynthia M Lummis",
@@ -9094,6 +10007,12 @@
      "date": "2021-09-03",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000571.jpg",
+   "committees": [
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Environment and Public Works"
    ]
   },
   {
@@ -9136,7 +10055,9 @@
      "date": "2022-02-24",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B000574.jpg",
+   "committees": []
   },
   {
    "name": "Roger Williams",
@@ -9178,6 +10099,11 @@
      "date": "2022-06-30",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000816.jpg",
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on Small Business"
    ]
   },
   {
@@ -9220,6 +10146,10 @@
      "date": "2020-07-28",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001205.jpg",
+   "committees": [
+    "House Committee on Ways and Means"
    ]
   },
   {
@@ -9248,7 +10178,9 @@
      "date": "2021-06-21",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Thomas MacArthur",
@@ -9290,7 +10222,9 @@
      "date": "2018-10-23",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001193.jpg",
+   "committees": []
   },
   {
    "name": "Michael Garcia",
@@ -9332,7 +10266,9 @@
      "date": "2020-11-13",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000061.jpg",
+   "committees": []
   },
   {
    "name": "Steve Chabot",
@@ -9374,7 +10310,9 @@
      "date": "2015-05-26",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C000266.jpg",
+   "committees": []
   },
   {
    "name": "Dan Newhouse",
@@ -9416,6 +10354,12 @@
      "date": "2021-11-02",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/N000189.jpg",
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Appropriations",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -9444,6 +10388,11 @@
      "date": "2024-06-04",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/N000188.jpg",
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Education and Workforce"
    ]
   },
   {
@@ -9486,7 +10435,9 @@
      "date": "2013-12-13",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000451.jpg",
+   "committees": []
   },
   {
    "name": "Susan W. Brooks",
@@ -9528,7 +10479,9 @@
      "date": "2020-04-06",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001284.jpg",
+   "committees": []
   },
   {
    "name": "Bernie Moreno",
@@ -9556,6 +10509,14 @@
      "date": "2025-12-19",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001242.jpg",
+   "committees": [
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Homeland Security and Governmental Affairs",
+    "Senate Committee on the Budget",
+    "United States Senate Caucus on International Narcotics Control"
    ]
   },
   {
@@ -9598,7 +10559,9 @@
      "date": "2016-10-28",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001269.jpg",
+   "committees": []
   },
   {
    "name": "Josh Gottheimer",
@@ -9640,6 +10603,11 @@
      "date": "2020-02-28",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
    ]
   },
   {
@@ -9682,6 +10650,12 @@
      "date": "2025-01-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001224.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on Foreign Affairs",
+    "House Committee on Veterans' Affairs"
    ]
   },
   {
@@ -9710,7 +10684,9 @@
      "date": "2017-02-10",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001111.jpg",
+   "committees": []
   },
   {
    "name": "James A. Himes",
@@ -9738,6 +10714,11 @@
      "date": "2017-08-22",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001047.jpg",
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
    ]
   },
   {
@@ -9780,6 +10761,12 @@
      "date": "2018-11-09",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001199.jpg",
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -9822,7 +10809,9 @@
      "date": "2014-05-12",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/O000169.jpg",
+   "committees": []
   },
   {
    "name": "Neal P. Dunn",
@@ -9850,6 +10839,11 @@
      "date": "2017-06-29",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000628.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -9892,7 +10886,9 @@
      "date": "2014-07-23",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000011.jpg",
+   "committees": []
   },
   {
    "name": "Timothy M Kaine",
@@ -9920,6 +10916,13 @@
      "date": "2019-05-16",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000384.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on the Budget"
    ]
   },
   {
@@ -9948,7 +10951,9 @@
      "date": "2014-09-18",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000354.jpg",
+   "committees": []
   },
   {
    "name": "Gary C Peters",
@@ -9990,6 +10995,13 @@
      "date": "2017-08-23",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000595.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Armed Services",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Homeland Security and Governmental Affairs"
    ]
   },
   {
@@ -10018,6 +11030,12 @@
      "date": "2025-03-19",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001241.jpg",
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Natural Resources",
+    "House Committee on Oversight and Government Reform"
    ]
   },
   {
@@ -10060,6 +11078,11 @@
      "date": "2025-06-03",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000612.jpg",
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Financial Services"
    ]
   },
   {
@@ -10102,6 +11125,11 @@
      "date": "2026-04-28",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000459.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -10144,6 +11172,14 @@
      "date": "2023-12-05",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M000355.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Appropriations",
+    "Senate Committee on Rules and Administration",
+    "Joint Committee on Printing",
+    "Joint Committee of Congress on the Library"
    ]
   },
   {
@@ -10172,6 +11208,12 @@
      "date": "2025-10-27",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001212.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Small Business"
    ]
   },
   {
@@ -10200,7 +11242,9 @@
      "date": "2021-09-09",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001297.jpg",
+   "committees": []
   },
   {
    "name": "Eric Cantor",
@@ -10228,7 +11272,9 @@
      "date": "2014-01-16",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001046.jpg",
+   "committees": []
   },
   {
    "name": "Thomas Massie",
@@ -10256,6 +11302,11 @@
      "date": "2020-07-14",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001184.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on the Judiciary"
    ]
   },
   {
@@ -10284,7 +11335,9 @@
      "date": "2021-02-17",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Lori Trahan",
@@ -10312,6 +11365,10 @@
      "date": "2021-12-27",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000482.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -10354,7 +11411,9 @@
      "date": "2014-10-15",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/O000170.jpg",
+   "committees": []
   },
   {
    "name": "Susan M Collins",
@@ -10396,6 +11455,12 @@
      "date": "2014-06-19",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001035.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Select Committee on Intelligence"
    ]
   },
   {
@@ -10438,6 +11503,12 @@
      "date": "2026-04-13",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000389.jpg",
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Oversight and Government Reform",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -10480,7 +11551,9 @@
      "date": "2025-05-23",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Sara Jacobs",
@@ -10522,6 +11595,11 @@
      "date": "2021-04-09",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000305.jpg",
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -10564,7 +11642,9 @@
      "date": "2021-03-23",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "David Cheston Rouzer",
@@ -10606,6 +11686,12 @@
      "date": "2022-01-14",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000603.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Science, Space, and Technology",
+    "House Committee on Agriculture"
    ]
   },
   {
@@ -10641,7 +11727,9 @@
      "date": "2021-06-24",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "James Banks",
@@ -10683,6 +11771,13 @@
      "date": "2025-02-18",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001299.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs"
    ]
   },
   {
@@ -10725,7 +11820,9 @@
      "date": "2018-11-01",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/A000367.jpg",
+   "committees": []
   },
   {
    "name": "Merrick B Garland",
@@ -10767,7 +11864,9 @@
      "date": "2021-06-02",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "David E. Price",
@@ -10809,7 +11908,9 @@
      "date": "2018-12-21",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000523.jpg",
+   "committees": []
   },
   {
    "name": "Ra\u00fal M. Grijalva",
@@ -10851,7 +11952,9 @@
      "date": "2020-08-25",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000551.jpg",
+   "committees": []
   },
   {
    "name": "Steve Knight",
@@ -10893,7 +11996,9 @@
      "date": "2018-01-16",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000387.jpg",
+   "committees": []
   },
   {
    "name": "Bill Pascrell Jr.",
@@ -10935,7 +12040,9 @@
      "date": "2019-12-30",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000096.jpg",
+   "committees": []
   },
   {
    "name": "Michael Whitaker",
@@ -10977,7 +12084,9 @@
      "date": "2024-08-21",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Julie Johnson",
@@ -11019,6 +12128,13 @@
      "date": "2025-02-12",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000310.jpg",
+   "committees": [
+    "Joint Committee of Congress on the Library",
+    "House Committee on Homeland Security",
+    "House Committee on Foreign Affairs",
+    "House Committee on House Administration"
    ]
   },
   {
@@ -11061,7 +12177,9 @@
      "date": "2022-07-22",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001274.jpg",
+   "committees": []
   },
   {
    "name": "Mark R Meadows",
@@ -11103,7 +12221,9 @@
      "date": "2016-06-17",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001187.jpg",
+   "committees": []
   },
   {
    "name": "Marie Newman",
@@ -11145,7 +12265,9 @@
      "date": "2021-03-01",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/N000192.jpg",
+   "committees": []
   },
   {
    "name": "Sean McMaster",
@@ -11187,7 +12309,9 @@
      "date": "2025-10-14",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Adam Kinzinger",
@@ -11229,7 +12353,9 @@
      "date": "2020-05-04",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000378.jpg",
+   "committees": []
   },
   {
    "name": "Cory A Booker",
@@ -11271,6 +12397,13 @@
      "date": "2014-04-08",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001288.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Small Business and Entrepreneurship",
+    "Senate Committee on the Judiciary"
    ]
   },
   {
@@ -11313,6 +12446,10 @@
      "date": "2014-10-29",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000797.jpg",
+   "committees": [
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -11355,7 +12492,9 @@
      "date": "2026-02-27",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Warren Davidson",
@@ -11397,6 +12536,11 @@
      "date": "2018-02-06",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000626.jpg",
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -11439,7 +12583,9 @@
      "date": "2015-08-21",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001051.jpg",
+   "committees": []
   },
   {
    "name": "Scott Bessent",
@@ -11474,7 +12620,9 @@
      "date": "2025-03-04",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "William F Hagerty",
@@ -11516,6 +12664,14 @@
      "date": "2021-12-28",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H000601.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Rules and Administration",
+    "Joint Committee on Printing"
    ]
   },
   {
@@ -11551,6 +12707,12 @@
      "date": "2016-02-29",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001196.jpg",
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Armed Services",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -11586,6 +12748,10 @@
      "date": "2015-02-20",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001188.jpg",
+   "committees": [
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -11621,6 +12787,13 @@
      "date": "2021-12-13",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001150.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Small Business and Entrepreneurship",
+    "Senate Committee on the Judiciary"
    ]
   },
   {
@@ -11663,6 +12836,10 @@
      "date": "2026-02-23",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001245.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology"
    ]
   },
   {
@@ -11705,6 +12882,12 @@
      "date": "2021-12-15",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000399.jpg",
+   "committees": [
+    "Joint Committee on Taxation",
+    "House Committee on Ways and Means",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -11747,7 +12930,9 @@
      "date": "2021-08-27",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Carlos Curbelo",
@@ -11789,7 +12974,9 @@
      "date": "2017-07-10",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001107.jpg",
+   "committees": []
   },
   {
    "name": "Blake Moore",
@@ -11831,6 +13018,11 @@
      "date": "2021-07-16",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001213.jpg",
+   "committees": [
+    "House Committee on Ways and Means",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -11873,7 +13065,9 @@
      "date": "2023-12-22",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Linda T. Sanchez",
@@ -11915,6 +13109,10 @@
      "date": "2025-10-28",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001156.jpg",
+   "committees": [
+    "House Committee on Ways and Means"
    ]
   },
   {
@@ -11957,6 +13155,11 @@
      "date": "2025-04-08",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001236.jpg",
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -11999,7 +13202,9 @@
      "date": "2017-06-30",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S000583.jpg",
+   "committees": []
   },
   {
    "name": "Arjun Mody",
@@ -12041,7 +13246,9 @@
      "date": "2026-01-30",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Brandon Gill",
@@ -12083,6 +13290,12 @@
      "date": "2025-10-29",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000603.jpg",
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Oversight and Government Reform",
+    "House Committee on the Budget"
    ]
   },
   {
@@ -12125,6 +13338,11 @@
      "date": "2020-03-30",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001204.jpg",
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on Small Business"
    ]
   },
   {
@@ -12167,6 +13385,12 @@
      "date": "2015-09-15",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000804.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Armed Services",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -12209,7 +13433,9 @@
      "date": "2023-11-27",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "James French Hill",
@@ -12251,6 +13477,11 @@
      "date": "2025-12-31",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001072.jpg",
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
    ]
   },
   {
@@ -12293,6 +13524,10 @@
      "date": "2025-06-05",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000110.jpg",
+   "committees": [
+    "House Committee on Financial Services"
    ]
   },
   {
@@ -12335,6 +13570,11 @@
      "date": "2026-04-09",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B000668.jpg",
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -12377,7 +13617,9 @@
      "date": "2018-11-29",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/O000171.jpg",
+   "committees": []
   },
   {
    "name": "Robert E. Latta",
@@ -12419,6 +13661,10 @@
      "date": "2025-06-05",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000566.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -12461,6 +13707,14 @@
      "date": "2021-06-16",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000805.jpg",
+   "committees": [
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Finance",
+    "Senate Committee on Rules and Administration",
+    "Senate Committee on the Budget",
+    "Senate Select Committee on Intelligence"
    ]
   },
   {
@@ -12503,7 +13757,9 @@
      "date": "2018-09-10",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000581.jpg",
+   "committees": []
   },
   {
    "name": "John McGuire",
@@ -12545,6 +13801,11 @@
      "date": "2026-04-15",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001239.jpg",
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Oversight and Government Reform"
    ]
   },
   {
@@ -12587,6 +13848,11 @@
      "date": "2024-12-18",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000595.jpg",
+   "committees": [
+    "House Committee on Appropriations",
+    "House Committee on Education and Workforce"
    ]
   },
   {
@@ -12629,6 +13895,15 @@
      "date": "2016-01-05",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000802.jpg",
+   "committees": [
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Finance",
+    "Senate Committee on the Budget",
+    "Senate Committee on the Judiciary",
+    "United States Senate Caucus on International Narcotics Control",
+    "Commission on Security and Cooperation in Europe"
    ]
   },
   {
@@ -12671,6 +13946,11 @@
      "date": "2025-07-01",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000048.jpg",
+   "committees": [
+    "House Committee on Homeland Security",
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -12713,7 +13993,9 @@
      "date": "2020-08-06",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "C. Scott Franklin",
@@ -12755,6 +14037,11 @@
      "date": "2023-09-11",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000472.jpg",
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on Appropriations"
    ]
   },
   {
@@ -12797,7 +14084,9 @@
      "date": "2019-04-24",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "committees": []
   },
   {
    "name": "Marjorie Taylor Greene",
@@ -12839,7 +14128,9 @@
      "date": "2025-04-04",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000596.jpg",
+   "committees": []
   },
   {
    "name": "Rodney Leland Blum",
@@ -12881,7 +14172,9 @@
      "date": "2016-09-26",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001294.jpg",
+   "committees": []
   },
   {
    "name": "Louise McIntosh Slaughter",
@@ -12923,7 +14216,9 @@
      "date": "2014-08-12",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S000480.jpg",
+   "committees": []
   },
   {
    "name": "Virginia Foxx",
@@ -12965,6 +14260,12 @@
      "date": "2017-03-20",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000450.jpg",
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Education and Workforce",
+    "House Committee on Rules"
    ]
   },
   {
@@ -13007,7 +14308,9 @@
      "date": "2021-02-17",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000577.jpg",
+   "committees": []
   },
   {
    "name": "Gary C. Peters",
@@ -13049,6 +14352,13 @@
      "date": "2014-11-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000595.jpg",
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Armed Services",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Homeland Security and Governmental Affairs"
    ]
   },
   {
@@ -13091,6 +14401,11 @@
      "date": "2024-06-06",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001136.jpg",
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on Education and Workforce"
    ]
   },
   {
@@ -13133,6 +14448,11 @@
      "date": "2023-05-05",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000628.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -13175,6 +14495,11 @@
      "date": "2026-02-05",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001157.jpg",
+   "committees": [
+    "House Committee on Homeland Security",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -13217,6 +14542,13 @@
      "date": "2020-08-10",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001189.jpg",
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services",
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Rules"
    ]
   },
   {
@@ -13259,7 +14591,9 @@
      "date": "2016-01-12",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000589.jpg",
+   "committees": []
   },
   {
    "name": "Douglas J Burgum",
@@ -13301,7 +14635,9 @@
      "date": "2025-02-05",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Jake Auchincloss",
@@ -13343,6 +14679,10 @@
      "date": "2024-11-18",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/A000148.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce"
    ]
   },
   {
@@ -13385,6 +14725,13 @@
      "date": "2015-11-29",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001098.jpg",
+   "committees": [
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Foreign Relations",
+    "Senate Committee on Rules and Administration",
+    "Senate Committee on the Judiciary"
    ]
   },
   {
@@ -13427,6 +14774,13 @@
      "date": "2020-09-02",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001299.jpg",
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs"
    ]
   },
   {
@@ -13469,6 +14823,11 @@
      "date": "2020-08-07",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000628.jpg",
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
    ]
   },
   {
@@ -13511,6 +14870,11 @@
      "date": "2020-04-17",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001068.jpg",
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Permanent Select Committee on Intelligence"
    ]
   },
   {
@@ -13553,7 +14917,9 @@
      "date": "2020-03-25",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Maria Elvira Salazar",
@@ -13595,6 +14961,11 @@
      "date": "2024-05-01",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S000168.jpg",
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on Foreign Affairs"
    ]
   },
   {
@@ -13637,7 +15008,9 @@
      "date": "2023-03-24",
      "sharp": true
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000590.jpg",
+   "committees": []
   },
   {
    "name": "Bill Flores",
@@ -13679,7 +15052,9 @@
      "date": "2019-05-08",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000461.jpg",
+   "committees": []
   },
   {
    "name": "John Hoeven",
@@ -13721,6 +15096,13 @@
      "date": "2019-01-04",
      "sharp": false
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001061.jpg",
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Appropriations",
+    "Senate Committee on Energy and Natural Resources",
+    "Senate Committee on Indian Affairs"
    ]
   },
   {
@@ -13763,7 +15145,9 @@
      "date": "2021-08-23",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Jared Moskowitz",
@@ -13805,6 +15189,12 @@
      "date": "2025-04-16",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001217.jpg",
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Foreign Affairs",
+    "House Select Subcommittee to Investigate the Remaining Questions Surrounding January 6, 2021"
    ]
   },
   {
@@ -13847,7 +15237,9 @@
      "date": "2020-03-11",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "David H McCormick",
@@ -13889,6 +15281,14 @@
      "date": "2025-04-09",
      "sharp": true
     }
+   ],
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001243.jpg",
+   "committees": [
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Energy and Natural Resources",
+    "Senate Committee on Foreign Relations",
+    "Joint Economic Committee",
+    "Senate Special Committee on Aging"
    ]
   },
   {
@@ -13931,7 +15331,9 @@
      "date": "2020-06-22",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   },
   {
    "name": "Frank J Bisignano",
@@ -13973,7 +15375,9 @@
      "date": "2025-12-04",
      "sharp": false
     }
-   ]
+   ],
+   "photo": "",
+   "committees": []
   }
  ]
 }
