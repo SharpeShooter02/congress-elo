@@ -431,6 +431,7 @@ def build():
         return members[key]
 
     committees = load_committees()
+    flagged = []   # individual sharp-call trades, for the "sketchiest trades" lists
 
     for t in scored:
         m = M(t["name"], t["chamber"], t.get("party", ""))
@@ -454,7 +455,14 @@ def build():
         if t.get("ex30") is not None:
             eff30 = t["ex30"] if t["side"] == "buy" else -t["ex30"]
         is_sharp = eff30 is not None and eff30 >= FLAG_PCT   # beat market 15%+ within a month
-        if is_sharp: m["sharp"] += 1
+        if is_sharp:
+            m["sharp"] += 1
+            flagged.append({
+                "name": t["name"], "party": t.get("party", ""), "chamber": t["chamber"],
+                "photo": t.get("photo", ""), "ticker": t.get("ticker", "") or "—",
+                "side": t["side"], "date": t["date"].isoformat(), "excess": round(eff30, 1),
+                "committees": committees.get(t.get("bioguide", ""), []),
+            })
         m["top"].append((eff, t.get("ticker", ""), t["side"], t["date"].isoformat(), is_sharp))
 
     out = []
@@ -484,13 +492,15 @@ def build():
     out.sort(key=lambda x: -x["elo"])
 
     generated = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
+    flagged_top = sorted(flagged, key=lambda x: -x["excess"])[:250]
     payload = {"generated": generated, "holding_days": HOLDING_DAYS,
-               "trades_scored": len(scored), "members": out}
+               "trades_scored": len(scored), "members": out, "flagged": flagged_top}
 
     # data.json  -> fetched by the browser when hosted over http (enables Reload)
     OUT_JSON.write_text(json.dumps(payload, indent=1))
     # data.js    -> loaded via <script> so it also works from a local file:// open
     OUT_JS.write_text("window.REAL_DATA = " + json.dumps(out) + ";\n"
+                      "window.REAL_FLAGGED = " + json.dumps(flagged_top) + ";\n"
                       "window.REAL_META = " + json.dumps({"generated": generated}) + ";\n")
 
     log(f"[done] {len(out)} members, {len(scored)} trades scored")
