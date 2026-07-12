@@ -31,8 +31,9 @@
     background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
   .ctl{display:flex;flex-direction:column;gap:5px;}
   .ctl label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
-  select,input[type=range]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+  select,input[type=range],input[type=text]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
     border-radius:8px;padding:7px 10px;font-size:14px;}
+  input[type=text]{width:100%;}
   .rangeval{color:var(--accent);font-weight:600;}
   table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);
     border-radius:12px;overflow:hidden;}
@@ -49,6 +50,7 @@
   .D{background:rgba(91,141,239,.16);color:var(--dem);}
   .R{background:rgba(240,101,106,.16);color:var(--rep);}
   .I{background:rgba(176,124,240,.16);color:var(--ind);}
+  .U{background:rgba(154,167,180,.16);color:var(--muted);}
   .elo{font-weight:700;font-variant-numeric:tabular-nums;}
   .pos{color:var(--win);} .neg{color:var(--loss);}
   .num{font-variant-numeric:tabular-nums;}
@@ -95,13 +97,17 @@
   </div>
 
   <div class="controls">
+    <div class="ctl" style="flex:1;min-width:170px">
+      <label>Search</label>
+      <input type="text" id="search" placeholder="Member name…">
+    </div>
     <div class="ctl">
       <label>Chamber</label>
       <select id="chamber"><option>All</option><option>House</option><option>Senate</option><option>Executive</option></select>
     </div>
     <div class="ctl">
       <label>Party</label>
-      <select id="party"><option>All</option><option value="D">Democrat</option><option value="R">Republican</option><option value="I">Independent</option></select>
+      <select id="party"><option value="All">All</option><option value="D">DEM</option><option value="R">Rep</option><option value="U">Unlisted</option></select>
     </div>
     <div class="ctl">
       <label>Min. trades: <span class="rangeval" id="mtv">5</span></label>
@@ -137,13 +143,22 @@
     </tr></thead>
     <tbody id="body"></tbody>
   </table>
+  <button id="moreMembers" class="reload" style="display:none;margin-top:12px">Show more</button>
 
   <div id="flaggedwrap" style="margin-top:30px">
-    <h2 style="font-size:19px;margin:0 0 4px">🚩 Sketchiest trades</h2>
-    <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b> (not disclosed). Each shows the member, <b>what the company does</b>, and <b>every committee they currently sit on</b> — so you can judge for yourself whether they had a hand in the industries they were trading. A flag for scrutiny, not proof.</p>
+    <h2 style="font-size:19px;margin:0 0 4px">🚩 Sharpest trades</h2>
+    <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b>. Each shows the member, <b>what the company does</b>, and <b>every committee they currently sit on</b> — so you can judge for yourself whether they had a hand in the industries they were trading. A flag for scrutiny, not proof.</p>
     <div class="fcols">
-      <div class="fcol"><h3 class="fh">Recent — last 12 months</h3><div id="fRecent"></div></div>
-      <div class="fcol"><h3 class="fh">Earlier</h3><div id="fPast"></div></div>
+      <div class="fcol">
+        <h3 class="fh">Last 12 months</h3>
+        <div id="fRecent"></div>
+        <button id="moreRecent" class="reload" style="display:none;margin-top:6px"></button>
+      </div>
+      <div class="fcol">
+        <h3 class="fh">All time <span id="fRange" style="text-transform:none;color:var(--muted);font-weight:400"></span></h3>
+        <div id="fAll"></div>
+        <button id="moreAll" class="reload" style="display:none;margin-top:6px"></button>
+      </div>
     </div>
   </div>
 
@@ -192,16 +207,17 @@ async function loadData(){
   try{
     const r=await fetch("data.json?t="+Date.now(),{cache:"no-store"});
     if(r.ok){const j=await r.json();
-      if(j&&Array.isArray(j.members)&&j.members.length) return {members:j.members,flagged:j.flagged||[],generated:j.generated,src:"json"};}
+      if(j&&Array.isArray(j.members)&&j.members.length) return {members:j.members,flagged:j.flagged||[],earliest:j.earliest||"",generated:j.generated,src:"json"};}
   }catch(e){/* not hosted / no file */}
   if(Array.isArray(window.REAL_DATA)&&window.REAL_DATA.length)
-    return {members:window.REAL_DATA,flagged:window.REAL_FLAGGED||[],generated:(window.REAL_META||{}).generated,src:"js"};
-  return {members:buildSample(20260709),flagged:[],generated:null,src:"sample"};
+    return {members:window.REAL_DATA,flagged:window.REAL_FLAGGED||[],earliest:(window.REAL_META||{}).earliest||"",generated:(window.REAL_META||{}).generated,src:"js"};
+  return {members:buildSample(20260709),flagged:[],earliest:"",generated:null,src:"sample"};
 }
 function applyState(res){
   IS_REAL = res.src!=="sample";
   DATA = res.members;
   FLAGGED = res.flagged||[];
+  DATA_EARLIEST = res.earliest||"";
   const b=document.getElementById("badge"), upd=document.getElementById("updated"), foot=document.getElementById("foot");
   if(IS_REAL){
     b.textContent="Live data · "+DATA.length+" members";
@@ -218,9 +234,10 @@ function applyState(res){
 }
 
 // ---------- rendering ----------
-const PARTY_NAME={D:"Dem",R:"Rep",I:"Ind"};
-function partyName(p){return PARTY_NAME[p]||"—";}
-let sortKey="elo", sortDir=-1;
+const PARTY_NAME={D:"DEM",R:"Rep"};
+function partyName(p){return PARTY_NAME[p]||"Unlisted";}
+function partyCls(p){return (p==="D"||p==="R")?p:"U";}
+let sortKey="elo", sortDir=-1, shownMembers=20, shownRecent=20, shownAll=20, DATA_EARLIEST="";
 function fmtPct(x){const s=(x>=0?"+":"")+Number(x).toFixed(1)+"%";return `<span class="${x>=0?'pos':'neg'} num">${s}</span>`;}
 function fitemHtml(t){
   const side=t.side==="sell"?"SOLD":"BOUGHT";
@@ -232,18 +249,25 @@ function fitemHtml(t){
   const cm=(t.committees||[]);
   const comm=cm.length?`<div class="fcomm"><b>Committees:</b> ${cm.join(" · ")}</div>`:`<div class="fcomm" style="opacity:.6"><b>Committees:</b> — (not a current member)</div>`;
   return `<div class="fitem">${av}<div class="fmain">
-    <div><b>${t.name}</b> <span class="pill ${t.party||''}">${partyName(t.party)}</span> · ${t.chamber}</div>
+    <div><b>${t.name}</b> <span class="pill ${partyCls(t.party)}">${partyName(t.party)}</span> · ${t.chamber}</div>
     <div class="fmeta">${side} <b>${co}</b> <span class="pos">+${Number(t.excess).toFixed(0)}%</span> vs market within a month · ${d}</div>
     ${sectLine}${comm}</div></div>`;
 }
+function renderFlist(el, arr, shown, btnId){
+  el.innerHTML = arr.slice(0, shown).map(fitemHtml).join("") || '<span style="color:var(--muted)">None.</span>';
+  const btn=document.getElementById(btnId);
+  if(btn){ if(arr.length>shown){ btn.style.display=""; btn.textContent=`Show 20 more (${arr.length-shown} left)`; } else btn.style.display="none"; }
+}
 function renderFlagged(){
-  const rEl=document.getElementById("fRecent"), pEl=document.getElementById("fPast");
-  if(!rEl||!pEl) return;
-  if(!FLAGGED.length){ rEl.innerHTML=pEl.innerHTML='<span style="color:var(--muted)">No flagged trades yet — rebuild the data.</span>'; return; }
-  const cutoff=Date.now()-365*864e5, recent=[], past=[];
-  FLAGGED.forEach(t=>{ (new Date(t.date).getTime()>=cutoff?recent:past).push(t); });
-  rEl.innerHTML = recent.slice(0,20).map(fitemHtml).join("")||'<span style="color:var(--muted)">None in the last year.</span>';
-  pEl.innerHTML = past.slice(0,20).map(fitemHtml).join("")||'<span style="color:var(--muted)">None.</span>';
+  const rEl=document.getElementById("fRecent"), aEl=document.getElementById("fAll");
+  if(!rEl||!aEl) return;
+  const rangeEl=document.getElementById("fRange");
+  if(rangeEl) rangeEl.textContent = DATA_EARLIEST ? "· data since "+new Date(DATA_EARLIEST).toLocaleDateString(undefined,{year:"numeric",month:"short"}) : "";
+  if(!FLAGGED.length){ rEl.innerHTML=aEl.innerHTML='<span style="color:var(--muted)">No flagged trades yet — rebuild the data.</span>'; return; }
+  const cutoff=Date.now()-365*864e5;
+  const recent=FLAGGED.filter(t=>new Date(t.date).getTime()>=cutoff);
+  renderFlist(rEl, recent, shownRecent, "moreRecent");
+  renderFlist(aEl, FLAGGED, shownAll, "moreAll");
 }
 function detailHtml(m){
   const tt=(m.top_trades||[]);
@@ -264,16 +288,23 @@ function render(){
   const chamber=document.getElementById("chamber").value;
   const party=document.getElementById("party").value;
   const mint=+document.getElementById("mintrades").value;
-  let rows=DATA.filter(m=>(chamber==="All"||m.chamber===chamber)&&(party==="All"||m.party===party)&&m.matches>=mint);
+  const q=(document.getElementById("search").value||"").trim().toLowerCase();
+  let rows=DATA.filter(m=>
+    (chamber==="All"||m.chamber===chamber) &&
+    (party==="All" ? true : (party==="U" ? (m.party!=="D"&&m.party!=="R") : m.party===party)) &&
+    (!q || (m.name||"").toLowerCase().includes(q)) &&
+    m.matches>=mint);
   rows.sort((a,b)=>{let av=a[sortKey],bv=b[sortKey];
     if(typeof av==="string"){av=av.toLowerCase();bv=(bv||"").toLowerCase();return sortDir*(av<bv?-1:av>bv?1:0);}
     return sortDir*((av||0)-(bv||0));});
+  const total=rows.length;
+  const vis=rows.slice(0, shownMembers);
   const body=document.getElementById("body");
-  body.innerHTML=rows.map((m,i)=>`
+  body.innerHTML=vis.map((m,i)=>`
     <tr class="mrow ${i===0&&sortKey==='elo'&&sortDir===-1?'top1':''}">
       <td class="rank">${i+1}</td>
       <td class="name">${m.photo?`<img class="av" src="${m.photo}" loading="lazy" alt="" onerror="this.style.display='none'">`:''}${m.name}${m.sharp?`<span class="flag" title="${m.sharp} sharp call${m.sharp>1?'s':''}: beat the market 15%+ within a month of the trade — flagged for scrutiny, not proof">🚩${m.sharp}</span>`:''}</td>
-      <td><span class="pill ${m.party||''}">${partyName(m.party)}</span></td>
+      <td><span class="pill ${partyCls(m.party)}">${partyName(m.party)}</span></td>
       <td>${m.chamber}</td>
       <td class="elo">${m.elo}</td>
       <td class="num">${m.matches}</td>
@@ -284,6 +315,8 @@ function render(){
       <td>${fmtPct(m.avgexcess)}</td>
     </tr>
     <tr class="detail" style="display:none"><td colspan="11"><div class="detailwrap">${detailHtml(m)}</div></td></tr>`).join("")||`<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:26px">No members match these filters.</td></tr>`;
+  const mb=document.getElementById("moreMembers");
+  if(mb){ if(total>shownMembers){ mb.style.display=""; mb.textContent=`Show more (${total-shownMembers} more)`; } else { mb.style.display="none"; } }
   document.querySelectorAll("#tbl th").forEach(th=>{
     const k=th.dataset.k; th.classList.toggle("sorted",k===sortKey);
     const a=th.querySelector(".arrow"); if(a)a.remove();
@@ -297,12 +330,17 @@ document.querySelectorAll("#tbl th").forEach(th=>{
     let k=th.dataset.k; if(k==="rank")return;
     if(k==="trades")k="matches"; if(k==="record")k="wins";
     if(k===sortKey)sortDir*=-1; else {sortKey=k; sortDir=(k==="name"||k==="party"||k==="chamber")?1:-1;}
-    render();
+    shownMembers=20; render();
   });
 });
-document.getElementById("sortsel").addEventListener("change",e=>{sortKey=e.target.value==="trades"?"matches":e.target.value;sortDir=-1;render();});
-["chamber","party"].forEach(id=>document.getElementById(id).addEventListener("change",render));
-document.getElementById("mintrades").addEventListener("input",e=>{document.getElementById("mtv").textContent=e.target.value;render();});
+function rerender(){shownMembers=20;render();}
+document.getElementById("sortsel").addEventListener("change",e=>{sortKey=e.target.value==="trades"?"matches":e.target.value;sortDir=-1;rerender();});
+["chamber","party"].forEach(id=>document.getElementById(id).addEventListener("change",rerender));
+document.getElementById("search").addEventListener("input",rerender);
+document.getElementById("mintrades").addEventListener("input",e=>{document.getElementById("mtv").textContent=e.target.value;rerender();});
+document.getElementById("moreMembers").addEventListener("click",()=>{shownMembers+=20;render();});
+document.getElementById("moreRecent").addEventListener("click",()=>{shownRecent+=20;renderFlagged();});
+document.getElementById("moreAll").addEventListener("click",()=>{shownAll+=20;renderFlagged();});
 document.getElementById("reload").addEventListener("click",async()=>{
   const btn=document.getElementById("reload"); btn.disabled=true; const old=btn.textContent; btn.textContent="⟳ Loading…";
   applyState(await loadData()); render();

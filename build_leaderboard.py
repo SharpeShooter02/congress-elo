@@ -525,7 +525,10 @@ def build():
 
     generated = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
     flagged_top = sorted(flagged, key=lambda x: -x["excess"])[:250]
-    payload = {"generated": generated, "holding_days": HOLDING_DAYS,
+    earliest = min((t["date"] for t in scored), default=None)
+    earliest_iso = earliest.isoformat() if earliest else ""
+    meta = {"generated": generated, "earliest": earliest_iso}
+    payload = {"generated": generated, "holding_days": HOLDING_DAYS, "earliest": earliest_iso,
                "trades_scored": len(scored), "members": out, "flagged": flagged_top}
 
     # data.json  -> fetched by the browser when hosted over http (enables Reload)
@@ -533,7 +536,7 @@ def build():
     # data.js    -> loaded via <script> so it also works from a local file:// open
     OUT_JS.write_text("window.REAL_DATA = " + json.dumps(out) + ";\n"
                       "window.REAL_FLAGGED = " + json.dumps(flagged_top) + ";\n"
-                      "window.REAL_META = " + json.dumps({"generated": generated}) + ";\n")
+                      "window.REAL_META = " + json.dumps(meta) + ";\n")
 
     log(f"[done] {len(out)} members, {len(scored)} trades scored")
     log(f"  wrote {OUT_JSON.name} and {OUT_JS.name}  (generated {generated})")
