@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-12T03:09:05+00:00",
+ "generated": "2026-07-12T18:48:54+00:00",
  "holding_days": 30,
  "trades_scored": 41846,
  "members": [
@@ -15377,6 +15377,3308 @@
     }
    ],
    "photo": "",
+   "committees": []
+  }
+ ],
+ "flagged": [
+  {
+   "name": "Austin Scott",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001189.jpg",
+   "ticker": "FCEL",
+   "side": "buy",
+   "date": "2020-10-30",
+   "excess": 399.2,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services",
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Rules"
+   ]
+  },
+  {
+   "name": "Nancy Pelosi",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000197.jpg",
+   "ticker": "TEM",
+   "side": "buy",
+   "date": "2025-01-14",
+   "excess": 158.5,
+   "committees": []
+  },
+  {
+   "name": "Donald Sternoff Beyer Jr",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001292.jpg",
+   "ticker": "EDIT",
+   "side": "buy",
+   "date": "2020-11-17",
+   "excess": 115.0,
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Austin Scott",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001189.jpg",
+   "ticker": "KPLT",
+   "side": "buy",
+   "date": "2021-08-13",
+   "excess": 101.8,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services",
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Rules"
+   ]
+  },
+  {
+   "name": "Ed Whitfield",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000413.jpg",
+   "ticker": "CBI",
+   "side": "buy",
+   "date": "2014-09-25",
+   "excess": 100.2,
+   "committees": []
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "INTC",
+   "side": "buy",
+   "date": "2026-04-07",
+   "excess": 96.3,
+   "committees": []
+  },
+  {
+   "name": "Zoe Lofgren",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000397.jpg",
+   "ticker": "LCID",
+   "side": "buy",
+   "date": "2021-10-13",
+   "excess": 87.2,
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on the Judiciary"
+   ]
+  },
+  {
+   "name": "Austin Scott",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001189.jpg",
+   "ticker": "BE",
+   "side": "buy",
+   "date": "2020-10-30",
+   "excess": 83.2,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services",
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Rules"
+   ]
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "AMTX",
+   "side": "buy",
+   "date": "2021-03-04",
+   "excess": 77.2,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "AMTX",
+   "side": "buy",
+   "date": "2021-03-04",
+   "excess": 77.2,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "AMTX",
+   "side": "buy",
+   "date": "2021-03-04",
+   "excess": 77.2,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "AMTX",
+   "side": "buy",
+   "date": "2021-03-04",
+   "excess": 77.2,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Dean Phillips",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000616.jpg",
+   "ticker": "AAL",
+   "side": "buy",
+   "date": "2020-05-13",
+   "excess": 75.9,
+   "committees": []
+  },
+  {
+   "name": "James E Banks",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001299.jpg",
+   "ticker": "PASO",
+   "side": "sell",
+   "date": "2020-09-01",
+   "excess": 75.2,
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "MGM",
+   "side": "buy",
+   "date": "2020-03-18",
+   "excess": 73.7,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Thomas Suozzi",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001201.jpg",
+   "ticker": "NIO",
+   "side": "buy",
+   "date": "2020-10-05",
+   "excess": 73.6,
+   "committees": [
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Julie Johnson",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000310.jpg",
+   "ticker": "PLTR",
+   "side": "buy",
+   "date": "2025-01-15",
+   "excess": 72.1,
+   "committees": [
+    "Joint Committee of Congress on the Library",
+    "House Committee on Homeland Security",
+    "House Committee on Foreign Affairs",
+    "House Committee on House Administration"
+   ]
+  },
+  {
+   "name": "Sheldon Whitehouse",
+   "party": "D",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000802.jpg",
+   "ticker": "GPRO",
+   "side": "buy",
+   "date": "2014-08-14",
+   "excess": 68.7,
+   "committees": [
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Finance",
+    "Senate Committee on the Budget",
+    "Senate Committee on the Judiciary",
+    "United States Senate Caucus on International Narcotics Control",
+    "Commission on Security and Cooperation in Europe"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "AMD",
+   "side": "buy",
+   "date": "2026-04-14",
+   "excess": 68.6,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "SNOW",
+   "side": "buy",
+   "date": "2026-05-05",
+   "excess": 67.8,
+   "committees": []
+  },
+  {
+   "name": "John Rutherford",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/R000609.jpg",
+   "ticker": "NCLH",
+   "side": "buy",
+   "date": "2020-05-11",
+   "excess": 67.2,
+   "committees": [
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Kathy Castor",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001066.jpg",
+   "ticker": "AAL",
+   "side": "buy",
+   "date": "2020-05-19",
+   "excess": 64.5,
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
+   ]
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "INTC",
+   "side": "buy",
+   "date": "2026-04-15",
+   "excess": 62.0,
+   "committees": []
+  },
+  {
+   "name": "Christopher L. Jacobs",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000020.jpg",
+   "ticker": "PLUG",
+   "side": "buy",
+   "date": "2022-07-18",
+   "excess": 61.8,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "AVAV",
+   "side": "buy",
+   "date": "2025-12-15",
+   "excess": 60.6,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "AMD",
+   "side": "buy",
+   "date": "2026-04-23",
+   "excess": 59.3,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "MU",
+   "side": "buy",
+   "date": "2026-05-21",
+   "excess": 58.6,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Donald Sternoff Beyer Jr",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001292.jpg",
+   "ticker": "NTLA",
+   "side": "buy",
+   "date": "2020-11-18",
+   "excess": 57.9,
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "TLRY",
+   "side": "sell",
+   "date": "2021-02-10",
+   "excess": 57.7,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "TLRY",
+   "side": "sell",
+   "date": "2021-02-10",
+   "excess": 57.7,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Daniel Goldman",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000599.jpg",
+   "ticker": "WAL",
+   "side": "sell",
+   "date": "2023-03-06",
+   "excess": 56.6,
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Homeland Security"
+   ]
+  },
+  {
+   "name": "James E Banks",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001299.jpg",
+   "ticker": "PASO",
+   "side": "sell",
+   "date": "2020-09-09",
+   "excess": 55.6,
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs"
+   ]
+  },
+  {
+   "name": "Marjorie Taylor Greene",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000596.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2024-10-21",
+   "excess": 55.2,
+   "committees": []
+  },
+  {
+   "name": "Michael Garcia",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000061.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2020-11-13",
+   "excess": 54.9,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "SNDK",
+   "side": "buy",
+   "date": "2026-01-09",
+   "excess": 54.6,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "AMTX",
+   "side": "sell",
+   "date": "2021-04-12",
+   "excess": 54.4,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "AMTX",
+   "side": "sell",
+   "date": "2021-04-12",
+   "excess": 54.4,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Dean Phillips",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000616.jpg",
+   "ticker": "RCL",
+   "side": "buy",
+   "date": "2020-04-02",
+   "excess": 54.2,
+   "committees": []
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "BYND",
+   "side": "buy",
+   "date": "2019-12-30",
+   "excess": 53.3,
+   "committees": []
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "BYND",
+   "side": "buy",
+   "date": "2019-12-30",
+   "excess": 53.3,
+   "committees": []
+  },
+  {
+   "name": "Thomas H Tuberville",
+   "party": "R",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000278.jpg",
+   "ticker": "SSYS",
+   "side": "sell",
+   "date": "2021-02-04",
+   "excess": 52.7,
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Armed Services",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs",
+    "Senate Special Committee on Aging"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "LYFT",
+   "side": "buy",
+   "date": "2020-10-16",
+   "excess": 52.3,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Greg Gianforte",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000584.jpg",
+   "ticker": "BBBY",
+   "side": "sell",
+   "date": "2019-09-11",
+   "excess": 52.1,
+   "committees": []
+  },
+  {
+   "name": "Julie Johnson",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000310.jpg",
+   "ticker": "SMCI",
+   "side": "buy",
+   "date": "2025-01-15",
+   "excess": 51.8,
+   "committees": [
+    "Joint Committee of Congress on the Library",
+    "House Committee on Homeland Security",
+    "House Committee on Foreign Affairs",
+    "House Committee on House Administration"
+   ]
+  },
+  {
+   "name": "Suzan K. DelBene",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000617.jpg",
+   "ticker": "CBI",
+   "side": "sell",
+   "date": "2014-06-18",
+   "excess": 51.1,
+   "committees": [
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "BE",
+   "side": "buy",
+   "date": "2025-09-26",
+   "excess": 50.9,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "BBVA",
+   "side": "buy",
+   "date": "2020-10-16",
+   "excess": 50.7,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "BABA",
+   "side": "buy",
+   "date": "2025-01-16",
+   "excess": 50.7,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Alan S. Lowenthal",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "ticker": "SPCE",
+   "side": "sell",
+   "date": "2021-02-04",
+   "excess": 50.2,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "AGIO",
+   "side": "buy",
+   "date": "2024-01-24",
+   "excess": 48.8,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "John Fetterman",
+   "party": "D",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000479.jpg",
+   "ticker": "MU",
+   "side": "buy",
+   "date": "2026-03-30",
+   "excess": 48.6,
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Homeland Security and Governmental Affairs",
+    "Commission on Security and Cooperation in Europe"
+   ]
+  },
+  {
+   "name": "James E Banks",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001299.jpg",
+   "ticker": "RBLX",
+   "side": "buy",
+   "date": "2021-11-02",
+   "excess": 48.1,
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "SEI",
+   "side": "buy",
+   "date": "2025-09-02",
+   "excess": 47.4,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Susan A. Davis",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000598.jpg",
+   "ticker": "RCL",
+   "side": "sell",
+   "date": "2020-02-11",
+   "excess": 47.1,
+   "committees": []
+  },
+  {
+   "name": "Rob Bresnahan",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001327.jpg",
+   "ticker": "ELF",
+   "side": "sell",
+   "date": "2025-01-13",
+   "excess": 46.9,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2024-11-14",
+   "excess": 46.7,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "Z",
+   "side": "sell",
+   "date": "2021-10-28",
+   "excess": 46.2,
+   "committees": []
+  },
+  {
+   "name": "Susie Lee",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000590.jpg",
+   "ticker": "OKE",
+   "side": "sell",
+   "date": "2020-02-24",
+   "excess": 46.0,
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Dan Newhouse",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/N000189.jpg",
+   "ticker": "UNH",
+   "side": "sell",
+   "date": "2025-04-11",
+   "excess": 45.8,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Appropriations",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
+   ]
+  },
+  {
+   "name": "Maria Elvira Salazar",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S000168.jpg",
+   "ticker": "MRVL",
+   "side": "buy",
+   "date": "2026-04-06",
+   "excess": 45.8,
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Thomas Suozzi",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001201.jpg",
+   "ticker": "FCEL",
+   "side": "buy",
+   "date": "2020-12-02",
+   "excess": 45.7,
+   "committees": [
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Tim Moore",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001236.jpg",
+   "ticker": "TQQQ",
+   "side": "buy",
+   "date": "2025-04-17",
+   "excess": 45.7,
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on the Budget"
+   ]
+  },
+  {
+   "name": "Jefferson Shreve",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001229.jpg",
+   "ticker": "PCVX",
+   "side": "sell",
+   "date": "2025-03-05",
+   "excess": 45.5,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Michael Garcia",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000061.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2020-11-17",
+   "excess": 45.4,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "ZTS",
+   "side": "sell",
+   "date": "2026-04-14",
+   "excess": 45.3,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "James E Banks",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001299.jpg",
+   "ticker": "PASO",
+   "side": "sell",
+   "date": "2020-09-02",
+   "excess": 45.1,
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs"
+   ]
+  },
+  {
+   "name": "Donald Sternoff Beyer Jr",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001292.jpg",
+   "ticker": "TDOC",
+   "side": "buy",
+   "date": "2020-01-28",
+   "excess": 45.0,
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Earl Blumenauer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B000574.jpg",
+   "ticker": "BROS",
+   "side": "buy",
+   "date": "2021-09-15",
+   "excess": 44.8,
+   "committees": []
+  },
+  {
+   "name": "Earl Blumenauer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B000574.jpg",
+   "ticker": "BROS",
+   "side": "buy",
+   "date": "2021-09-15",
+   "excess": 44.8,
+   "committees": []
+  },
+  {
+   "name": "Earl Blumenauer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B000574.jpg",
+   "ticker": "BROS",
+   "side": "buy",
+   "date": "2021-09-15",
+   "excess": 44.8,
+   "committees": []
+  },
+  {
+   "name": "Rohit Khanna",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000389.jpg",
+   "ticker": "INTC",
+   "side": "buy",
+   "date": "2026-04-24",
+   "excess": 44.7,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Oversight and Government Reform",
+    "House Select Committee on the Strategic Competition Between the United States and the Chinese Communist Party"
+   ]
+  },
+  {
+   "name": "James Comer",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001108.jpg",
+   "ticker": "PLTR",
+   "side": "buy",
+   "date": "2025-01-21",
+   "excess": 44.3,
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Education and Workforce"
+   ]
+  },
+  {
+   "name": "Susie Lee",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000590.jpg",
+   "ticker": "USFD",
+   "side": "buy",
+   "date": "2020-11-04",
+   "excess": 44.0,
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Kathy Manning",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001135.jpg",
+   "ticker": "NVDA",
+   "side": "buy",
+   "date": "2023-04-28",
+   "excess": 43.7,
+   "committees": []
+  },
+  {
+   "name": "Kathy Manning",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001135.jpg",
+   "ticker": "NVDA",
+   "side": "buy",
+   "date": "2023-04-28",
+   "excess": 43.7,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "SRPT",
+   "side": "sell",
+   "date": "2025-04-14",
+   "excess": 43.6,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Byron Donalds",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000032.jpg",
+   "ticker": "MRVL",
+   "side": "buy",
+   "date": "2026-04-02",
+   "excess": 43.4,
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Byron Donalds",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000032.jpg",
+   "ticker": "MRVL",
+   "side": "buy",
+   "date": "2026-04-02",
+   "excess": 43.4,
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "AMD",
+   "side": "buy",
+   "date": "2026-04-27",
+   "excess": 43.3,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Rob Bresnahan",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001327.jpg",
+   "ticker": "TTD",
+   "side": "sell",
+   "date": "2025-02-10",
+   "excess": 43.2,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "ARQT",
+   "side": "sell",
+   "date": "2023-09-15",
+   "excess": 43.1,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "CPRI",
+   "side": "buy",
+   "date": "2020-03-18",
+   "excess": 42.9,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "QDEL",
+   "side": "sell",
+   "date": "2020-07-30",
+   "excess": 42.8,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "AMD",
+   "side": "buy",
+   "date": "2026-05-05",
+   "excess": 42.8,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Tom Malinowski",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001203.jpg",
+   "ticker": "PSIX",
+   "side": "buy",
+   "date": "2019-12-30",
+   "excess": 42.6,
+   "committees": []
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "GNRC",
+   "side": "sell",
+   "date": "2022-09-28",
+   "excess": 42.6,
+   "committees": []
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "GNRC",
+   "side": "sell",
+   "date": "2022-10-03",
+   "excess": 42.6,
+   "committees": []
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "INTC",
+   "side": "buy",
+   "date": "2026-03-17",
+   "excess": 42.5,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "TSCO",
+   "side": "sell",
+   "date": "2026-04-09",
+   "excess": 42.3,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Bruce Westerman",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000821.jpg",
+   "ticker": "UNH",
+   "side": "sell",
+   "date": "2025-04-21",
+   "excess": 42.1,
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Transportation and Infrastructure"
+   ]
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "INTC",
+   "side": "buy",
+   "date": "2026-03-23",
+   "excess": 42.1,
+   "committees": []
+  },
+  {
+   "name": "Dean Phillips",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000616.jpg",
+   "ticker": "COTY",
+   "side": "buy",
+   "date": "2019-02-04",
+   "excess": 42.0,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "SNOW",
+   "side": "buy",
+   "date": "2020-11-06",
+   "excess": 41.6,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Lois Frankel",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000462.jpg",
+   "ticker": "SEDG",
+   "side": "buy",
+   "date": "2020-01-27",
+   "excess": 41.5,
+   "committees": [
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2018-10-08",
+   "excess": 41.4,
+   "committees": []
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2018-10-08",
+   "excess": 41.4,
+   "committees": []
+  },
+  {
+   "name": "Jefferson Shreve",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001229.jpg",
+   "ticker": "DG",
+   "side": "buy",
+   "date": "2025-03-05",
+   "excess": 41.3,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "QDEL",
+   "side": "buy",
+   "date": "2020-03-02",
+   "excess": 41.2,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Donald Sternoff Beyer Jr",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001292.jpg",
+   "ticker": "PI",
+   "side": "buy",
+   "date": "2021-10-04",
+   "excess": 41.2,
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "PLTR",
+   "side": "buy",
+   "date": "2025-03-31",
+   "excess": 41.1,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Tim Moore",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001236.jpg",
+   "ticker": "TQQQ",
+   "side": "buy",
+   "date": "2025-04-22",
+   "excess": 41.1,
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on the Budget"
+   ]
+  },
+  {
+   "name": "Markwayne Mullin",
+   "party": "R",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001190.jpg",
+   "ticker": "SHOP",
+   "side": "buy",
+   "date": "2023-01-03",
+   "excess": 41.0,
+   "committees": []
+  },
+  {
+   "name": "Michael Garcia",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000061.jpg",
+   "ticker": "FAS",
+   "side": "buy",
+   "date": "2020-10-26",
+   "excess": 40.7,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "IFNNY",
+   "side": "buy",
+   "date": "2026-04-13",
+   "excess": 40.7,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "EXAS",
+   "side": "buy",
+   "date": "2020-03-16",
+   "excess": 40.6,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "ADYEY",
+   "side": "sell",
+   "date": "2023-07-19",
+   "excess": 40.6,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "ADYEY",
+   "side": "buy",
+   "date": "2023-10-16",
+   "excess": 40.6,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Rob Bresnahan",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001327.jpg",
+   "ticker": "PLTR",
+   "side": "buy",
+   "date": "2025-04-08",
+   "excess": 40.4,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Marjorie Taylor Greene",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000596.jpg",
+   "ticker": "PLTR",
+   "side": "buy",
+   "date": "2025-04-08",
+   "excess": 40.4,
+   "committees": []
+  },
+  {
+   "name": "Alan S. Lowenthal",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "ticker": "BA",
+   "side": "sell",
+   "date": "2020-03-05",
+   "excess": 40.3,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "AFRM",
+   "side": "sell",
+   "date": "2021-12-28",
+   "excess": 40.3,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Mark Green",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000590.jpg",
+   "ticker": "NGL",
+   "side": "sell",
+   "date": "2020-10-05",
+   "excess": 40.2,
+   "committees": []
+  },
+  {
+   "name": "Virginia Foxx",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000450.jpg",
+   "ticker": "USDP",
+   "side": "sell",
+   "date": "2023-11-10",
+   "excess": 40.2,
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Education and Workforce",
+    "House Committee on Rules"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "SNDK",
+   "side": "buy",
+   "date": "2026-03-13",
+   "excess": 40.1,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Alan S. Lowenthal",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "ticker": "BA",
+   "side": "sell",
+   "date": "2020-02-19",
+   "excess": 40.0,
+   "committees": []
+  },
+  {
+   "name": "Thomas H Tuberville",
+   "party": "R",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000278.jpg",
+   "ticker": "NFLX",
+   "side": "sell",
+   "date": "2022-03-30",
+   "excess": 39.9,
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Armed Services",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs",
+    "Senate Special Committee on Aging"
+   ]
+  },
+  {
+   "name": "Alan S. Lowenthal",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "ticker": "RUN",
+   "side": "sell",
+   "date": "2020-02-27",
+   "excess": 39.8,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "PANW",
+   "side": "buy",
+   "date": "2026-04-14",
+   "excess": 39.8,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "April McClain Delaney",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/D000620.jpg",
+   "ticker": "ENTG",
+   "side": "buy",
+   "date": "2026-05-21",
+   "excess": 39.7,
+   "committees": []
+  },
+  {
+   "name": "John James",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000307.jpg",
+   "ticker": "HUM",
+   "side": "sell",
+   "date": "2024-09-04",
+   "excess": 39.6,
+   "committees": [
+    "House Committee on Energy and Commerce"
+   ]
+  },
+  {
+   "name": "Austin Scott",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001189.jpg",
+   "ticker": "KPLT",
+   "side": "sell",
+   "date": "2024-07-31",
+   "excess": 39.5,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services",
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Rules"
+   ]
+  },
+  {
+   "name": "Austin Scott",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001189.jpg",
+   "ticker": "PLUG",
+   "side": "sell",
+   "date": "2021-04-09",
+   "excess": 39.3,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services",
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Rules"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "AMD",
+   "side": "buy",
+   "date": "2023-04-28",
+   "excess": 39.3,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "ADYEY",
+   "side": "sell",
+   "date": "2023-07-18",
+   "excess": 39.3,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "VRT",
+   "side": "buy",
+   "date": "2026-01-30",
+   "excess": 39.3,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Mark Green",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000590.jpg",
+   "ticker": "NGL",
+   "side": "buy",
+   "date": "2023-05-17",
+   "excess": 39.1,
+   "committees": []
+  },
+  {
+   "name": "Tim Moore",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001236.jpg",
+   "ticker": "CBRL",
+   "side": "buy",
+   "date": "2025-12-16",
+   "excess": 39.1,
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on the Budget"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "CHTR",
+   "side": "sell",
+   "date": "2026-04-14",
+   "excess": 39.0,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Debbie Wasserman Schultz",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000797.jpg",
+   "ticker": "NGD",
+   "side": "buy",
+   "date": "2024-02-28",
+   "excess": 38.6,
+   "committees": [
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "INTC",
+   "side": "buy",
+   "date": "2026-03-13",
+   "excess": 38.6,
+   "committees": []
+  },
+  {
+   "name": "K. Michael Conaway",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001062.jpg",
+   "ticker": "MPC",
+   "side": "buy",
+   "date": "2020-04-22",
+   "excess": 38.5,
+   "committees": []
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "INTC",
+   "side": "buy",
+   "date": "2025-08-29",
+   "excess": 38.5,
+   "committees": []
+  },
+  {
+   "name": "Jonathan Jackson",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000309.jpg",
+   "ticker": "HOOD",
+   "side": "buy",
+   "date": "2025-09-05",
+   "excess": 38.5,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Rob Bresnahan",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001327.jpg",
+   "ticker": "BABA",
+   "side": "buy",
+   "date": "2025-01-29",
+   "excess": 38.4,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "AFRM",
+   "side": "sell",
+   "date": "2022-02-11",
+   "excess": 38.1,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Christopher L. Jacobs",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000020.jpg",
+   "ticker": "PTON",
+   "side": "sell",
+   "date": "2022-04-11",
+   "excess": 38.1,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "ON",
+   "side": "buy",
+   "date": "2020-03-18",
+   "excess": 38.0,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "NVDA",
+   "side": "buy",
+   "date": "2021-10-05",
+   "excess": 38.0,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "CSCO",
+   "side": "buy",
+   "date": "2026-04-15",
+   "excess": 38.0,
+   "committees": []
+  },
+  {
+   "name": "Marjorie Taylor Greene",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000596.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2024-11-01",
+   "excess": 37.9,
+   "committees": []
+  },
+  {
+   "name": "James Comer",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001108.jpg",
+   "ticker": "TTD",
+   "side": "sell",
+   "date": "2025-02-04",
+   "excess": 37.8,
+   "committees": [
+    "House Committee on Oversight and Government Reform",
+    "House Committee on Education and Workforce"
+   ]
+  },
+  {
+   "name": "Tom Malinowski",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001203.jpg",
+   "ticker": "AMRC",
+   "side": "sell",
+   "date": "2021-02-05",
+   "excess": 37.5,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "EPAM",
+   "side": "sell",
+   "date": "2026-04-14",
+   "excess": 37.3,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Tom Malinowski",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001203.jpg",
+   "ticker": "PTON",
+   "side": "buy",
+   "date": "2019-10-22",
+   "excess": 37.2,
+   "committees": []
+  },
+  {
+   "name": "Debbie Wasserman Schultz",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000797.jpg",
+   "ticker": "PTEN",
+   "side": "buy",
+   "date": "2022-01-20",
+   "excess": 37.2,
+   "committees": [
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "LGND",
+   "side": "buy",
+   "date": "2026-05-29",
+   "excess": 37.2,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Greg Gianforte",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000584.jpg",
+   "ticker": "OZK",
+   "side": "buy",
+   "date": "2018-12-21",
+   "excess": 37.0,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "EBS",
+   "side": "buy",
+   "date": "2020-06-19",
+   "excess": 37.0,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Richard L. Hanna",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001051.jpg",
+   "ticker": "ALNY",
+   "side": "buy",
+   "date": "2016-10-13",
+   "excess": 36.9,
+   "committees": []
+  },
+  {
+   "name": "Alan S. Lowenthal",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "ticker": "SPCE",
+   "side": "sell",
+   "date": "2020-02-18",
+   "excess": 36.9,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "NVDA",
+   "side": "buy",
+   "date": "2023-05-04",
+   "excess": 36.9,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Julie Johnson",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/J000310.jpg",
+   "ticker": "UNH",
+   "side": "sell",
+   "date": "2025-04-07",
+   "excess": 36.7,
+   "committees": [
+    "Joint Committee of Congress on the Library",
+    "House Committee on Homeland Security",
+    "House Committee on Foreign Affairs",
+    "House Committee on House Administration"
+   ]
+  },
+  {
+   "name": "Laurel Lee",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000597.jpg",
+   "ticker": "HURA",
+   "side": "buy",
+   "date": "2025-07-13",
+   "excess": 36.7,
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Energy and Commerce",
+    "House Committee on House Administration"
+   ]
+  },
+  {
+   "name": "Tom Malinowski",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001203.jpg",
+   "ticker": "PROF",
+   "side": "buy",
+   "date": "2020-01-14",
+   "excess": 36.6,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "CCL",
+   "side": "sell",
+   "date": "2020-03-13",
+   "excess": 36.5,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "John Hoeven",
+   "party": "R",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001061.jpg",
+   "ticker": "NOG",
+   "side": "buy",
+   "date": "2015-01-16",
+   "excess": 36.4,
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Appropriations",
+    "Senate Committee on Energy and Natural Resources",
+    "Senate Committee on Indian Affairs"
+   ]
+  },
+  {
+   "name": "Susie Lee",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000590.jpg",
+   "ticker": "OKE",
+   "side": "sell",
+   "date": "2020-03-09",
+   "excess": 36.4,
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2018-10-09",
+   "excess": 36.3,
+   "committees": []
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2018-09-28",
+   "excess": 35.8,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "SCHW",
+   "side": "sell",
+   "date": "2023-03-06",
+   "excess": 35.8,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "ICUI",
+   "side": "sell",
+   "date": "2019-07-30",
+   "excess": 35.5,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "BABA",
+   "side": "buy",
+   "date": "2025-01-31",
+   "excess": 35.5,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Lori Chavez-DeRemer",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "UNH",
+   "side": "sell",
+   "date": "2025-04-28",
+   "excess": 35.5,
+   "committees": []
+  },
+  {
+   "name": "Kevin Hern",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001082.jpg",
+   "ticker": "CRM",
+   "side": "buy",
+   "date": "2020-07-27",
+   "excess": 35.2,
+   "committees": [
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Andrew Saul",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "ACOPF",
+   "side": "sell",
+   "date": "2021-04-15",
+   "excess": 35.2,
+   "committees": []
+  },
+  {
+   "name": "Andrew Saul",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "ACOPF",
+   "side": "sell",
+   "date": "2021-04-15",
+   "excess": 35.2,
+   "committees": []
+  },
+  {
+   "name": "Andrew Saul",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "ACOPF",
+   "side": "sell",
+   "date": "2021-04-19",
+   "excess": 35.2,
+   "committees": []
+  },
+  {
+   "name": "Markwayne Mullin",
+   "party": "R",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001190.jpg",
+   "ticker": "LRCX",
+   "side": "buy",
+   "date": "2025-12-29",
+   "excess": 35.2,
+   "committees": []
+  },
+  {
+   "name": "Rob Bresnahan",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001327.jpg",
+   "ticker": "MANH",
+   "side": "sell",
+   "date": "2025-01-13",
+   "excess": 35.1,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Thomas Suozzi",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001201.jpg",
+   "ticker": "PCG",
+   "side": "sell",
+   "date": "2019-01-07",
+   "excess": 35.0,
+   "committees": [
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Andrew Saul",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "ACOPF",
+   "side": "sell",
+   "date": "2021-04-20",
+   "excess": 35.0,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "DXC",
+   "side": "sell",
+   "date": "2020-02-07",
+   "excess": 34.7,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Mark Green",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000590.jpg",
+   "ticker": "GEL",
+   "side": "buy",
+   "date": "2021-09-02",
+   "excess": 34.7,
+   "committees": []
+  },
+  {
+   "name": "Cheri Bustos",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001286.jpg",
+   "ticker": "EXPE",
+   "side": "sell",
+   "date": "2019-10-18",
+   "excess": 34.6,
+   "committees": []
+  },
+  {
+   "name": "Laurel Lee",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000597.jpg",
+   "ticker": "HURA",
+   "side": "buy",
+   "date": "2024-11-25",
+   "excess": 34.6,
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Energy and Commerce",
+    "House Committee on House Administration"
+   ]
+  },
+  {
+   "name": "David Trone",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000483.jpg",
+   "ticker": "KTB",
+   "side": "sell",
+   "date": "2020-03-04",
+   "excess": 34.4,
+   "committees": []
+  },
+  {
+   "name": "Austin Scott",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001189.jpg",
+   "ticker": "BE",
+   "side": "sell",
+   "date": "2020-10-09",
+   "excess": 34.4,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services",
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Rules"
+   ]
+  },
+  {
+   "name": "Ed Perlmutter",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/P000593.jpg",
+   "ticker": "COIN",
+   "side": "buy",
+   "date": "2021-09-23",
+   "excess": 34.4,
+   "committees": []
+  },
+  {
+   "name": "Daniel S Sullivan",
+   "party": "R",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001198.jpg",
+   "ticker": "ALGN",
+   "side": "buy",
+   "date": "2023-01-10",
+   "excess": 34.2,
+   "committees": [
+    "Senate Committee on Armed Services",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Veterans' Affairs"
+   ]
+  },
+  {
+   "name": "Andrew Saul",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "HCXLF",
+   "side": "sell",
+   "date": "2020-03-31",
+   "excess": 34.1,
+   "committees": []
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "TLRY",
+   "side": "sell",
+   "date": "2021-02-09",
+   "excess": 34.1,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Brian Mast",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001199.jpg",
+   "ticker": "TLRY",
+   "side": "sell",
+   "date": "2021-02-09",
+   "excess": 34.1,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Robert B. Aderholt",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/A000055.jpg",
+   "ticker": "TSLA",
+   "side": "sell",
+   "date": "2022-12-05",
+   "excess": 34.1,
+   "committees": [
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Marie Newman",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/N000192.jpg",
+   "ticker": "MRNA",
+   "side": "buy",
+   "date": "2021-01-14",
+   "excess": 34.0,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "TSLA",
+   "side": "buy",
+   "date": "2024-11-26",
+   "excess": 34.0,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Donald Sternoff Beyer Jr",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001292.jpg",
+   "ticker": "TDOC",
+   "side": "buy",
+   "date": "2020-02-14",
+   "excess": 33.9,
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Thomas Suozzi",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001201.jpg",
+   "ticker": "WKHS",
+   "side": "sell",
+   "date": "2020-10-05",
+   "excess": 33.9,
+   "committees": [
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Kathy Manning",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001135.jpg",
+   "ticker": "AMAT",
+   "side": "buy",
+   "date": "2022-10-12",
+   "excess": 33.8,
+   "committees": []
+  },
+  {
+   "name": "Daniel Goldman",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000599.jpg",
+   "ticker": "HPP",
+   "side": "sell",
+   "date": "2023-03-01",
+   "excess": 33.7,
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Homeland Security"
+   ]
+  },
+  {
+   "name": "Peter Meijer",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001186.jpg",
+   "ticker": "Z",
+   "side": "sell",
+   "date": "2021-02-16",
+   "excess": 33.6,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "UNH",
+   "side": "sell",
+   "date": "2025-04-29",
+   "excess": 33.5,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "HUM",
+   "side": "buy",
+   "date": "2020-03-18",
+   "excess": 33.1,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "ROG",
+   "side": "buy",
+   "date": "2020-10-26",
+   "excess": 33.1,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Thomas H. Kean Jr",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/K000398.jpg",
+   "ticker": "TXN",
+   "side": "buy",
+   "date": "2026-04-14",
+   "excess": 33.1,
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Committee on Foreign Affairs"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "KIM",
+   "side": "sell",
+   "date": "2020-03-18",
+   "excess": 33.0,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Andrew Saul",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "ACOPF",
+   "side": "sell",
+   "date": "2021-04-16",
+   "excess": 33.0,
+   "committees": []
+  },
+  {
+   "name": "Sheldon Whitehouse",
+   "party": "D",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000802.jpg",
+   "ticker": "NFLX",
+   "side": "buy",
+   "date": "2015-04-07",
+   "excess": 32.9,
+   "committees": [
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Finance",
+    "Senate Committee on the Budget",
+    "Senate Committee on the Judiciary",
+    "United States Senate Caucus on International Narcotics Control",
+    "Commission on Security and Cooperation in Europe"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "EBS",
+   "side": "buy",
+   "date": "2020-06-15",
+   "excess": 32.9,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "NVDA",
+   "side": "buy",
+   "date": "2023-02-21",
+   "excess": 32.9,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Donald Sternoff Beyer Jr",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001292.jpg",
+   "ticker": "FVRR",
+   "side": "sell",
+   "date": "2021-02-26",
+   "excess": 32.8,
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Katie Britt",
+   "party": "R",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001319.jpg",
+   "ticker": "UNH",
+   "side": "sell",
+   "date": "2025-04-30",
+   "excess": 32.8,
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Banking, Housing, and Urban Affairs",
+    "Senate Committee on Rules and Administration",
+    "Senate Committee on the Judiciary",
+    "Commission on Security and Cooperation in Europe"
+   ]
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "INTC",
+   "side": "buy",
+   "date": "2026-03-25",
+   "excess": 32.8,
+   "committees": []
+  },
+  {
+   "name": "Alan S. Lowenthal",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "ticker": "RUN",
+   "side": "sell",
+   "date": "2020-02-26",
+   "excess": 32.7,
+   "committees": []
+  },
+  {
+   "name": "Lois Frankel",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000462.jpg",
+   "ticker": "FE",
+   "side": "sell",
+   "date": "2020-07-15",
+   "excess": 32.7,
+   "committees": [
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Mark W Menezes",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "ETSY",
+   "side": "buy",
+   "date": "2020-09-16",
+   "excess": 32.7,
+   "committees": []
+  },
+  {
+   "name": "K. Michael Conaway",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001062.jpg",
+   "ticker": "LUV",
+   "side": "sell",
+   "date": "2020-03-18",
+   "excess": 32.6,
+   "committees": []
+  },
+  {
+   "name": "K. Michael Conaway",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001062.jpg",
+   "ticker": "LUV",
+   "side": "sell",
+   "date": "2020-03-18",
+   "excess": 32.6,
+   "committees": []
+  },
+  {
+   "name": "Alan S. Lowenthal",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "ticker": "DKNG",
+   "side": "buy",
+   "date": "2020-02-03",
+   "excess": 32.5,
+   "committees": []
+  },
+  {
+   "name": "Susie Lee",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000590.jpg",
+   "ticker": "QRVO",
+   "side": "buy",
+   "date": "2019-10-07",
+   "excess": 32.4,
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "RCL",
+   "side": "buy",
+   "date": "2020-03-18",
+   "excess": 32.4,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Austin Scott",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001189.jpg",
+   "ticker": "NVVE",
+   "side": "buy",
+   "date": "2021-05-25",
+   "excess": 32.4,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services",
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Rules"
+   ]
+  },
+  {
+   "name": "Austin Scott",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001189.jpg",
+   "ticker": "CLNE",
+   "side": "sell",
+   "date": "2021-06-14",
+   "excess": 32.4,
+   "committees": [
+    "House Committee on Agriculture",
+    "House Committee on Armed Services",
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Rules"
+   ]
+  },
+  {
+   "name": "Dwight Evans",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/E000296.jpg",
+   "ticker": "TWST",
+   "side": "sell",
+   "date": "2022-03-30",
+   "excess": 32.4,
+   "committees": [
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Julia Letlow",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000595.jpg",
+   "ticker": "TPR",
+   "side": "buy",
+   "date": "2024-10-23",
+   "excess": 32.4,
+   "committees": [
+    "House Committee on Appropriations",
+    "House Committee on Education and Workforce"
+   ]
+  },
+  {
+   "name": "Lisa McClain",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001136.jpg",
+   "ticker": "IT",
+   "side": "sell",
+   "date": "2025-07-22",
+   "excess": 32.3,
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on Education and Workforce"
+   ]
+  },
+  {
+   "name": "Tim Moore",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001236.jpg",
+   "ticker": "TNA",
+   "side": "buy",
+   "date": "2025-04-08",
+   "excess": 32.2,
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on the Budget"
+   ]
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "PLTR",
+   "side": "buy",
+   "date": "2025-01-06",
+   "excess": 32.1,
+   "committees": []
+  },
+  {
+   "name": "Sheldon Whitehouse",
+   "party": "D",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/W000802.jpg",
+   "ticker": "SSYS",
+   "side": "sell",
+   "date": "2015-04-06",
+   "excess": 32.0,
+   "committees": [
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Finance",
+    "Senate Committee on the Budget",
+    "Senate Committee on the Judiciary",
+    "United States Senate Caucus on International Narcotics Control",
+    "Commission on Security and Cooperation in Europe"
+   ]
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "AMD",
+   "side": "buy",
+   "date": "2026-03-23",
+   "excess": 31.9,
+   "committees": []
+  },
+  {
+   "name": "Daniel Goldman",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000599.jpg",
+   "ticker": "BILL",
+   "side": "buy",
+   "date": "2023-04-10",
+   "excess": 31.8,
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Homeland Security"
+   ]
+  },
+  {
+   "name": "Katherine M. Clark",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001101.jpg",
+   "ticker": "KHC",
+   "side": "sell",
+   "date": "2019-01-25",
+   "excess": 31.7,
+   "committees": []
+  },
+  {
+   "name": "Tom Malinowski",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001203.jpg",
+   "ticker": "NVGS",
+   "side": "buy",
+   "date": "2020-11-17",
+   "excess": 31.7,
+   "committees": []
+  },
+  {
+   "name": "Marjorie Taylor Greene",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000596.jpg",
+   "ticker": "CAH",
+   "side": "buy",
+   "date": "2025-10-24",
+   "excess": 31.7,
+   "committees": []
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "AJINF",
+   "side": "buy",
+   "date": "2026-02-03",
+   "excess": 31.7,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Donald J Trump",
+   "party": "",
+   "chamber": "Executive",
+   "photo": "",
+   "ticker": "SNOW",
+   "side": "buy",
+   "date": "2026-05-22",
+   "excess": 31.6,
+   "committees": []
+  },
+  {
+   "name": "Alan S. Lowenthal",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "ticker": "SPCE",
+   "side": "sell",
+   "date": "2020-02-20",
+   "excess": 31.5,
+   "committees": []
+  },
+  {
+   "name": "Alan S. Lowenthal",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000579.jpg",
+   "ticker": "SPCE",
+   "side": "sell",
+   "date": "2020-02-20",
+   "excess": 31.5,
+   "committees": []
+  },
+  {
+   "name": "Mark Green",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000590.jpg",
+   "ticker": "NGL",
+   "side": "sell",
+   "date": "2021-03-04",
+   "excess": 31.5,
+   "committees": []
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "IART",
+   "side": "sell",
+   "date": "2024-04-05",
+   "excess": 31.5,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "NWL",
+   "side": "sell",
+   "date": "2017-10-18",
+   "excess": 31.4,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "PYPL",
+   "side": "sell",
+   "date": "2022-01-13",
+   "excess": 31.4,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Daniel Goldman",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000599.jpg",
+   "ticker": "HPP",
+   "side": "sell",
+   "date": "2023-03-06",
+   "excess": 31.4,
+   "committees": [
+    "House Committee on the Judiciary",
+    "House Committee on Homeland Security"
+   ]
+  },
+  {
+   "name": "Thomas Suozzi",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/S001201.jpg",
+   "ticker": "CRSP",
+   "side": "buy",
+   "date": "2021-06-03",
+   "excess": 31.3,
+   "committees": [
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Zoe Lofgren",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000397.jpg",
+   "ticker": "LCID",
+   "side": "sell",
+   "date": "2023-05-25",
+   "excess": 31.3,
+   "committees": [
+    "House Committee on Science, Space, and Technology",
+    "House Committee on the Judiciary"
+   ]
+  },
+  {
+   "name": "Lisa McClain",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001136.jpg",
+   "ticker": "NVO",
+   "side": "sell",
+   "date": "2025-07-10",
+   "excess": 31.3,
+   "committees": [
+    "House Committee on Financial Services",
+    "House Committee on Education and Workforce"
+   ]
+  },
+  {
+   "name": "Josh Gottheimer",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000583.jpg",
+   "ticker": "ABCB",
+   "side": "buy",
+   "date": "2020-10-16",
+   "excess": 31.2,
+   "committees": [
+    "House Permanent Select Committee on Intelligence",
+    "House Committee on Financial Services"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "SMCI",
+   "side": "buy",
+   "date": "2025-09-05",
+   "excess": 31.2,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Lois Frankel",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/F000462.jpg",
+   "ticker": "UI",
+   "side": "sell",
+   "date": "2023-04-19",
+   "excess": 31.1,
+   "committees": [
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Tom Malinowski",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/M001203.jpg",
+   "ticker": "FIVN",
+   "side": "buy",
+   "date": "2019-07-18",
+   "excess": 31.0,
+   "committees": []
+  },
+  {
+   "name": "Greg Gianforte",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/G000584.jpg",
+   "ticker": "EVH",
+   "side": "buy",
+   "date": "2019-10-11",
+   "excess": 31.0,
+   "committees": []
+  },
+  {
+   "name": "Susie Lee",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000590.jpg",
+   "ticker": "GFL",
+   "side": "buy",
+   "date": "2020-11-04",
+   "excess": 31.0,
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Appropriations"
+   ]
+  },
+  {
+   "name": "Rob Bresnahan",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001327.jpg",
+   "ticker": "BABA",
+   "side": "buy",
+   "date": "2025-01-30",
+   "excess": 31.0,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Gilbert Cisneros",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001123.jpg",
+   "ticker": "CTSH",
+   "side": "sell",
+   "date": "2026-04-14",
+   "excess": 31.0,
+   "committees": [
+    "House Committee on Armed Services",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Rob Bresnahan",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001327.jpg",
+   "ticker": "BABA",
+   "side": "buy",
+   "date": "2025-02-10",
+   "excess": 30.9,
+   "committees": [
+    "House Committee on Transportation and Infrastructure",
+    "House Committee on Agriculture",
+    "House Committee on Small Business"
+   ]
+  },
+  {
+   "name": "Valerie Hoyle",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/H001094.jpg",
+   "ticker": "UNH",
+   "side": "sell",
+   "date": "2025-05-06",
+   "excess": 30.9,
+   "committees": [
+    "House Committee on Natural Resources",
+    "House Committee on Transportation and Infrastructure"
+   ]
+  },
+  {
+   "name": "Shelley M Capito",
+   "party": "R",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/C001047.jpg",
+   "ticker": "LLY",
+   "side": "buy",
+   "date": "2025-10-24",
+   "excess": 30.9,
+   "committees": [
+    "Senate Committee on Appropriations",
+    "Senate Committee on Commerce, Science, and Transportation",
+    "Senate Committee on Environment and Public Works",
+    "Senate Committee on Rules and Administration"
+   ]
+  },
+  {
+   "name": "Richard W. Allen",
+   "party": "R",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/A000372.jpg",
+   "ticker": "WMT",
+   "side": "buy",
+   "date": "2020-02-20",
+   "excess": 30.8,
+   "committees": [
+    "House Committee on Energy and Commerce",
+    "House Committee on Education and Workforce"
+   ]
+  },
+  {
+   "name": "Donald Sternoff Beyer Jr",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/B001292.jpg",
+   "ticker": "PI",
+   "side": "sell",
+   "date": "2020-07-27",
+   "excess": 30.8,
+   "committees": [
+    "Joint Economic Committee",
+    "House Committee on Ways and Means"
+   ]
+  },
+  {
+   "name": "Thomas H Tuberville",
+   "party": "R",
+   "chamber": "Senate",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/T000278.jpg",
+   "ticker": "SSYS",
+   "side": "sell",
+   "date": "2021-11-04",
+   "excess": 30.8,
+   "committees": [
+    "Senate Committee on Agriculture, Nutrition, and Forestry",
+    "Senate Committee on Armed Services",
+    "Senate Committee on Health, Education, Labor, and Pensions",
+    "Senate Committee on Veterans' Affairs",
+    "Senate Special Committee on Aging"
+   ]
+  },
+  {
+   "name": "James R. Langevin",
+   "party": "D",
+   "chamber": "House",
+   "photo": "https://unitedstates.github.io/images/congress/225x275/L000559.jpg",
+   "ticker": "BABA",
+   "side": "sell",
+   "date": "2022-02-11",
+   "excess": 30.8,
    "committees": []
   }
  ]
