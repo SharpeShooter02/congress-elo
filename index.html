@@ -67,6 +67,9 @@
     border-radius:8px;padding:4px 10px;margin:3px 6px 3px 0;color:var(--txt);font-size:12px;}
   .detailwrap .tt .s{color:var(--muted);}
   .flag{font-size:11px;color:var(--amber);font-weight:600;white-space:nowrap;margin-left:5px;}
+  .av{width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:7px;object-fit:cover;background:var(--panel2);border:1px solid var(--line);}
+  .detailwrap .comm{margin-top:9px;color:var(--muted);}
+  .detailwrap .comm b{color:var(--txt);}
 </style>
 </head>
 <body>
@@ -198,18 +201,20 @@ const PARTY_NAME={D:"Dem",R:"Rep",I:"Ind"};
 function partyName(p){return PARTY_NAME[p]||"—";}
 let sortKey="elo", sortDir=-1;
 function fmtPct(x){const s=(x>=0?"+":"")+Number(x).toFixed(1)+"%";return `<span class="${x>=0?'pos':'neg'} num">${s}</span>`;}
-function topHtml(m){
+function detailHtml(m){
   const tt=(m.top_trades||[]);
-  if(!tt.length) return "No graded trades to show.";
-  const chips=tt.map(t=>{
+  const chips = tt.length ? tt.map(t=>{
     const side=t.side==="sell"?"SELL":"BUY";
     const sign=t.excess>=0?"+":"";
     const cls=t.excess>=0?"pos":"neg";
     const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short"}):"";
     const flag=t.sharp?" 🚩":"";
     return `<span class="tt">${side} <b>${t.ticker}</b> <span class="${cls}">${sign}${Number(t.excess).toFixed(0)}%</span>${flag} <span class="s">${d}</span></span>`;
-  }).join("");
-  return `Biggest trades vs the market — the ones carrying this rating: ${chips}`;
+  }).join("") : "";
+  const trades = chips ? `Biggest trades vs the market — the ones carrying this rating: ${chips}` : "No graded trades to show.";
+  const cm=(m.committees||[]);
+  const comm = cm.length ? `<div class="comm"><b>Committees:</b> ${cm.join(" · ")}</div>` : "";
+  return `<div>${trades}</div>${comm}`;
 }
 function render(){
   const chamber=document.getElementById("chamber").value;
@@ -223,7 +228,7 @@ function render(){
   body.innerHTML=rows.map((m,i)=>`
     <tr class="mrow ${i===0&&sortKey==='elo'&&sortDir===-1?'top1':''}">
       <td class="rank">${i+1}</td>
-      <td class="name">${m.name}${m.sharp?`<span class="flag" title="${m.sharp} sharp call${m.sharp>1?'s':''}: beat the market 15%+ within a month of the trade — flagged for scrutiny, not proof">🚩${m.sharp}</span>`:''}</td>
+      <td class="name">${m.photo?`<img class="av" src="${m.photo}" loading="lazy" alt="" onerror="this.style.display='none'">`:''}${m.name}${m.sharp?`<span class="flag" title="${m.sharp} sharp call${m.sharp>1?'s':''}: beat the market 15%+ within a month of the trade — flagged for scrutiny, not proof">🚩${m.sharp}</span>`:''}</td>
       <td><span class="pill ${m.party||''}">${partyName(m.party)}</span></td>
       <td>${m.chamber}</td>
       <td class="elo">${m.elo}</td>
@@ -234,7 +239,7 @@ function render(){
       <td class="num">${m.n_sells||0} · ${Number(m.sell_winrate||0).toFixed(0)}%</td>
       <td>${fmtPct(m.avgexcess)}</td>
     </tr>
-    <tr class="detail" style="display:none"><td colspan="11"><div class="detailwrap">${topHtml(m)}</div></td></tr>`).join("")||`<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:26px">No members match these filters.</td></tr>`;
+    <tr class="detail" style="display:none"><td colspan="11"><div class="detailwrap">${detailHtml(m)}</div></td></tr>`).join("")||`<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:26px">No members match these filters.</td></tr>`;
   document.querySelectorAll("#tbl th").forEach(th=>{
     const k=th.dataset.k; th.classList.toggle("sorted",k===sortKey);
     const a=th.querySelector(".arrow"); if(a)a.remove();

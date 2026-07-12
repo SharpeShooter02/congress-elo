@@ -64,6 +64,9 @@ KADOA_FILERS_URL = "https://raw.githubusercontent.com/kadoa-org/congress-trading
 # excess-vs-market return already computed per trade ({id} = a filer id).
 KADOA_FILER_URL  = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data/filer/{id}.json"
 LEG_URL          = "https://unitedstates.github.io/congress-legislators/legislators-current.json"
+# Committee assignments (current members), keyed by bioguide id — no scraping.
+COMMITTEES_URL           = "https://unitedstates.github.io/congress-legislators/committees-current.json"
+COMMITTEE_MEMBERSHIP_URL = "https://unitedstates.github.io/congress-legislators/committee-membership-current.json"
 
 # ----------------------------- deps -------------------------------
 try:
@@ -223,7 +226,10 @@ def load_trades():
         except Exception as e:
             log(f"  x {fid}: {e}")
             continue
-        rows = doc.get("trades", []) if isinstance(doc, dict) else (doc or [])
+        rows  = doc.get("trades", []) if isinstance(doc, dict) else (doc or [])
+        finfo = doc.get("filer", {}) if isinstance(doc, dict) else {}
+        photo = sval(finfo.get("photo_url")) or sval(f.get("photo_url"))
+        bg    = photo.rsplit("/", 1)[-1].split(".")[0] if photo else ""   # .../G000061.jpg -> G000061
         for row in rows:
             side  = norm_type(sval(row.get("transaction_type")) or sval(row.get("type")))
             tdate = parse_date(sval(row.get("transaction_date")) or sval(row.get("date")))
@@ -242,6 +248,7 @@ def load_trades():
                 "side": side, "date": tdate,
                 "amount": sval(row.get("amount_range_label")) or sval(row.get("amount")),
                 "ret30": r30, "ret1y": r1y, "retsince": rsince,
+                "photo": photo, "bioguide": bg,
             })
         if i % 40 == 0:
             log(f"  {i}/{len(roster)} filers · {len(trades)} trades so far")
@@ -338,6 +345,33 @@ def match_party(name, pmap):
     return pmap.get(last, "")
 
 
+def load_committees():
+    """bioguide -> [committee names] for current members (skips subcommittees)."""
+    try:
+        comms = fetch_json(COMMITTEES_URL, "committees.json", max_age_h=24 * 7)
+        membs = fetch_json(COMMITTEE_MEMBERSHIP_URL, "committee_membership.json", max_age_h=24 * 7)
+    except Exception as e:
+        log(f"[committees] skip ({e})"); return {}
+    code_name = {}
+    for c in (comms or []):
+        code = c.get("thomas_id")
+        if code:
+            code_name[code] = c.get("name", code)
+    out = {}
+    for code, members in (membs or {}).items():
+        name = code_name.get(code)          # only top-level committees (skip subcommittee codes)
+        if not name:
+            continue
+        for mem in members:
+            bg = mem.get("bioguide")
+            if bg:
+                lst = out.setdefault(bg, [])
+                if name not in lst:
+                    lst.append(name)
+    log(f"[committees] {len(out)} members with assignments")
+    return out
+
+
 # ---------------------------- ELO ---------------------------------
 def build():
     trades = load_trades()
@@ -392,11 +426,16 @@ def build():
                             "matches": 0, "sumExcess": 0.0,
                             "nb": 0, "bw": 0, "bsum": 0.0,   # buys:  count, wins, sum eff
                             "ns": 0, "sw": 0, "ssum": 0.0,   # sells: count, wins, sum eff
-                            "sharp": 0, "top": []}           # sharp = fast big wins; top = trades
+                            "sharp": 0, "top": [],           # sharp = fast big wins; top = trades
+                            "photo": "", "bioguide": ""}
         return members[key]
+
+    committees = load_committees()
 
     for t in scored:
         m = M(t["name"], t["chamber"], t.get("party", ""))
+        if not m["photo"] and t.get("photo"): m["photo"] = t["photo"]
+        if not m["bioguide"] and t.get("bioguide"): m["bioguide"] = t["bioguide"]
         eff = t["excess"] if t["side"] == "buy" else -t["excess"]  # sells win when stock lags
         S = 1.0 if eff > TIE_BAND_PCT else (0.0 if eff < -TIE_BAND_PCT else 0.5)
         E = 1.0 / (1.0 + 10 ** ((MARKET_ELO - m["elo"]) / ELO_DIV))
@@ -439,6 +478,8 @@ def build():
                 {"ticker": tk or "—", "side": sd, "excess": round(e, 1), "date": dstr, "sharp": bool(sh)}
                 for e, tk, sd, dstr, sh in sorted(m["top"], key=lambda x: -x[0])[:3]
             ],
+            "photo": m["photo"],
+            "committees": committees.get(m["bioguide"], []),
         })
     out.sort(key=lambda x: -x["elo"])
 
