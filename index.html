@@ -38,9 +38,11 @@
   .chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--txt);}
   .chip.dim{color:var(--muted);}
   .ptbl{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-  .ptbl th,.ptbl td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;white-space:nowrap;}
-  .ptbl th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);background:var(--panel2);}
-  .ptbl td.num,.ptbl td.pos,.ptbl td.neg{font-variant-numeric:tabular-nums;}
+  .ptbl th,.ptbl td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top;}
+  .ptbl th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);background:var(--panel2);white-space:nowrap;}
+  .ptbl td.nw{white-space:nowrap;}
+  .ptbl td.co{word-break:break-word;min-width:150px;}
+  .ptbl td.num,.ptbl td.pos,.ptbl td.neg{font-variant-numeric:tabular-nums;white-space:nowrap;}
   .ptbl tbody tr:last-child td{border-bottom:none;}
   .badge{display:inline-block;background:rgba(227,179,65,.15);color:var(--amber);
     border:1px solid rgba(227,179,65,.4);border-radius:999px;padding:3px 12px;
@@ -120,6 +122,10 @@
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
   .fcomm .lbl{text-transform:uppercase;letter-spacing:.4px;font-size:10px;opacity:.75;margin-right:5px;}
   .fcomm.dim{opacity:.6;}
+  .fconf{color:var(--amber);font-size:11.5px;margin-top:4px;font-weight:600;}
+  .conf{color:var(--amber);}
+  .clink{color:var(--txt);text-decoration:none;}
+  .clink:hover{color:var(--accent);text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -133,6 +139,7 @@
   <nav class="tabs" id="tabs">
     <a href="#board" data-view="board" class="active">Leaderboard</a>
     <a href="#sharpest" data-view="sharp">🚩 Sharpest trades</a>
+    <a href="#clusters" data-view="clusters">👥 Clusters</a>
   </nav>
 
   <div id="view-board">
@@ -165,6 +172,8 @@
         <option value="elo">ELO rating</option>
         <option value="winrate">Win % vs S&amp;P</option>
         <option value="sharp">Suspicious calls (🚩)</option>
+        <option value="sharp_conflicts">Committee conflicts (⚠️)</option>
+        <option value="luck_odds">Least likely to be luck</option>
         <option value="sell_winrate">Sell timing (win %)</option>
         <option value="buy_winrate">Buy timing (win %)</option>
         <option value="avgexcess">Avg excess return</option>
@@ -199,9 +208,12 @@
   <div id="flaggedwrap" style="margin-top:30px">
     <h2 style="font-size:19px;margin:0 0 4px">🚩 Sharpest trades</h2>
     <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b> — shown with the member, what the company does, and their current committees. A flag for scrutiny, not proof.</p>
-    <div class="ctl" style="margin:0 0 14px;max-width:200px">
-      <label>Sort</label>
-      <select id="fsort"><option value="mag">Biggest beat</option><option value="recent">Most recent</option></select>
+    <div style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:0 0 14px">
+      <div class="ctl" style="max-width:200px">
+        <label>Sort</label>
+        <select id="fsort"><option value="mag">Biggest beat</option><option value="recent">Most recent</option></select>
+      </div>
+      <label style="display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);padding-bottom:8px;cursor:pointer"><input type="checkbox" id="fconfonly" style="width:auto"> ⚠️ Committee conflicts only</label>
     </div>
     <div class="fcols">
       <div class="fcol">
@@ -226,6 +238,8 @@
   </div><!-- /view-sharp -->
 
   <div id="view-member" style="display:none"></div>
+
+  <div id="view-clusters" style="display:none"></div>
 
   <details>
     <summary>Methodology &amp; hosting</summary>
@@ -267,21 +281,22 @@ function buildSample(seed){
 }
 
 // ---------- data loading: data.json (hosted) -> data.js (local) -> sample ----------
-let DATA=[], FLAGGED=[], IS_REAL=false;
+let DATA=[], FLAGGED=[], CLUSTERS=[], IS_REAL=false;
 async function loadData(){
   try{
     const r=await fetch("data.json?t="+Date.now(),{cache:"no-store"});
     if(r.ok){const j=await r.json();
-      if(j&&Array.isArray(j.members)&&j.members.length) return {members:j.members,flagged:j.flagged||[],earliest:j.earliest||"",generated:j.generated,src:"json"};}
+      if(j&&Array.isArray(j.members)&&j.members.length) return {members:j.members,flagged:j.flagged||[],clusters:j.clusters||[],earliest:j.earliest||"",generated:j.generated,src:"json"};}
   }catch(e){/* not hosted / no file */}
   if(Array.isArray(window.REAL_DATA)&&window.REAL_DATA.length)
-    return {members:window.REAL_DATA,flagged:window.REAL_FLAGGED||[],earliest:(window.REAL_META||{}).earliest||"",generated:(window.REAL_META||{}).generated,src:"js"};
-  return {members:buildSample(20260709),flagged:[],earliest:"",generated:null,src:"sample"};
+    return {members:window.REAL_DATA,flagged:window.REAL_FLAGGED||[],clusters:window.REAL_CLUSTERS||[],earliest:(window.REAL_META||{}).earliest||"",generated:(window.REAL_META||{}).generated,src:"js"};
+  return {members:buildSample(20260709),flagged:[],clusters:[],earliest:"",generated:null,src:"sample"};
 }
 function applyState(res){
   IS_REAL = res.src!=="sample";
   DATA = res.members;
   FLAGGED = res.flagged||[];
+  CLUSTERS = res.clusters||[];
   DATA_EARLIEST = res.earliest||"";
   const b=document.getElementById("badge"), upd=document.getElementById("updated"), foot=document.getElementById("foot");
   if(IS_REAL){
@@ -296,6 +311,7 @@ function applyState(res){
     foot.textContent="Prototype · showing synthetic sample data until a real dataset is present.";
   }
   renderFlagged();
+  renderClusters();
 }
 
 // ---------- rendering ----------
@@ -322,11 +338,12 @@ function fitemHtml(t){
   const comm=cm.length
     ? `<div class="fcomm"><span class="lbl">Committees</span>${cm.join(" · ")}</div>`
     : `<div class="fcomm dim"><span class="lbl">Committees</span>Not a current member</div>`;
+  const confLine=t.conflict?`<div class="fconf">⚠️ On a committee overseeing this sector${t.conflict_committee?': '+t.conflict_committee:''}</div>`:"";
   return `<div class="fitem" data-id="${t.id||''}">${avatarHtml(t.photo,t.name,'av')}<div class="fmain">
     <div class="fname"><b>${t.name}</b> <span class="pill ${partyCls(t.party)}">${partyName(t.party)}</span> ${activeBadge(t.active)} <span class="fch">· ${t.chamber}</span></div>
     <div class="fmeta"><span class="${scls}">${side}</span> <b>${co}</b></div>
     <div class="fperf"><span class="pos">+${Number(t.excess).toFixed(0)}%</span> vs S&amp;P over 1 month · ${d}</div>
-    ${sectLine}${comm}</div></div>`;
+    ${sectLine}${confLine}${comm}</div></div>`;
 }
 function renderFlist(el, arr, shown, btnId, lessId){
   el.innerHTML = arr.slice(0, shown).map(fitemHtml).join("") || '<span style="color:var(--muted)">None.</span>';
@@ -340,10 +357,12 @@ function renderFlagged(){
   const rangeEl=document.getElementById("fRange");
   if(rangeEl) rangeEl.textContent = DATA_EARLIEST ? "· data since "+new Date(DATA_EARLIEST).toLocaleDateString(undefined,{year:"numeric",month:"short"}) : "";
   if(!FLAGGED.length){ rEl.innerHTML=aEl.innerHTML='<span style="color:var(--muted)">No flagged trades yet — rebuild the data.</span>'; return; }
+  const co=document.getElementById("fconfonly");
+  const base=(co&&co.checked)?FLAGGED.filter(t=>t.conflict):FLAGGED;
   const cutoff=Date.now()-365*864e5;
-  const recent=sortFlagged(FLAGGED.filter(t=>new Date(t.date).getTime()>=cutoff));
+  const recent=sortFlagged(base.filter(t=>new Date(t.date).getTime()>=cutoff));
   renderFlist(rEl, recent, shownRecent, "moreRecent", "lessRecent");
-  renderFlist(aEl, sortFlagged(FLAGGED), shownAll, "moreAll", "lessAll");
+  renderFlist(aEl, sortFlagged(base), shownAll, "moreAll", "lessAll");
 }
 function sortFlagged(arr){
   return arr.slice().sort((a,b)=> fSort==="recent"
@@ -423,6 +442,7 @@ document.getElementById("moreMembers").addEventListener("click",()=>{shownMember
 document.getElementById("moreRecent").addEventListener("click",()=>{shownRecent+=20;renderFlagged();});
 document.getElementById("moreAll").addEventListener("click",()=>{shownAll+=20;renderFlagged();});
 document.getElementById("fsort").addEventListener("change",e=>{fSort=e.target.value;shownRecent=20;shownAll=20;renderFlagged();});
+document.getElementById("fconfonly").addEventListener("change",()=>{shownRecent=20;shownAll=20;renderFlagged();});
 document.getElementById("lessMembers").addEventListener("click",()=>{shownMembers=20;render();});
 document.getElementById("lessRecent").addEventListener("click",()=>{shownRecent=20;renderFlagged();});
 document.getElementById("lessAll").addEventListener("click",()=>{shownAll=20;renderFlagged();});
@@ -448,6 +468,7 @@ function showView(v){
   document.getElementById("view-board").style.display = v==="board"?"":"none";
   document.getElementById("view-sharp").style.display = v==="sharp"?"":"none";
   document.getElementById("view-member").style.display = v==="member"?"":"none";
+  document.getElementById("view-clusters").style.display = v==="clusters"?"":"none";
   document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("active", a.dataset.view===v));
   window.scrollTo({top:0});
 }
@@ -455,7 +476,25 @@ function route(){
   const h=(location.hash||"").replace(/^#\/?/,"");
   if(h.indexOf("member/")===0){ showView("member"); renderMember(decodeURIComponent(h.slice(7))); }
   else if(h==="sharpest"){ showView("sharp"); }
+  else if(h==="clusters"){ showView("clusters"); }
   else { showView("board"); }
+}
+function clusterHtml(c){
+  const fmt=(s,withYear)=>new Date(s).toLocaleDateString(undefined,withYear?{year:"numeric",month:"short",day:"numeric"}:{month:"short",day:"numeric"});
+  const dr=c.start===c.end?fmt(c.start,true):`${fmt(c.start,false)}–${fmt(c.end,true)}`;
+  const mem=(c.trades||[]).map(t=>`<a class="clink" href="#member/${t.id}">${t.name}</a> <span class="${t.side==='sell'?'sell':'buy'}">${t.side==='sell'?'sold':'bought'}</span>${t.sharp?' 🚩':''}`).join(" · ");
+  return `<div class="fitem" style="cursor:default;display:block">
+    <div class="fname"><b>${c.n_members} members</b> traded <b>${c.company||c.ticker} (${c.ticker})</b>${c.sector?` <span class="fch">· ${c.sector}</span>`:''}</div>
+    <div class="fperf">${dr}${c.n_sharp?` · <span class="pos">${c.n_sharp} sharp</span>`:''}</div>
+    <div class="fcomm" style="-webkit-line-clamp:unset;display:block;margin-top:6px">${mem}</div>
+  </div>`;
+}
+function renderClusters(){
+  const el=document.getElementById("view-clusters"); if(!el) return;
+  const items=(CLUSTERS||[]).map(clusterHtml).join("")||'<p class="sub">No clusters yet — rebuild the data.</p>';
+  el.innerHTML=`<h2 style="font-size:19px;margin:0 0 4px">👥 Trade clusters</h2>
+    <p class="sub" style="margin:0 0 16px">Moments when <b>three or more members</b> traded the same stock within ~10 days of each other — coordinated timing or shared information. Ranked by how many piled in. Click a name for their profile.</p>
+    ${items}`;
 }
 window.addEventListener("hashchange", route);
 
@@ -475,22 +514,26 @@ function memberHtml(m){
   const cm=(m.committees||[]);
   const commHtml=cm.length?cm.map(c=>`<span class="chip">${c}</span>`).join(""):`<span class="chip dim">Not a current member</span>`;
   const sharpBadge=m.sharp?`<span class="flag">🚩 ${m.sharp} sharp call${m.sharp>1?'s':''}</span>`:"";
+  const luckStr=m.luck_odds?`≈ 1-in-${Number(m.luck_odds).toLocaleString()} chance this record is luck. `:"";
+  const confStr=m.conflicts?`<span class="conf">⚠️ ${m.conflicts} trade${m.conflicts>1?'s':''} in a committee's sector${m.sharp_conflicts?` (${m.sharp_conflicts} sharp)`:''}.</span>`:"";
+  const extraLine=(luckStr||confStr)?`<div class="pmeta2">${luckStr}${confStr}</div>`:"";
   const rows=(m.trades||[]).map(t=>{
     const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"";
     const co=t.company?`${t.company} (${t.ticker})`:t.ticker;
     const exn=Number(t.ex30!=null?t.ex30:t.excess);
-    return `<tr><td class="num">${d}</td><td class="${t.side==='sell'?'sell':'buy'}">${t.side==="sell"?"Sell":"Buy"}</td><td>${co}</td><td>${t.sector||"—"}</td><td class="${exn>=0?'pos':'neg'}">${exn>=0?'+':''}${exn.toFixed(0)}%</td><td>${t.sharp?'🚩':''}</td></tr>`;
+    return `<tr><td class="num nw">${d}</td><td class="nw ${t.side==='sell'?'sell':'buy'}">${t.side==="sell"?"Sell":"Buy"}</td><td class="co">${co}</td><td class="nw">${t.sector||"—"}</td><td class="nw ${exn>=0?'pos':'neg'}">${exn>=0?'+':''}${exn.toFixed(0)}%</td><td class="nw">${t.sharp?'🚩':''}${t.conflict?' ⚠️':''}</td></tr>`;
   }).join("");
   return `<a class="back" href="#board">← Back to leaderboard</a>
     <div class="phead">${av}<div>
       <div class="pname">${m.name} <span class="pill ${partyCls(m.party)}">${partyName(m.party)}</span> ${activeBadge(m.active)}</div>
       <div class="pmeta">${m.chamber} · ELO <b>${m.elo}</b> · ${m.wins}–${m.losses}–${m.ties} (${Number(m.winrate).toFixed(0)}% vs S&amp;P) ${sharpBadge}</div>
       <div class="pmeta2">Buys: ${m.n_buys} (${Number(m.buy_winrate).toFixed(0)}% beat market) · Sells: ${m.n_sells} (${Number(m.sell_winrate).toFixed(0)}% beat market)</div>
+      ${extraLine}
     </div></div>
     <div class="psec"><h3>Current committees</h3><div class="chips">${commHtml}</div></div>
     ${secTop?`<div class="psec"><h3>Most-traded sectors</h3><div class="chips">${secTop}</div></div>`:""}
     <div class="psec"><h3>All scored trades (${(m.trades||[]).length})</h3>
-      <div style="overflow:auto"><table class="ptbl"><thead><tr><th>Date</th><th>Side</th><th>Company</th><th>Sector</th><th>vs S&amp;P</th><th>🚩</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div style="overflow:auto"><table class="ptbl"><thead><tr><th>Date</th><th>Side</th><th>Company</th><th>Sector</th><th>vs S&amp;P</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table></div>
     </div>`;
 }
 

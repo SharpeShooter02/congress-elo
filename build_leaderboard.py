@@ -168,6 +168,12 @@ def slugify(s):
     return "".join(c if c.isalnum() else "-" for c in (s or "").lower()).strip("-") or "x"
 
 
+def clip(s, n=70):
+    """Bound a company/asset name so bond-style descriptions don't blow out the UI."""
+    s = (s or "").strip()
+    return (s[:n].rstrip() + "…") if len(s) > n else s
+
+
 def extract_name(row):
     """Member name across schemas: a single field (representative / senator / name),
     first_name + last_name (Senate JSON), or an 'office' string like
@@ -263,7 +269,7 @@ def load_trades():
                 "amount": sval(row.get("amount_range_label")) or sval(row.get("amount")),
                 "ret30": r30, "ret1y": r1y, "retsince": rsince,
                 "photo": photo, "bioguide": bg, "fid": fid,
-                "company": sval(row.get("asset_name")).split("(")[0].split("[")[0].strip(),
+                "company": clip(sval(row.get("asset_name")).split("(")[0].split("[")[0]),
             })
         if i % 40 == 0:
             log(f"  {i}/{len(roster)} filers · {len(trades)} trades so far")
@@ -416,6 +422,56 @@ def load_current_bioguides():
     return out
 
 
+# Curated: a keyword in a committee's name -> the market sectors it oversees.
+# Broad tax/spending committees (Ways & Means, Appropriations, Budget, Rules) are
+# deliberately omitted so they don't flag essentially every trade.
+COMMITTEE_SECTORS = {
+    "energy and commerce": {"Energy", "Utilities", "Health Care", "Telecommunications", "Technology"},
+    "energy":             {"Energy", "Utilities"},
+    "natural resources":  {"Energy", "Basic Materials", "Utilities"},
+    "financial services": {"Finance", "Real Estate"},
+    "banking":            {"Finance", "Real Estate"},
+    "armed services":     {"Industrials"},
+    "homeland security":  {"Industrials"},
+    "intelligence":       {"Industrials"},
+    "agriculture":        {"Consumer Staples", "Basic Materials"},
+    "health":             {"Health Care"},
+    "science":            {"Technology"},
+    "commerce":           {"Technology", "Telecommunications", "Industrials"},
+    "transportation":     {"Industrials"},
+}
+
+
+def build_jurisdiction(committees):
+    """bg -> {sector: [committee names that oversee it]} for current members."""
+    out = {}
+    for bg, coms in committees.items():
+        smap = {}
+        for c in coms:
+            cl = c.lower()
+            secs = set()
+            for kw, s in COMMITTEE_SECTORS.items():
+                if kw in cl:
+                    secs |= s
+            for s in secs:
+                smap.setdefault(s, [])
+                if c not in smap[s]:
+                    smap[s].append(c)
+        if smap:
+            out[bg] = smap
+    return out
+
+
+def luck_odds(wins, losses):
+    """Rough '1-in-N chance this is luck': binomial tail (normal approx) vs a coin flip."""
+    n = wins + losses
+    if n < 15 or wins <= n * 0.5:
+        return None
+    z = (wins - 0.5 - n * 0.5) / math.sqrt(n * 0.25)
+    p = max(0.5 * math.erfc(z / math.sqrt(2)), 1e-12)
+    return round(1 / p)
+
+
 # ---------------------------- ELO ---------------------------------
 def build():
     trades = load_trades()
@@ -471,14 +527,16 @@ def build():
                             "matches": 0, "sumExcess": 0.0,
                             "nb": 0, "bw": 0, "bsum": 0.0,   # buys:  count, wins, sum eff
                             "ns": 0, "sw": 0, "ssum": 0.0,   # sells: count, wins, sum eff
-                            "sharp": 0, "trades": [],        # sharp = fast big wins; trades = all
+                            "sharp": 0, "conf": 0, "sconf": 0, "trades": [],
                             "photo": "", "bioguide": "", "id": ""}
         return members[key]
 
     committees = load_committees()
     sectors = load_ticker_sectors()
     current_bg = load_current_bioguides()
+    juris = build_jurisdiction(committees)
     flagged = []   # individual sharp-call trades, for the "sketchiest trades" lists
+    all_tr = []    # every trade (for cluster / herding detection)
 
     def is_active(chamber, bioguide):
         # None for executive branch (no "seat" concept); True/False for Congress
@@ -508,6 +566,13 @@ def build():
             eff30 = t["ex30"] if t["side"] == "buy" else -t["ex30"]
         is_sharp = eff30 is not None and eff30 >= FLAG_PCT   # beat market 15%+ within a month
         si = sectors.get((t.get("ticker") or "").upper(), {})
+        sector = si.get("sector", "")
+        overlap = juris.get(t.get("bioguide", ""), {}).get(sector, []) if sector else []
+        conflict = bool(overlap)           # stock is in a sector a committee they sit on oversees
+        conf_com = overlap[0] if overlap else ""
+        if conflict:
+            m["conf"] += 1
+            if is_sharp: m["sconf"] += 1
         if is_sharp:
             m["sharp"] += 1
             flagged.append({
@@ -515,16 +580,23 @@ def build():
                 "chamber": t["chamber"], "active": is_active(t["chamber"], t.get("bioguide", "")),
                 "photo": t.get("photo", ""), "ticker": t.get("ticker", "") or "—",
                 "company": t.get("company", ""),
-                "sector": si.get("sector", ""), "industry": si.get("industry", ""),
+                "sector": sector, "industry": si.get("industry", ""),
                 "side": t["side"], "date": t["date"].isoformat(), "excess": round(eff30, 1),
                 "committees": committees.get(t.get("bioguide", ""), []),
+                "conflict": conflict, "conflict_committee": conf_com,
             })
         m["trades"].append({
             "date": t["date"].isoformat(), "side": t["side"],
             "ticker": t.get("ticker", "") or "—", "company": t.get("company", ""),
-            "sector": si.get("sector", ""), "excess": round(eff, 1),
+            "sector": sector, "excess": round(eff, 1),
             "ex30": round(eff30, 1) if eff30 is not None else None, "sharp": is_sharp,
+            "conflict": conflict, "conflict_committee": conf_com,
         })
+        tkc = t.get("ticker", "") or ""
+        if tkc and tkc != "—":
+            all_tr.append({"ticker": tkc, "company": t.get("company", ""), "sector": sector,
+                           "d": t["date"], "name": t["name"], "id": t.get("fid", ""),
+                           "side": t["side"], "sharp": is_sharp})
 
     for m in members.values():          # ensure every member has a stable id
         if not m["id"]:
@@ -547,6 +619,8 @@ def build():
             "sell_winrate": round(m["sw"] / m["ns"] * 100, 1) if m["ns"] else 0,
             "sell_avgexcess": round(m["ssum"] / m["ns"], 2) if m["ns"] else 0,
             "sharp": m["sharp"],
+            "conflicts": m["conf"], "sharp_conflicts": m["sconf"],
+            "luck_odds": luck_odds(int(m["wins"]), int(m["losses"])),
             "id": m["id"],
             "active": is_active(m["chamber"], m["bioguide"]),
             "photo": m["photo"],
@@ -563,6 +637,8 @@ def build():
             "elo": round(m["elo"]), "matches": m["matches"],
             "wins": int(m["wins"]), "losses": int(m["losses"]), "ties": int(m["ties"]),
             "winrate": round(m["wins"] / m["matches"] * 100, 1), "sharp": m["sharp"],
+            "conflicts": m["conf"], "sharp_conflicts": m["sconf"],
+            "luck_odds": luck_odds(int(m["wins"]), int(m["losses"])),
             "n_buys": m["nb"], "buy_winrate": round(m["bw"] / m["nb"] * 100, 1) if m["nb"] else 0,
             "n_sells": m["ns"], "sell_winrate": round(m["sw"] / m["ns"] * 100, 1) if m["ns"] else 0,
             "committees": committees.get(m["bioguide"], []),
@@ -583,15 +659,38 @@ def build():
         seen.add(k); flagged_top.append(f)
     earliest = min((t["date"] for t in scored), default=None)
     earliest_iso = earliest.isoformat() if earliest else ""
+
+    # cluster / herding detection: same ticker traded by >=3 distinct members within ~10 days
+    buckets = {}
+    for tr in all_tr:
+        buckets.setdefault((tr["ticker"], tr["d"].toordinal() // 10), []).append(tr)
+    clusters = []
+    for (tk, _), trs in buckets.items():
+        ids = {x["id"] for x in trs}
+        if len(ids) < 3:
+            continue
+        trs.sort(key=lambda x: x["d"])
+        clusters.append({
+            "ticker": tk, "company": trs[0]["company"], "sector": trs[0]["sector"],
+            "start": trs[0]["d"].isoformat(), "end": trs[-1]["d"].isoformat(),
+            "n_members": len(ids), "n_sharp": sum(1 for x in trs if x["sharp"]),
+            "trades": [{"name": x["name"], "id": x["id"], "side": x["side"],
+                        "date": x["d"].isoformat(), "sharp": x["sharp"]} for x in trs],
+        })
+    clusters.sort(key=lambda c: (c["n_members"], c["end"]), reverse=True)
+    clusters = clusters[:120]
+    log(f"[clusters] {len(clusters)} herding clusters")
+
     meta = {"generated": generated, "earliest": earliest_iso}
     payload = {"generated": generated, "holding_days": HOLDING_DAYS, "earliest": earliest_iso,
-               "trades_scored": len(scored), "members": out, "flagged": flagged_top}
+               "trades_scored": len(scored), "members": out, "flagged": flagged_top, "clusters": clusters}
 
     # data.json  -> fetched by the browser when hosted over http (enables Reload)
     OUT_JSON.write_text(json.dumps(payload, indent=1))
     # data.js    -> loaded via <script> so it also works from a local file:// open
     OUT_JS.write_text("window.REAL_DATA = " + json.dumps(out) + ";\n"
                       "window.REAL_FLAGGED = " + json.dumps(flagged_top) + ";\n"
+                      "window.REAL_CLUSTERS = " + json.dumps(clusters) + ";\n"
                       "window.REAL_META = " + json.dumps(meta) + ";\n")
 
     log(f"[done] {len(out)} members, {len(scored)} trades scored")
