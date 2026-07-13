@@ -173,7 +173,6 @@
         <option value="winrate">Win % vs S&amp;P</option>
         <option value="sharp">Suspicious calls (🚩)</option>
         <option value="sharp_conflicts">Committee conflicts (⚠️)</option>
-        <option value="luck_odds">Least likely to be luck</option>
         <option value="sell_winrate">Sell timing (win %)</option>
         <option value="buy_winrate">Buy timing (win %)</option>
         <option value="avgexcess">Avg excess return</option>
@@ -208,30 +207,22 @@
   <div id="flaggedwrap" style="margin-top:30px">
     <h2 style="font-size:19px;margin:0 0 4px">🚩 Sharpest trades</h2>
     <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b> — shown with the member, what the company does, and their current committees. A flag for scrutiny, not proof.</p>
-    <div style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:0 0 14px">
+    <div style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:0 0 12px">
+      <div class="ctl" style="max-width:200px">
+        <label>Range</label>
+        <select id="frange"><option value="recent">Last 12 months</option><option value="all">All time</option></select>
+      </div>
       <div class="ctl" style="max-width:200px">
         <label>Sort</label>
         <select id="fsort"><option value="mag">Biggest beat</option><option value="recent">Most recent</option></select>
       </div>
       <label style="display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--muted);padding-bottom:8px;cursor:pointer"><input type="checkbox" id="fconfonly" style="width:auto"> ⚠️ Committee conflicts only</label>
     </div>
-    <div class="fcols">
-      <div class="fcol">
-        <h3 class="fh">Last 12 months</h3>
-        <div id="fRecent"></div>
-        <div style="display:flex;gap:8px;margin-top:6px">
-          <button id="moreRecent" class="reload" style="display:none"></button>
-          <button id="lessRecent" class="reload" style="display:none">Show less</button>
-        </div>
-      </div>
-      <div class="fcol">
-        <h3 class="fh">All time <span id="fRange" style="text-transform:none;color:var(--muted);font-weight:400"></span></h3>
-        <div id="fAll"></div>
-        <div style="display:flex;gap:8px;margin-top:6px">
-          <button id="moreAll" class="reload" style="display:none"></button>
-          <button id="lessAll" class="reload" style="display:none">Show less</button>
-        </div>
-      </div>
+    <p class="src" id="fCoverage" style="margin:-2px 0 12px"></p>
+    <div id="fList"></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button id="fMore" class="reload" style="display:none"></button>
+      <button id="fLess" class="reload" style="display:none">Show less</button>
     </div>
   </div>
 
@@ -326,7 +317,7 @@ function avatarHtml(photo,name,cls){
     ? `<img class="${cls}" src="${photo}" loading="lazy" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'${cls} ${ph}',textContent:'${init}'}))">`
     : `<div class="${cls} ${ph}">${init}</div>`;
 }
-let sortKey="elo", sortDir=-1, shownMembers=20, shownRecent=20, shownAll=20, DATA_EARLIEST="", fSort="mag";
+let sortKey="elo", sortDir=-1, shownMembers=20, shownFlag=20, DATA_EARLIEST="", fSort="mag";
 function fmtPct(x){const s=(x>=0?"+":"")+Number(x).toFixed(1)+"%";return `<span class="${x>=0?'pos':'neg'} num">${s}</span>`;}
 function fitemHtml(t){
   const side=t.side==="sell"?"SOLD":"BOUGHT", scls=t.side==="sell"?"sell":"buy";
@@ -334,16 +325,12 @@ function fitemHtml(t){
   const co=t.company?`${t.company} (${t.ticker})`:`${t.ticker}`;
   const sect=[t.sector,t.industry].filter(Boolean).join(" · ");
   const sectLine=sect?`<div class="fsec">${sect}</div>`:"";
-  const cm=(t.committees||[]);
-  const comm=cm.length
-    ? `<div class="fcomm"><span class="lbl">Committees</span>${cm.join(" · ")}</div>`
-    : `<div class="fcomm dim"><span class="lbl">Committees</span>Not a current member</div>`;
   const confLine=t.conflict?`<div class="fconf">⚠️ On a committee overseeing this sector${t.conflict_committee?': '+t.conflict_committee:''}</div>`:"";
   return `<div class="fitem" data-id="${t.id||''}">${avatarHtml(t.photo,t.name,'av')}<div class="fmain">
     <div class="fname"><b>${t.name}</b> <span class="pill ${partyCls(t.party)}">${partyName(t.party)}</span> ${activeBadge(t.active)} <span class="fch">· ${t.chamber}</span></div>
     <div class="fmeta"><span class="${scls}">${side}</span> <b>${co}</b></div>
     <div class="fperf"><span class="pos">+${Number(t.excess).toFixed(0)}%</span> vs S&amp;P over 1 month · ${d}</div>
-    ${sectLine}${confLine}${comm}</div></div>`;
+    ${sectLine}${confLine}</div></div>`;
 }
 function renderFlist(el, arr, shown, btnId, lessId){
   el.innerHTML = arr.slice(0, shown).map(fitemHtml).join("") || '<span style="color:var(--muted)">None.</span>';
@@ -352,17 +339,16 @@ function renderFlist(el, arr, shown, btnId, lessId){
   if(less) less.style.display = shown>20 ? "" : "none";
 }
 function renderFlagged(){
-  const rEl=document.getElementById("fRecent"), aEl=document.getElementById("fAll");
-  if(!rEl||!aEl) return;
-  const rangeEl=document.getElementById("fRange");
-  if(rangeEl) rangeEl.textContent = DATA_EARLIEST ? "· data since "+new Date(DATA_EARLIEST).toLocaleDateString(undefined,{year:"numeric",month:"short"}) : "";
-  if(!FLAGGED.length){ rEl.innerHTML=aEl.innerHTML='<span style="color:var(--muted)">No flagged trades yet — rebuild the data.</span>'; return; }
-  const co=document.getElementById("fconfonly");
-  const base=(co&&co.checked)?FLAGGED.filter(t=>t.conflict):FLAGGED;
-  const cutoff=Date.now()-365*864e5;
-  const recent=sortFlagged(base.filter(t=>new Date(t.date).getTime()>=cutoff));
-  renderFlist(rEl, recent, shownRecent, "moreRecent", "lessRecent");
-  renderFlist(aEl, sortFlagged(base), shownAll, "moreAll", "lessAll");
+  const listEl=document.getElementById("fList"); if(!listEl) return;
+  const range=document.getElementById("frange").value;
+  const covEl=document.getElementById("fCoverage");
+  if(covEl) covEl.textContent=(range==="all"&&DATA_EARLIEST)?("Sharpest calls since "+new Date(DATA_EARLIEST).toLocaleDateString(undefined,{year:"numeric",month:"short"})):"";
+  const more=document.getElementById("fMore"), less=document.getElementById("fLess");
+  if(!FLAGGED.length){ listEl.innerHTML='<span style="color:var(--muted)">No flagged trades yet — rebuild the data.</span>'; if(more)more.style.display="none"; if(less)less.style.display="none"; return; }
+  const cb=document.getElementById("fconfonly");
+  let base=(cb&&cb.checked)?FLAGGED.filter(t=>t.conflict):FLAGGED;
+  if(range==="recent"){ const cutoff=Date.now()-365*864e5; base=base.filter(t=>new Date(t.date).getTime()>=cutoff); }
+  renderFlist(listEl, sortFlagged(base), shownFlag, "fMore", "fLess");
 }
 function sortFlagged(arr){
   return arr.slice().sort((a,b)=> fSort==="recent"
@@ -439,13 +425,13 @@ document.getElementById("sortsel").addEventListener("change",e=>{sortKey=e.targe
 document.getElementById("search").addEventListener("input",rerender);
 document.getElementById("mintrades").addEventListener("input",e=>{document.getElementById("mtv").textContent=e.target.value;rerender();});
 document.getElementById("moreMembers").addEventListener("click",()=>{shownMembers+=20;render();});
-document.getElementById("moreRecent").addEventListener("click",()=>{shownRecent+=20;renderFlagged();});
-document.getElementById("moreAll").addEventListener("click",()=>{shownAll+=20;renderFlagged();});
-document.getElementById("fsort").addEventListener("change",e=>{fSort=e.target.value;shownRecent=20;shownAll=20;renderFlagged();});
-document.getElementById("fconfonly").addEventListener("change",()=>{shownRecent=20;shownAll=20;renderFlagged();});
 document.getElementById("lessMembers").addEventListener("click",()=>{shownMembers=20;render();});
-document.getElementById("lessRecent").addEventListener("click",()=>{shownRecent=20;renderFlagged();});
-document.getElementById("lessAll").addEventListener("click",()=>{shownAll=20;renderFlagged();});
+function rerenderFlag(){shownFlag=20;renderFlagged();}
+document.getElementById("frange").addEventListener("change",rerenderFlag);
+document.getElementById("fsort").addEventListener("change",e=>{fSort=e.target.value;rerenderFlag();});
+document.getElementById("fconfonly").addEventListener("change",rerenderFlag);
+document.getElementById("fMore").addEventListener("click",()=>{shownFlag+=20;renderFlagged();});
+document.getElementById("fLess").addEventListener("click",()=>{shownFlag=20;renderFlagged();});
 document.getElementById("reload").addEventListener("click",async()=>{
   const btn=document.getElementById("reload"); btn.disabled=true; const old=btn.textContent; btn.textContent="⟳ Loading…";
   applyState(await loadData()); render();
@@ -514,9 +500,8 @@ function memberHtml(m){
   const cm=(m.committees||[]);
   const commHtml=cm.length?cm.map(c=>`<span class="chip">${c}</span>`).join(""):`<span class="chip dim">Not a current member</span>`;
   const sharpBadge=m.sharp?`<span class="flag">🚩 ${m.sharp} sharp call${m.sharp>1?'s':''}</span>`:"";
-  const luckStr=m.luck_odds?`≈ 1-in-${Number(m.luck_odds).toLocaleString()} chance this record is luck. `:"";
   const confStr=m.conflicts?`<span class="conf">⚠️ ${m.conflicts} trade${m.conflicts>1?'s':''} in a committee's sector${m.sharp_conflicts?` (${m.sharp_conflicts} sharp)`:''}.</span>`:"";
-  const extraLine=(luckStr||confStr)?`<div class="pmeta2">${luckStr}${confStr}</div>`:"";
+  const extraLine=confStr?`<div class="pmeta2">${confStr}</div>`:"";
   const rows=(m.trades||[]).map(t=>{
     const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"";
     const co=t.company?`${t.company} (${t.ticker})`:t.ticker;
