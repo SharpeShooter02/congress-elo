@@ -404,6 +404,18 @@ def load_ticker_sectors():
     return out
 
 
+def load_current_bioguides():
+    """Set of bioguide ids for members CURRENTLY serving in Congress."""
+    try:
+        legs = fetch_json(LEG_URL, "legislators.json", max_age_h=24 * 30)
+    except Exception as e:
+        log(f"[current] skip ({e})"); return set()
+    out = {(l.get("id") or {}).get("bioguide") for l in legs}
+    out.discard(None)
+    log(f"[current] {len(out)} sitting members of Congress")
+    return out
+
+
 # ---------------------------- ELO ---------------------------------
 def build():
     trades = load_trades()
@@ -465,7 +477,12 @@ def build():
 
     committees = load_committees()
     sectors = load_ticker_sectors()
+    current_bg = load_current_bioguides()
     flagged = []   # individual sharp-call trades, for the "sketchiest trades" lists
+
+    def is_active(chamber, bioguide):
+        # None for executive branch (no "seat" concept); True/False for Congress
+        return (bioguide in current_bg) if chamber in ("House", "Senate") else None
 
     for t in scored:
         m = M(t["name"], t["chamber"], t.get("party", ""))
@@ -494,7 +511,8 @@ def build():
         if is_sharp:
             m["sharp"] += 1
             flagged.append({
-                "name": t["name"], "party": t.get("party", ""), "chamber": t["chamber"],
+                "name": t["name"], "id": t.get("fid", ""), "party": t.get("party", ""),
+                "chamber": t["chamber"], "active": is_active(t["chamber"], t.get("bioguide", "")),
                 "photo": t.get("photo", ""), "ticker": t.get("ticker", "") or "—",
                 "company": t.get("company", ""),
                 "sector": si.get("sector", ""), "industry": si.get("industry", ""),
@@ -530,6 +548,7 @@ def build():
             "sell_avgexcess": round(m["ssum"] / m["ns"], 2) if m["ns"] else 0,
             "sharp": m["sharp"],
             "id": m["id"],
+            "active": is_active(m["chamber"], m["bioguide"]),
             "photo": m["photo"],
         })
     out.sort(key=lambda x: -x["elo"])
@@ -540,7 +559,7 @@ def build():
         if m["matches"] < MIN_TRADES: continue
         prof = {
             "id": m["id"], "name": m["name"], "party": m["party"], "chamber": m["chamber"],
-            "photo": m["photo"],
+            "active": is_active(m["chamber"], m["bioguide"]), "photo": m["photo"],
             "elo": round(m["elo"]), "matches": m["matches"],
             "wins": int(m["wins"]), "losses": int(m["losses"]), "ties": int(m["ties"]),
             "winrate": round(m["wins"] / m["matches"] * 100, 1), "sharp": m["sharp"],

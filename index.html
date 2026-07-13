@@ -100,7 +100,14 @@
   .fcols{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;}
   .fcol{flex:1;min-width:320px;}
   .fh{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 10px;}
-  .fitem{display:flex;gap:11px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:9px;}
+  .fitem{display:flex;gap:11px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:9px;cursor:pointer;transition:border-color .12s;}
+  .fitem:hover{border-color:var(--accent);}
+  .fperf{font-size:12.5px;margin-top:2px;color:var(--muted);}
+  .buy{color:var(--win);font-weight:600;}
+  .sell{color:var(--loss);font-weight:600;}
+  .stat{display:inline-block;font-size:10px;font-weight:600;padding:1px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.3px;vertical-align:middle;}
+  .stat.cur{background:rgba(63,185,80,.15);color:var(--win);}
+  .stat.fmr{background:rgba(154,167,180,.14);color:var(--muted);}
   .fitem .av{width:36px;height:36px;margin:0;flex:none;}
   .av.avph{display:inline-flex;align-items:center;justify-content:center;background:var(--panel2);color:var(--muted);font-size:14px;font-weight:600;}
   .fmain{min-width:0;flex:1;}
@@ -191,7 +198,7 @@
   <div id="view-sharp" style="display:none">
   <div id="flaggedwrap" style="margin-top:30px">
     <h2 style="font-size:19px;margin:0 0 4px">🚩 Sharpest trades</h2>
-    <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b>. Each shows the member, <b>what the company does</b>, and <b>every committee they currently sit on</b> — so you can judge for yourself whether they had a hand in the industries they were trading. A flag for scrutiny, not proof.</p>
+    <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b> — shown with the member, what the company does, and their current committees. A flag for scrutiny, not proof.</p>
     <div class="ctl" style="margin:0 0 14px;max-width:200px">
       <label>Sort</label>
       <select id="fsort"><option value="mag">Biggest beat</option><option value="recent">Most recent</option></select>
@@ -295,25 +302,30 @@ function applyState(res){
 const PARTY_NAME={D:"DEM",R:"Rep"};
 function partyName(p){return PARTY_NAME[p]||"Unlisted";}
 function partyCls(p){return (p==="D"||p==="R")?p:"U";}
+function activeBadge(a){ return a===true?'<span class="stat cur">Current</span>':a===false?'<span class="stat fmr">Former</span>':''; }
+function avatarHtml(photo,name,cls){
+  const init=((name||"?").trim()[0]||"?").toUpperCase();
+  const ph=cls==="pav"?"pavph":"avph";
+  return photo
+    ? `<img class="${cls}" src="${photo}" loading="lazy" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'${cls} ${ph}',textContent:'${init}'}))">`
+    : `<div class="${cls} ${ph}">${init}</div>`;
+}
 let sortKey="elo", sortDir=-1, shownMembers=20, shownRecent=20, shownAll=20, DATA_EARLIEST="", fSort="mag";
 function fmtPct(x){const s=(x>=0?"+":"")+Number(x).toFixed(1)+"%";return `<span class="${x>=0?'pos':'neg'} num">${s}</span>`;}
 function fitemHtml(t){
-  const side=t.side==="sell"?"SOLD":"BOUGHT";
-  const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short"}):"";
-  const initial=((t.name||"?").trim()[0]||"?").toUpperCase();
-  const av=t.photo
-    ? `<img class="av" src="${t.photo}" loading="lazy" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'av avph',textContent:'${initial}'}))">`
-    : `<div class="av avph">${initial}</div>`;
+  const side=t.side==="sell"?"SOLD":"BOUGHT", scls=t.side==="sell"?"sell":"buy";
+  const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"";
   const co=t.company?`${t.company} (${t.ticker})`:`${t.ticker}`;
   const sect=[t.sector,t.industry].filter(Boolean).join(" · ");
-  const sectLine=sect?`<div class="fsec">🏢 ${sect}</div>`:"";
+  const sectLine=sect?`<div class="fsec">${sect}</div>`:"";
   const cm=(t.committees||[]);
   const comm=cm.length
     ? `<div class="fcomm"><span class="lbl">Committees</span>${cm.join(" · ")}</div>`
-    : `<div class="fcomm dim"><span class="lbl">Committees</span>— not a current member</div>`;
-  return `<div class="fitem">${av}<div class="fmain">
-    <div class="fname"><b>${t.name}</b> <span class="pill ${partyCls(t.party)}">${partyName(t.party)}</span> <span class="fch">· ${t.chamber}</span></div>
-    <div class="fmeta">${side} <b>${co}</b> <span class="pos">+${Number(t.excess).toFixed(0)}%</span> vs S&amp;P · ${d}</div>
+    : `<div class="fcomm dim"><span class="lbl">Committees</span>Not a current member</div>`;
+  return `<div class="fitem" data-id="${t.id||''}">${avatarHtml(t.photo,t.name,'av')}<div class="fmain">
+    <div class="fname"><b>${t.name}</b> <span class="pill ${partyCls(t.party)}">${partyName(t.party)}</span> ${activeBadge(t.active)} <span class="fch">· ${t.chamber}</span></div>
+    <div class="fmeta"><span class="${scls}">${side}</span> <b>${co}</b></div>
+    <div class="fperf"><span class="pos">+${Number(t.excess).toFixed(0)}%</span> vs S&amp;P over 1 month · ${d}</div>
     ${sectLine}${comm}</div></div>`;
 }
 function renderFlist(el, arr, shown, btnId, lessId){
@@ -372,7 +384,7 @@ function render(){
   body.innerHTML=vis.map((m,i)=>`
     <tr class="mrow ${i===0&&sortKey==='elo'&&sortDir===-1?'top1':''}" data-id="${m.id||''}">
       <td class="rank">${i+1}</td>
-      <td class="name">${m.photo?`<img class="av" src="${m.photo}" loading="lazy" alt="" onerror="this.style.display='none'">`:''}${m.name}${m.sharp?`<span class="flag" title="${m.sharp} sharp call${m.sharp>1?'s':''}: beat the market 15%+ within a month of the trade — flagged for scrutiny, not proof">🚩${m.sharp}</span>`:''}</td>
+      <td class="name">${avatarHtml(m.photo,m.name,'av')}${m.name} ${activeBadge(m.active)}${m.sharp?`<span class="flag" title="${m.sharp} sharp call${m.sharp>1?'s':''}: beat the market 15%+ within a month of the trade — flagged for scrutiny, not proof">🚩${m.sharp}</span>`:''}</td>
       <td><span class="pill ${partyCls(m.party)}">${partyName(m.party)}</span></td>
       <td>${m.chamber}</td>
       <td class="elo">${m.elo}</td>
@@ -425,6 +437,11 @@ document.getElementById("body").addEventListener("click",e=>{
   const tr=e.target.closest("tr.mrow"); if(!tr||!tr.dataset.id)return;
   location.hash="member/"+tr.dataset.id;
 });
+// click a sharp-trade card -> open that member's profile
+document.getElementById("flaggedwrap").addEventListener("click",e=>{
+  const it=e.target.closest(".fitem"); if(!it||!it.dataset.id)return;
+  location.hash="member/"+it.dataset.id;
+});
 
 // ---------- routing ----------
 function showView(v){
@@ -451,10 +468,7 @@ async function renderMember(id){
   el.innerHTML=memberHtml(m);
 }
 function memberHtml(m){
-  const initial=((m.name||"?").trim()[0]||"?").toUpperCase();
-  const av=m.photo
-    ? `<img class="pav" src="${m.photo}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'pav pavph',textContent:'${initial}'}))">`
-    : `<div class="pav pavph">${initial}</div>`;
+  const av=avatarHtml(m.photo,m.name,'pav');
   const secCount={};
   (m.trades||[]).forEach(t=>{ if(t.sector) secCount[t.sector]=(secCount[t.sector]||0)+1; });
   const secTop=Object.entries(secCount).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([s,n])=>`<span class="chip">${s} · ${n}</span>`).join("");
@@ -465,11 +479,11 @@ function memberHtml(m){
     const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"";
     const co=t.company?`${t.company} (${t.ticker})`:t.ticker;
     const exn=Number(t.ex30!=null?t.ex30:t.excess);
-    return `<tr><td class="num">${d}</td><td>${t.side==="sell"?"Sell":"Buy"}</td><td>${co}</td><td>${t.sector||"—"}</td><td class="${exn>=0?'pos':'neg'}">${exn>=0?'+':''}${exn.toFixed(0)}%</td><td>${t.sharp?'🚩':''}</td></tr>`;
+    return `<tr><td class="num">${d}</td><td class="${t.side==='sell'?'sell':'buy'}">${t.side==="sell"?"Sell":"Buy"}</td><td>${co}</td><td>${t.sector||"—"}</td><td class="${exn>=0?'pos':'neg'}">${exn>=0?'+':''}${exn.toFixed(0)}%</td><td>${t.sharp?'🚩':''}</td></tr>`;
   }).join("");
   return `<a class="back" href="#board">← Back to leaderboard</a>
     <div class="phead">${av}<div>
-      <div class="pname">${m.name} <span class="pill ${partyCls(m.party)}">${partyName(m.party)}</span></div>
+      <div class="pname">${m.name} <span class="pill ${partyCls(m.party)}">${partyName(m.party)}</span> ${activeBadge(m.active)}</div>
       <div class="pmeta">${m.chamber} · ELO <b>${m.elo}</b> · ${m.wins}–${m.losses}–${m.ties} (${Number(m.winrate).toFixed(0)}% vs S&amp;P) ${sharpBadge}</div>
       <div class="pmeta2">Buys: ${m.n_buys} (${Number(m.buy_winrate).toFixed(0)}% beat market) · Sells: ${m.n_sells} (${Number(m.sell_winrate).toFixed(0)}% beat market)</div>
     </div></div>
