@@ -163,6 +163,11 @@ def fnum(v):
         return None
 
 
+def slugify(s):
+    """URL/filesystem-safe id from a name."""
+    return "".join(c if c.isalnum() else "-" for c in (s or "").lower()).strip("-") or "x"
+
+
 def extract_name(row):
     """Member name across schemas: a single field (representative / senator / name),
     first_name + last_name (Senate JSON), or an 'office' string like
@@ -257,7 +262,7 @@ def load_trades():
                 "side": side, "date": tdate,
                 "amount": sval(row.get("amount_range_label")) or sval(row.get("amount")),
                 "ret30": r30, "ret1y": r1y, "retsince": rsince,
-                "photo": photo, "bioguide": bg,
+                "photo": photo, "bioguide": bg, "fid": fid,
                 "company": sval(row.get("asset_name")).split("(")[0].split("[")[0].strip(),
             })
         if i % 40 == 0:
@@ -454,8 +459,8 @@ def build():
                             "matches": 0, "sumExcess": 0.0,
                             "nb": 0, "bw": 0, "bsum": 0.0,   # buys:  count, wins, sum eff
                             "ns": 0, "sw": 0, "ssum": 0.0,   # sells: count, wins, sum eff
-                            "sharp": 0, "top": [],           # sharp = fast big wins; top = trades
-                            "photo": "", "bioguide": ""}
+                            "sharp": 0, "trades": [],        # sharp = fast big wins; trades = all
+                            "photo": "", "bioguide": "", "id": ""}
         return members[key]
 
     committees = load_committees()
@@ -466,6 +471,7 @@ def build():
         m = M(t["name"], t["chamber"], t.get("party", ""))
         if not m["photo"] and t.get("photo"): m["photo"] = t["photo"]
         if not m["bioguide"] and t.get("bioguide"): m["bioguide"] = t["bioguide"]
+        if not m["id"] and t.get("fid"): m["id"] = t["fid"]
         eff = t["excess"] if t["side"] == "buy" else -t["excess"]  # sells win when stock lags
         S = 1.0 if eff > TIE_BAND_PCT else (0.0 if eff < -TIE_BAND_PCT else 0.5)
         E = 1.0 / (1.0 + 10 ** ((MARKET_ELO - m["elo"]) / ELO_DIV))
@@ -484,9 +490,9 @@ def build():
         if t.get("ex30") is not None:
             eff30 = t["ex30"] if t["side"] == "buy" else -t["ex30"]
         is_sharp = eff30 is not None and eff30 >= FLAG_PCT   # beat market 15%+ within a month
+        si = sectors.get((t.get("ticker") or "").upper(), {})
         if is_sharp:
             m["sharp"] += 1
-            si = sectors.get((t.get("ticker") or "").upper(), {})
             flagged.append({
                 "name": t["name"], "party": t.get("party", ""), "chamber": t["chamber"],
                 "photo": t.get("photo", ""), "ticker": t.get("ticker", "") or "—",
@@ -495,7 +501,16 @@ def build():
                 "side": t["side"], "date": t["date"].isoformat(), "excess": round(eff30, 1),
                 "committees": committees.get(t.get("bioguide", ""), []),
             })
-        m["top"].append((eff, t.get("ticker", ""), t["side"], t["date"].isoformat(), is_sharp))
+        m["trades"].append({
+            "date": t["date"].isoformat(), "side": t["side"],
+            "ticker": t.get("ticker", "") or "—", "company": t.get("company", ""),
+            "sector": si.get("sector", ""), "excess": round(eff, 1),
+            "ex30": round(eff30, 1) if eff30 is not None else None, "sharp": is_sharp,
+        })
+
+    for m in members.values():          # ensure every member has a stable id
+        if not m["id"]:
+            m["id"] = slugify(m["name"] + "-" + m["chamber"])
 
     out = []
     for m in members.values():
@@ -514,14 +529,28 @@ def build():
             "sell_winrate": round(m["sw"] / m["ns"] * 100, 1) if m["ns"] else 0,
             "sell_avgexcess": round(m["ssum"] / m["ns"], 2) if m["ns"] else 0,
             "sharp": m["sharp"],
-            "top_trades": [
-                {"ticker": tk or "—", "side": sd, "excess": round(e, 1), "date": dstr, "sharp": bool(sh)}
-                for e, tk, sd, dstr, sh in sorted(m["top"], key=lambda x: -x[0])[:3]
-            ],
+            "id": m["id"],
             "photo": m["photo"],
-            "committees": committees.get(m["bioguide"], []),
         })
     out.sort(key=lambda x: -x["elo"])
+
+    # per-member profile files (fetched on demand by the profile view)
+    member_dir = Path(__file__).with_name("member"); member_dir.mkdir(exist_ok=True)
+    for m in members.values():
+        if m["matches"] < MIN_TRADES: continue
+        prof = {
+            "id": m["id"], "name": m["name"], "party": m["party"], "chamber": m["chamber"],
+            "photo": m["photo"],
+            "elo": round(m["elo"]), "matches": m["matches"],
+            "wins": int(m["wins"]), "losses": int(m["losses"]), "ties": int(m["ties"]),
+            "winrate": round(m["wins"] / m["matches"] * 100, 1), "sharp": m["sharp"],
+            "n_buys": m["nb"], "buy_winrate": round(m["bw"] / m["nb"] * 100, 1) if m["nb"] else 0,
+            "n_sells": m["ns"], "sell_winrate": round(m["sw"] / m["ns"] * 100, 1) if m["ns"] else 0,
+            "committees": committees.get(m["bioguide"], []),
+            "trades": sorted(m["trades"], key=lambda x: x["date"], reverse=True),
+        }
+        (member_dir / (m["id"] + ".json")).write_text(json.dumps(prof))
+    log(f"[member] wrote {len(out)} profile files")
 
     generated = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
     # Keep the 700 most RECENT sharp trades (any magnitude) AND the 700 BIGGEST all-time,
