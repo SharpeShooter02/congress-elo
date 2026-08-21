@@ -4,135 +4,341 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Congressional Trading ELO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
+  /* ==================================================================
+     Steel + light chrome — the same Win9x / Web 1.0 skin as the main
+     site (sharpeshooter02.github.io): Oxanium display type, Verdana
+     body, hard bevels, zero border radius.
+     Class names are unchanged so the render JS below still works.
+     ================================================================== */
   :root{
-    --bg:#0e1117; --panel:#161b22; --panel2:#1c232d; --line:#2a323d;
-    --txt:#e6edf3; --muted:#9aa7b4; --accent:#4c8dff; --win:#3fb950; --loss:#f85149;
-    --amber:#e3b341; --dem:#5b8def; --rep:#f0656a; --ind:#b07cf0;
+    --bg:#dcdfe4; --panel:#eef0f3; --panel2:#e2e6ea;
+    --line:#9aa3b0; --line-dark:#6f7783;
+    --txt:#1c2128; --muted:#59616d;
+    --accent:#2f6690; --accent-dark:#14425f; --visited:#6b3f8f;
+    --hi:#ffffff; --lo:#8b929c; --mark:#fff4b8;
+    --win:#1a7a33; --loss:#b3261e; --amber:#8a5a00;
+    --dem:#2f5fb0; --rep:#b03a3f; --ind:#6b3f8f;
+    --disp:"Oxanium","Trebuchet MS",Verdana,sans-serif;
+    --body:Verdana,Tahoma,Geneva,"DejaVu Sans",sans-serif;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--txt);
-    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
-  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px;}
-  h1{font-size:26px;margin:0 0 4px;letter-spacing:-.3px;}
-  .sub{color:var(--muted);margin:0 0 18px;max-width:760px;}
-  .src{color:var(--muted);font-size:12px;margin:0 0 16px;line-height:1.5;}
-  .src a{color:var(--muted);}
-  .tabs{display:flex;gap:6px;margin:2px 0 18px;border-bottom:1px solid var(--line);}
-  .tabs a{padding:9px 14px;color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;border-bottom:2px solid transparent;margin-bottom:-1px;}
-  .tabs a:hover{color:var(--txt);}
-  .tabs a.active{color:var(--accent);border-bottom-color:var(--accent);}
-  tr.mrow:hover td.name{color:var(--accent);}
-  .back{display:inline-block;color:var(--muted);text-decoration:none;font-size:13px;margin-bottom:16px;}
-  .back:hover{color:var(--accent);}
-  .phead{display:flex;gap:16px;align-items:center;margin-bottom:8px;}
-  .pav{width:72px;height:72px;border-radius:50%;object-fit:cover;background:var(--panel2);border:1px solid var(--line);flex:none;}
-  .pav.pavph{display:inline-flex;align-items:center;justify-content:center;color:var(--muted);font-size:28px;font-weight:700;}
-  .pname{font-size:22px;font-weight:700;}
-  .pmeta{color:var(--muted);font-size:14px;margin-top:5px;}
-  .pmeta b{color:var(--txt);}
-  .pmeta2{color:var(--muted);font-size:13px;margin-top:3px;}
-  .psec{margin:22px 0;}
-  .psec h3{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 10px;}
-  .chips{display:flex;flex-wrap:wrap;gap:7px;}
-  .chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--txt);}
-  .chip.dim{color:var(--muted);}
-  .ptbl{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-  .ptbl th,.ptbl td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top;}
-  .ptbl th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);background:var(--panel2);white-space:nowrap;}
-  .ptbl td.nw{white-space:nowrap;}
-  .ptbl td.co{word-break:break-word;min-width:150px;}
-  .ptbl td.num,.ptbl td.pos,.ptbl td.neg{font-variant-numeric:tabular-nums;white-space:nowrap;}
-  .ptbl tbody tr:last-child td{border-bottom:none;}
-  .badge{display:inline-block;background:rgba(227,179,65,.15);color:var(--amber);
-    border:1px solid rgba(227,179,65,.4);border-radius:999px;padding:3px 12px;
-    font-size:12px;font-weight:600;letter-spacing:.4px;margin-bottom:14px;text-transform:uppercase;}
-  .toolbar{display:flex;align-items:center;gap:12px;margin:0 2px 14px;flex-wrap:wrap;}
-  .marketline{color:var(--muted);font-size:13px;margin:0;}
-  .marketline b{color:var(--txt);}
-  .upd{color:var(--muted);font-size:12px;}
-  button.reload{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
-    border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;}
-  button.reload:hover{border-color:var(--accent);color:var(--accent);}
-  button.reload:disabled{opacity:.5;cursor:default;}
+  *{border-radius:0 !important}
+  body{margin:0;color:var(--txt);background-color:var(--bg);
+    /* Subtle tiled weave, the way every 1999 page had a tiling bg */
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Crect width='8' height='8' fill='%23dcdfe4'/%3E%3Cpath d='M0 0h4v4H0z' fill='%23d5d9df'/%3E%3Cpath d='M4 4h4v4H4z' fill='%23d5d9df'/%3E%3C/svg%3E");
+    background-repeat:repeat;background-attachment:fixed;
+    font:14px/1.6 var(--body);}
+  ::selection{background:var(--accent);color:#fff}
+
+  /* ---- masthead: title bar, matching the main site ---- */
+  .masthead{background:var(--panel);border:3px outset var(--panel2);border-top:0;
+    position:sticky;top:0;z-index:20;}
+  .masthead .mh{max-width:1080px;margin:0 auto;padding:9px 16px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .masthead .brand{font-family:var(--disp);font-weight:800;font-size:15px;
+    letter-spacing:.05em;text-transform:uppercase;color:var(--accent-dark);
+    text-decoration:none;}
+  .masthead .brand:hover{background:var(--mark)}
+  .mhnav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+  .mhnav a{font-family:var(--disp);font-weight:600;font-size:12px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--txt);text-decoration:none;padding:5px 11px;
+    border:3px outset var(--panel2);background:var(--panel2);}
+  .mhnav a:hover{background:var(--accent);color:#fff}
+  .mhnav a:active{border-style:inset}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:22px 16px 60px;}
+
+  h1,h2,h3{font-family:var(--disp);font-weight:800;color:var(--accent-dark);
+    letter-spacing:.04em;text-transform:uppercase;line-height:1.3;}
+  h1{font-size:25px;margin:0 0 6px;}
+  .sub{color:var(--txt);margin:0 0 16px;max-width:820px;font-size:13.5px;}
+  .src{color:var(--muted);font-size:11.5px;margin:0 0 16px;line-height:1.6;}
+  a{color:var(--accent);text-decoration:underline}
+  a:visited{color:var(--visited)}
+  a:hover{color:var(--accent-dark);background:var(--mark)}
+  .src a{color:var(--muted)}
+  b,strong{color:#000}
+
+  /* ---- tabs: raised buttons, pressed in when active ---- */
+  .tabs{display:flex;gap:4px;margin:2px 0 16px;border-bottom:3px groove var(--line);
+    padding-bottom:6px;flex-wrap:wrap;}
+  .tabs a{font-family:var(--disp);font-weight:600;font-size:12px;letter-spacing:.06em;
+    text-transform:uppercase;padding:7px 13px;color:var(--txt);text-decoration:none;
+    border:3px outset var(--panel2);background:var(--panel2);}
+  .tabs a:hover{background:var(--mark);color:var(--accent-dark)}
+  .tabs a.active{background:var(--accent);color:#fff;border-style:inset}
+  .tabs a:active{border-style:inset}
+
+  .back{display:inline-block;color:var(--accent);font-size:12px;margin-bottom:14px;
+    font-family:var(--disp);font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+
+  /* ---- status badge: an inset status-bar field ---- */
+  .badge{display:inline-block;background:var(--panel);border:2px inset var(--panel2);
+    color:var(--muted);padding:4px 12px;font-family:var(--disp);font-weight:600;
+    font-size:11px;letter-spacing:.08em;margin-bottom:14px;text-transform:uppercase;}
+  .badge.live{color:var(--win)}
+
+  /* ---- toolbar / controls panel ---- */
+  .toolbar{display:flex;align-items:center;gap:12px;margin:0 0 14px;flex-wrap:wrap;}
+  .marketline{color:var(--txt);font-size:12.5px;margin:0;}
+  .upd{color:var(--muted);font-size:11px;font-family:var(--disp);letter-spacing:.04em;}
+  button.reload{font-family:var(--disp);font-weight:600;font-size:11.5px;letter-spacing:.06em;
+    text-transform:uppercase;background:var(--panel2);color:var(--txt);
+    border:3px outset var(--panel2);padding:6px 13px;cursor:pointer;}
+  button.reload:hover{background:var(--accent);color:#fff}
+  button.reload:active{border-style:inset}
+  button.reload:disabled{color:var(--lo);background:var(--panel2);border-style:outset;cursor:default}
+
   .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:end;
-    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+    background:var(--panel);border:3px outset var(--panel2);padding:13px 15px;margin-bottom:16px;}
   .ctl{display:flex;flex-direction:column;gap:5px;}
-  .ctl label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
-  select,input[type=range],input[type=text]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
-    border-radius:8px;padding:7px 10px;font-size:14px;}
-  input[type=text]{width:100%;}
-  .rangeval{color:var(--accent);font-weight:600;}
-  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);
-    border-radius:12px;overflow:hidden;}
-  th,td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
-  th:nth-child(2),td:nth-child(2){text-align:left;}
-  th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel2);}
-  th.sorted{color:var(--accent);}
-  th .arrow{font-size:9px;opacity:.8;}
-  tbody tr:hover{background:var(--panel2);}
-  tbody tr:last-child td{border-bottom:none;}
-  .rank{color:var(--muted);width:38px;}
-  .name{font-weight:600;}
-  .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;}
-  .D{background:rgba(91,141,239,.16);color:var(--dem);}
-  .R{background:rgba(240,101,106,.16);color:var(--rep);}
-  .I{background:rgba(176,124,240,.16);color:var(--ind);}
-  .U{background:rgba(154,167,180,.16);color:var(--muted);}
-  .elo{font-weight:700;font-variant-numeric:tabular-nums;}
-  .pos{color:var(--win);} .neg{color:var(--loss);}
-  .num{font-variant-numeric:tabular-nums;}
-  .top1 .elo{color:var(--amber);}
-  details{margin-top:20px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px 18px;}
-  summary{cursor:pointer;padding:12px 0;font-weight:600;}
-  details p,details li{color:var(--muted);font-size:14px;}
-  code{background:var(--panel2);padding:1px 6px;border-radius:5px;color:var(--txt);font-size:13px;}
-  .foot{margin-top:22px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:16px;}
-  tr.mrow{cursor:pointer;}
-  tr.mrow td.rank::after{content:" ›";color:var(--muted);}
-  tr.detail td{background:var(--panel2);padding:0;}
-  .detailwrap{padding:11px 16px;font-size:13px;color:var(--muted);text-align:left;white-space:normal;}
-  .detailwrap .tt{display:inline-block;background:var(--panel);border:1px solid var(--line);
-    border-radius:8px;padding:4px 10px;margin:3px 6px 3px 0;color:var(--txt);font-size:12px;}
-  .detailwrap .tt .s{color:var(--muted);}
-  .flag{font-size:11px;color:var(--amber);font-weight:600;white-space:nowrap;margin-left:5px;}
-  .av{width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:7px;object-fit:cover;background:var(--panel2);border:1px solid var(--line);}
-  .detailwrap .comm{margin-top:9px;color:var(--muted);}
-  .detailwrap .comm b{color:var(--txt);}
-  .fcols{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;}
-  .fcol{flex:1;min-width:320px;}
-  .fh{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 10px;}
-  .fitem{display:flex;gap:11px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:9px;cursor:pointer;transition:border-color .12s;}
-  .fitem:hover{border-color:var(--accent);}
-  .fperf{font-size:12.5px;margin-top:2px;color:var(--muted);}
-  .buy{color:var(--win);font-weight:600;}
-  .sell{color:var(--loss);font-weight:600;}
-  .stat{display:inline-block;font-size:10px;font-weight:600;padding:1px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.3px;vertical-align:middle;}
-  .stat.cur{background:rgba(63,185,80,.15);color:var(--win);}
-  .stat.fmr{background:rgba(154,167,180,.14);color:var(--muted);}
-  .fitem .av{width:36px;height:36px;margin:0;flex:none;}
-  .av.avph{display:inline-flex;align-items:center;justify-content:center;background:var(--panel2);color:var(--muted);font-size:14px;font-weight:600;}
-  .fmain{min-width:0;flex:1;}
-  .fname{font-size:14px;line-height:1.35;}
-  .fch{color:var(--muted);font-size:13px;}
-  .fmeta{color:var(--muted);font-size:13px;margin-top:3px;line-height:1.4;}
-  .fmeta b{color:var(--txt);}
-  .fsec{color:var(--txt);font-size:12px;margin-top:5px;}
-  .fcomm{color:var(--muted);font-size:11.5px;margin-top:5px;line-height:1.5;
+  .ctl label{font-family:var(--disp);font-size:10.5px;font-weight:600;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--accent-dark);}
+  select,input[type=text]{background:#fff;color:var(--txt);border:2px inset var(--panel2);
+    padding:6px 8px;font:13px var(--body);}
+  select:focus,input[type=text]:focus{outline:2px solid var(--accent);outline-offset:-2px}
+  input[type=text]{width:100%}
+  input[type=range]{accent-color:var(--accent);background:var(--panel2);
+    border:2px inset var(--panel2);padding:3px;}
+  .rangeval{color:var(--accent-dark);font-weight:700}
+
+  /* ---- leaderboard table: a hard 1px grid, no rounding ---- */
+  table{width:100%;border-collapse:collapse;background:var(--panel);
+    border:3px inset var(--panel2);}
+  th,td{padding:8px 10px;text-align:right;border:1px solid var(--line);
+    white-space:nowrap;font-size:12.5px;}
+  th:nth-child(2),td:nth-child(2){text-align:left}
+  th{font-family:var(--disp);font-size:10.5px;font-weight:800;letter-spacing:.07em;
+    text-transform:uppercase;color:var(--accent-dark);cursor:pointer;user-select:none;
+    position:sticky;top:47px;background:var(--panel2);
+    box-shadow:inset -1px -1px 0 var(--lo), inset 1px 1px 0 var(--hi);}
+  th:hover{background:var(--mark)}
+  th.sorted{background:var(--accent);color:#fff}
+  th .arrow{font-size:9px}
+  tbody tr:nth-child(even){background:var(--panel2)}
+  tbody tr:hover{background:var(--mark)}
+  .rank{color:var(--muted);width:40px}
+  .name{font-weight:700;font-family:var(--disp);letter-spacing:.02em}
+  tr.mrow{cursor:pointer}
+  tr.mrow td.rank::after{content:" \25B8";color:var(--muted)}
+  tr.mrow:hover td.name{color:var(--accent-dark);text-decoration:underline}
+
+  /* ---- party pills: square tags with a hard border ---- */
+  /* Fixed width and a left-aligned cell, so DEM / REP / IND stack in a straight
+     column instead of drifting with the length of the label beside them. */
+  /* min-width, not width: DEM / REP / IND all sit in the same 42px box so they
+     stack in a straight column, while a longer label such as "Unlisted" or an
+     agency name grows instead of spilling out of its border. */
+  .pill{display:inline-block;font-family:var(--disp);font-size:10.5px;font-weight:700;
+    letter-spacing:.07em;padding:2px 6px;border:1px solid;min-width:42px;
+    text-align:center;box-sizing:border-box;}
+  .pill.A{min-width:0}
+  td.affil{text-align:left;white-space:nowrap}
+  .D{background:#dde6f6;color:var(--dem);border-color:var(--dem)}
+  .R{background:#f7dedf;color:var(--rep);border-color:var(--rep)}
+  .I{background:#ebdff7;color:var(--ind);border-color:var(--ind)}
+  .U{background:var(--panel2);color:var(--muted);border-color:var(--line)}
+  /* Executive-branch agency tag — deliberately not a party colour */
+  .A{background:var(--panel);color:var(--accent-dark);border-color:var(--accent);
+    font-weight:600;letter-spacing:.04em;text-transform:none;}
+  .st{display:inline-block;width:22px;font-family:var(--disp);font-size:10px;
+    font-weight:700;color:var(--muted);letter-spacing:.06em;margin-left:5px;}
+
+  /* ---- hand-rolled SVG charts (no library, no CDN) ---- */
+  .spark{display:block;width:100%;height:auto;background:var(--panel);
+    border:2px inset var(--panel2);}
+  .spark .grid{stroke:var(--line);stroke-width:.5;opacity:.55}
+  .spark .mkt{stroke:var(--lo);stroke-width:1;stroke-dasharray:3 3}
+  .spark .line{fill:none;stroke:var(--accent);stroke-width:1.6}
+  .spark .area{fill:var(--accent);opacity:.12}
+  .spark .lbl{font:9px "Oxanium",Verdana,sans-serif;fill:var(--muted);letter-spacing:.06em}
+  .sparkwrap{border:3px outset var(--panel2);background:var(--panel);padding:10px 12px}
+  .sparkcap{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
+  .spark{cursor:crosshair}
+  .spark .hl{stroke:var(--accent-dark);stroke-width:.8;stroke-dasharray:2 2}
+  .spark .hd{fill:var(--accent-dark);stroke:#fff;stroke-width:1}
+  .chartread{font-family:var(--disp);font-size:11.5px;letter-spacing:.03em;color:var(--muted);
+    background:var(--panel2);border:2px inset var(--panel2);padding:5px 9px;margin-bottom:8px;}
+  .chartread.on{color:var(--txt)}
+  .chartread b{font-size:14px;color:var(--accent-dark)}
+  .chartread b.tkr{font-size:12px;color:var(--txt)}
+  .chartread .buy,.chartread .sell{font-size:10px;letter-spacing:.07em}
+  .elo{font-weight:800;font-family:var(--disp);font-variant-numeric:tabular-nums}
+  .pos{color:var(--win);font-weight:600} .neg{color:var(--loss);font-weight:600}
+  .num{font-variant-numeric:tabular-nums}
+  .top1 .elo{color:#8a5a00;background:#ffe9a8;padding:1px 5px}
+  .flag{font-size:11px;color:var(--amber);font-weight:700;white-space:nowrap;margin-left:5px}
+  .conf{color:var(--amber);font-weight:600}
+  .buy{color:var(--win);font-weight:700} .sell{color:var(--loss);font-weight:700}
+
+  /* ---- avatars: square and framed, like a 90s ID photo ---- */
+  .av{width:24px;height:24px;vertical-align:middle;margin-right:7px;object-fit:cover;
+    background:var(--panel2);border:2px outset var(--panel2);}
+  .av.avph{display:inline-flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:12px;font-weight:700;font-family:var(--disp)}
+  .pav{width:74px;height:74px;object-fit:cover;background:var(--panel2);
+    border:3px outset var(--panel2);padding:2px;flex:none;}
+  .pav.pavph{display:inline-flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:28px;font-weight:800;font-family:var(--disp)}
+
+  /* ---- member profile ---- */
+  .phead{display:flex;gap:16px;align-items:center;margin-bottom:14px;}
+  .pid{min-width:0}
+  .pname{font-family:var(--disp);font-size:22px;font-weight:800;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--accent-dark);line-height:1.15;}
+  .ptags{margin-top:7px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .prole{color:var(--muted);font-size:12.5px;margin-top:6px}
+  .pmeta{color:var(--txt);font-size:13px;margin-top:5px}
+  .pmeta b{color:#000}
+  .pmeta2{color:var(--muted);font-size:12px;margin-top:3px}
+
+  /* Stat panel — one beveled cell per number, so the header scans in a glance
+     instead of running together on one line. */
+  .statgrid{display:grid;gap:6px;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));}
+  .stbox{background:var(--panel);border:3px outset var(--panel2);padding:8px 11px 9px;}
+  .stk{font-family:var(--disp);font-size:9.5px;font-weight:700;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--accent-dark);}
+  .stv{font-family:var(--disp);font-size:19px;font-weight:800;line-height:1.25;
+    margin-top:3px;font-variant-numeric:tabular-nums;color:var(--txt);}
+  .stv.big{font-size:24px}
+  .stv.pos{color:var(--win)} .stv.neg{color:var(--loss)} .stv.warn{color:var(--amber)}
+  .sts{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+  .late{color:var(--amber);font-weight:700}
+  /* thin-record marker next to a rating */
+  .rel{font-family:var(--disp);font-weight:800;font-size:11px;margin-left:3px;
+    vertical-align:super;cursor:help}
+  .rel.ok{color:transparent} .rel.warn{color:var(--amber)} .rel.bad{color:var(--loss)}
+  .rolechip{display:inline-block;background:var(--panel);border:2px outset var(--panel2);
+    padding:4px 9px;margin:3px 5px 0 0;font-size:11.5px;color:var(--txt)}
+  .rolechip b{color:var(--accent-dark)}
+  .rolenote{font-size:11px;color:var(--muted);margin-top:5px;font-style:italic}
+
+  /* ---- leaderboard micro-visuals ---- */
+  .mcell{display:flex;align-items:center;gap:8px}
+  .mcell .av{margin:0;flex:none;width:30px;height:30px}
+  .mtxt{min-width:0}
+  .mname{font-family:var(--disp);font-weight:700;letter-spacing:.02em;font-size:13px;
+    white-space:nowrap;color:var(--txt)}
+  .msub{font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;
+    gap:5px;font-family:var(--disp);letter-spacing:.05em;text-transform:uppercase}
+  .msub .stat{font-size:8.5px;padding:0 5px}
+  tr.mrow:hover .mname{color:var(--accent-dark);text-decoration:underline}
+
+  .ecell{display:flex;align-items:center;justify-content:flex-end;gap:7px}
+  .enum{font-family:var(--disp);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+  .msp{background:var(--panel2);border:1px solid var(--line);flex:none}
+  .msp polyline{fill:none;stroke-width:1.3}
+  .msp.up polyline{stroke:var(--win)} .msp.down polyline{stroke:var(--loss)}
+  .msp.up circle{fill:var(--win)} .msp.down circle{fill:var(--loss)}
+  .msp .base{stroke:var(--lo);stroke-width:.7;stroke-dasharray:2 2}
+
+  .wlt{font-size:9.5px;color:var(--muted);font-family:var(--disp);letter-spacing:.04em;margin-top:1px}
+
+  td.bs{text-align:left;min-width:112px}
+  .bsrow{display:flex;align-items:center;gap:5px;line-height:1.5}
+  .bsl{font-family:var(--disp);font-size:9px;font-weight:800;color:var(--muted);width:8px}
+  .bsbar{flex:1;height:7px;background:var(--panel2);border:1px solid var(--line);
+    display:block;min-width:34px}
+  .bsbar i{display:block;height:100%}
+  .bsbar i.buyf{background:var(--win)} .bsbar i.sellf{background:var(--accent)}
+  .bsn{font-size:9.5px;font-variant-numeric:tabular-nums;color:var(--txt);width:24px;text-align:right}
+
+  .dvb{background:var(--panel2);border:1px solid var(--line);flex:none}
+  .dvb rect.p{fill:var(--win)} .dvb rect.n{fill:var(--loss)}
+  .dvb rect.d{fill:var(--dem)} .dvb rect.r{fill:var(--rep)}
+  td.ideotd{text-align:center}
+  .ideo{display:inline-block;line-height:0;cursor:help}
+  .dvb .zero{stroke:var(--lo);stroke-width:1}
+  .pbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .pbar .back{margin-bottom:0}
+  .copylink.copied{background:var(--win);color:#fff;border-style:inset}
+  .dimz{color:var(--lo)}
+  .psec{margin:22px 0}
+  .psec h3{font-size:12px;letter-spacing:.09em;color:var(--accent-dark);margin:0 0 9px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{background:var(--panel);border:2px outset var(--panel2);padding:4px 11px;
+    font-size:12px;color:var(--txt);}
+  .chip.dim{color:var(--muted)}
+  .ptbl{width:100%;border-collapse:collapse;background:var(--panel);border:3px inset var(--panel2);}
+  .ptbl th,.ptbl td{padding:7px 10px;text-align:left;border:1px solid var(--line);
+    font-size:12px;vertical-align:top;}
+  .ptbl th{background:var(--panel2);position:static;cursor:default;color:var(--accent-dark)}
+  .ptbl th:hover{background:var(--panel2)}
+  .ptbl td.nw{white-space:nowrap}
+  .ptbl td.co{word-break:break-word;min-width:150px;white-space:normal}
+  .ptbl td.num,.ptbl td.pos,.ptbl td.neg{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ptbl tbody tr:nth-child(even){background:var(--panel2)}
+
+  /* ---- sharpest-trades / cluster cards ---- */
+  .fcols{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start}
+  .fcol{flex:1;min-width:320px}
+  .fh{font-family:var(--disp);font-size:11px;font-weight:800;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--accent-dark);margin:0 0 9px;}
+  .fitem{display:flex;gap:11px;align-items:flex-start;background:var(--panel);
+    border:3px outset var(--panel2);padding:11px 13px;margin-bottom:8px;cursor:pointer;}
+  .fitem:hover{background:var(--mark)}
+  .fitem:active{border-style:inset}
+  .fitem .av{width:38px;height:38px;margin:0;flex:none}
+  .fmain{min-width:0;flex:1}
+  .fname{font-size:13.5px;line-height:1.35;font-weight:600}
+  .fch{color:var(--muted);font-size:12.5px;font-weight:400}
+  .fmeta{color:var(--muted);font-size:12.5px;margin-top:3px;line-height:1.45}
+  .fmeta b{color:#000}
+  .fperf{font-size:12px;margin-top:2px;color:var(--muted)}
+  .fsec{color:var(--txt);font-size:11.5px;margin-top:5px}
+  .fcomm{color:var(--muted);font-size:11px;margin-top:5px;line-height:1.5;
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-  .fcomm .lbl{text-transform:uppercase;letter-spacing:.4px;font-size:10px;opacity:.75;margin-right:5px;}
-  .fcomm.dim{opacity:.6;}
-  .fconf{color:var(--amber);font-size:11.5px;margin-top:4px;font-weight:600;}
-  .conf{color:var(--amber);}
-  .clink{color:var(--txt);text-decoration:none;}
-  .clink:hover{color:var(--accent);text-decoration:underline;}
+  .fcomm .lbl{font-family:var(--disp);text-transform:uppercase;letter-spacing:.06em;
+    font-size:9.5px;margin-right:5px;color:var(--accent-dark);}
+  .fcomm.dim{color:var(--lo)}
+  .fconf{color:var(--amber);font-size:11.5px;margin-top:4px;font-weight:700}
+  .clink{color:var(--accent);text-decoration:none}
+  .clink:hover{text-decoration:underline;background:var(--mark)}
+
+  /* ---- status tags ---- */
+  .stat{display:inline-block;font-family:var(--disp);font-size:9.5px;font-weight:700;
+    padding:1px 7px;letter-spacing:.06em;text-transform:uppercase;vertical-align:middle;
+    border:1px solid;}
+  .stat.cur{background:#dcefe0;color:var(--win);border-color:var(--win)}
+  .stat.fmr{background:var(--panel2);color:var(--muted);border-color:var(--line)}
+  .stat.unk{background:var(--panel);color:var(--muted);border-color:var(--line);
+    border-style:dashed;text-transform:none;letter-spacing:.02em;font-weight:600}
+
+  /* ---- methodology drawer + footer ---- */
+  details{margin-top:20px;background:var(--panel);border:3px outset var(--panel2);padding:2px 16px;}
+  summary{cursor:pointer;padding:11px 0;font-family:var(--disp);font-weight:700;
+    letter-spacing:.06em;text-transform:uppercase;font-size:12.5px;color:var(--accent-dark);}
+  details p,details li{color:var(--txt);font-size:13px}
+  code{background:var(--panel2);border:1px solid var(--line);padding:0 5px;
+    font:12px "Courier New",Courier,monospace;color:var(--accent-dark);}
+  .foot{margin-top:20px;color:var(--muted);font-size:12px;
+    border-top:3px groove var(--line);padding-top:14px;}
+
+  @media (max-width:640px){
+    .masthead .mh{padding:8px 12px}
+    th{position:static}
+    .wrap{padding:16px 12px 60px}
+  }
 </style>
 </head>
 <body>
+<header class="masthead">
+  <div class="mh">
+    <a class="brand" href="https://sharpeshooter02.github.io/">Mason Buttner</a>
+    <nav class="mhnav">
+      <a href="https://sharpeshooter02.github.io/">Research</a>
+      <a href="https://sharpeshooter02.github.io/about/">About</a>
+    </nav>
+  </div>
+</header>
 <div class="wrap">
   <div class="badge" id="badge">Sample data · prototype</div>
   <h1>Congressional Trading ELO</h1>
-  <p class="sub">Every disclosed trade is scored as a head-to-head <b>match against the S&amp;P 500</b>: a buy that beats the market wins, and a <b>well-timed sell</b> — one made before the stock lags the market — also wins. Each trade's edge is <b>time-decayed</b> (a move within weeks counts far more than one that takes years), so quick, repeatable correctness rises to the top. Ratings start at 1500 against a fixed 1500-rated market. The <b>Buys</b> and <b>Sells</b> columns split each member's record, so you can see whether a rating comes from buying skill or from selling ahead of declines. <b>Click any row</b> to reveal the specific trades carrying that rating. A <b>🚩</b> marks members who've made <b>sharp calls</b> — trades that beat the market 15%+ within a month, a flag for scrutiny (not proof).</p>
+  <p class="sub">Every disclosed trade is scored as a head-to-head <b>match against the S&amp;P 500</b>: a buy that beats the market wins, and a sell made before the stock lags the market wins too. Ratings replay chronologically from 1500, weighted by how reliable each member's record is. <b>1500 is the median member.</b> Higher means they beat the market more, and more consistently, than most of Congress.</p>
 
   <p class="src">Data: <a href="https://github.com/kadoa-org/congress-trading-monitor">Congress Trading Monitor</a> (House Clerk · Senate eFD · OGE disclosures) · committees from <a href="https://github.com/unitedstates/congress-legislators">congress-legislators</a> · sectors from <a href="https://github.com/rreichel3/US-Stock-Symbols">US-Stock-Symbols</a>. Prices vs the S&amp;P 500.</p>
 
@@ -144,7 +350,7 @@
 
   <div id="view-board">
   <div class="toolbar">
-    <p class="marketline">Fixed opponent — <b>S&amp;P 500 = 1500 ELO</b>. Above 1500 beats the market more often than not.</p>
+    <p class="marketline">Click any member for their full record. <a href="#" onclick="document.querySelector('details').open=true;document.querySelector('details').scrollIntoView({behavior:'smooth'});return false;">How the rating works</a></p>
     <button class="reload" id="reload" title="Fetch the latest published data.json">⟳ Reload data</button>
     <span class="upd" id="updated"></span>
   </div>
@@ -159,23 +365,34 @@
       <select id="chamber"><option>All</option><option>House</option><option>Senate</option><option>Executive</option></select>
     </div>
     <div class="ctl">
-      <label>Party</label>
-      <select id="party"><option value="All">All</option><option value="D">DEM</option><option value="R">Rep</option><option value="U">Unlisted</option></select>
+      <label>Serving</label>
+      <select id="serving">
+        <option value="current">Currently serving</option>
+        <option value="all">Everyone (incl. former)</option>
+        <option value="former">Former only</option>
+        <option value="unknown">Tenure unknown</option>
+      </select>
     </div>
     <div class="ctl">
-      <label>Min. trades: <span class="rangeval" id="mtv">5</span></label>
+      <label>Party</label>
+      <select id="party"><option value="All">All</option><option value="D">DEM</option><option value="R">REP</option><option value="I">IND</option><option value="U">No party (executive)</option></select>
+    </div>
+    <div class="ctl">
+      <label>Min. decisions: <span class="rangeval" id="mtv">5</span></label>
       <input type="range" id="mintrades" min="1" max="40" value="5">
     </div>
     <div class="ctl">
       <label>Sort by</label>
       <select id="sortsel">
         <option value="elo">ELO rating</option>
-        <option value="winrate">Win % vs S&amp;P</option>
+        <option value="score">Score % vs S&amp;P</option>
         <option value="sharp">Suspicious calls (🚩)</option>
         <option value="sharp_conflicts">Committee conflicts (⚠️)</option>
         <option value="sell_winrate">Sell timing (win %)</option>
         <option value="buy_winrate">Buy timing (win %)</option>
         <option value="avgexcess">Avg excess return</option>
+        <option value="late">Late filings</option>
+        <option value="ideology">Ideology (liberal first)</option>
         <option value="trades">Trades</option>
       </select>
     </div>
@@ -185,15 +402,14 @@
     <thead><tr>
       <th data-k="rank" class="rank">#</th>
       <th data-k="name">Member</th>
-      <th data-k="party">Party</th>
-      <th data-k="chamber">Chamber</th>
-      <th data-k="elo" class="sorted">ELO <span class="arrow">▼</span></th>
-      <th data-k="trades">Trades</th>
-      <th data-k="record">W–L–T</th>
-      <th data-k="winrate">Win %</th>
-      <th data-k="buy_winrate">Buys (win %)</th>
-      <th data-k="sell_winrate">Sells (win %)</th>
+      <th data-k="party">Party / Agency</th>
+      <th data-k="elo" class="sorted">Rating <span class="arrow">▼</span></th>
+      <th data-k="trades" title="Distinct decisions. Repeat trades in the same stock and direction within a week are counted once.">Decisions</th>
+      <th data-k="score" title="Share of match points won: a win counts 1, a tie counts 1/2. This is what the ELO is built on, because a bare wins/total treats a dead-even trade as a loss. Hover a row's figure for the W–L–T record.">Score %</th>
+      <th data-k="buy_winrate" title="Win rate on buys (B) and on sells (S). Click to sort by buy skill, click again for sell skill.">Buy / Sell</th>
       <th data-k="avgexcess">Avg excess</th>
+      <th data-k="ideology" title="DW-NOMINATE, from Voteview: where a member's roll-call voting sits on the liberal to conservative axis. Left of centre is liberal, right is conservative. Congress only.">Ideology</th>
+      <th data-k="late" title="Trades disclosed after the STOCK Act's 45-day deadline">Late</th>
     </tr></thead>
     <tbody id="body"></tbody>
   </table>
@@ -206,7 +422,7 @@
   <div id="view-sharp" style="display:none">
   <div id="flaggedwrap" style="margin-top:30px">
     <h2 style="font-size:19px;margin:0 0 4px">🚩 Sharpest trades</h2>
-    <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b> — shown with the member, what the company does, and their current committees. A flag for scrutiny, not proof.</p>
+    <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b>, shown with the member, what the company does, and their current committees.</p>
     <div style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:0 0 12px">
       <div class="ctl" style="max-width:200px">
         <label>Range</label>
@@ -234,10 +450,15 @@
 
   <details>
     <summary>Methodology &amp; hosting</summary>
-    <p><b>The match.</b> Each disclosed trade's return is compared to the S&amp;P 500's over the same period — the <i>excess return</i> — blended across the ~30-day, ~1-year, and full holding windows and <b>time-decayed</b> so fast moves count most and slow buy-and-holds count least. For a <code>Purchase</code>, positive excess = win; for a <code>Sale</code>, the stock lagging the market afterward = win. ±0.5% is a tie.</p>
-    <p><b>Rating update.</b> ELO with the market fixed at 1500: <code>E = 1/(1+10^((1500−R)/700))</code>, margin multiplier <code>m = min(1+ln(1+|excess%|), 4.5)</code>, and <code>R += 32·m·(S−E)</code> with S = 1/0.5/0. Trades replay in chronological order. The <b>Buys</b>/<b>Sells</b> columns split each record by trade direction, so a mediocre buyer who sells with suspicious timing is visible at a glance.</p>
-    <p><b>Sharp calls 🚩.</b> A trade is flagged a <i>sharp call</i> when it beat the S&amp;P by 15%+ within about a month of the disclosure — fast, decisive correctness of the kind non-public information tends to produce (e.g. a Department of Energy official selling an energy stock right before it slid). The 🚩 next to a name counts how many they've made. Treat it as a <b>statistical flag worth a closer look, not proof of wrongdoing</b> — fast wins also come from skill, luck, or public news.</p>
-    <p><b>Data flow.</b> <code>build_leaderboard.py</code> (run in GitHub Actions) pulls the open <a href="https://github.com/kadoa-org/congress-trading-monitor">Congress Trading Monitor</a> dataset — House, Senate, and executive-branch filings — computes the ELO, and writes <code>data.json</code> + <code>data.js</code>. This page fetches <code>data.json</code> when hosted (Reload pulls the latest), falling back to <code>data.js</code> for local opens or synthetic sample data.</p>
+    <p><b>The match.</b> Each disclosed trade's return is compared to the S&amp;P 500's over the same period, giving the <i>excess return</i>, blended across the ~30-day, ~1-year, and full holding windows and <b>time-decayed</b> so fast moves count most and slow buy-and-holds count least. For a <code>Purchase</code>, positive excess = win; for a <code>Sale</code>, the stock lagging the market afterward = win. ±0.5% is a tie.</p>
+    <p><b>Rating update.</b> ELO with the market fixed at 1500: <code>E = 1/(1+10^((1500−R)/700))</code>, margin multiplier <code>m = min(1+ln(1+|excess%|), 4.5)</code>, and <code>R += 32·m·(S−E)</code> with S = 1/0.5/0. Decisions replay in chronological order. The <b>Buys</b>/<b>Sells</b> columns split each record by direction, so a mediocre buyer who sells with suspicious timing is visible at a glance.</p>
+    <p><b>One decision, one match.</b> Repeat trades in the same stock and direction within <b>7 days</b> are collapsed into a single decision. A member filing four purchases of the same stock in a week made one call, and scoring it four times let a single decision dominate a rating. In this dataset that merges about 15% of trades. <b>Broad-market index funds are excluded</b> (S&amp;P 500 and total-market trackers, plus levered and inverse versions): their return <i>is</i> the benchmark, so scoring them as "beat the S&amp;P" is circular. Sector and country funds are kept, since those are real directional bets.</p>
+    <p><b>Rating sensitivity.</b> The K-factor is <b>8</b>, not chess's 32. At 32 a single decision could move a rating by up to 144 points, so the published number tracked whatever happened most recently. It correlated <b>0.85 with a member's last 50 decisions but only 0.61 with their whole record</b>, and a typical career swung 668 points between peak and trough. That is also why average excess return looked disconnected from the rating: one is a full-sample mean, the other was a recency-weighted random walk. Dropping K to 8 raises the measured reliability from 0.62 to 0.79.</p>
+    <p><b>Reliability weighting.</b> Splitting each member's decisions into odd/even halves and correlating the two independent ratings shows how much of a rating is skill rather than luck. Ratings are shrunk toward 1500 by <code>n/(n+27)</code>, so a thin record cannot buy a high rating on a lucky streak. Hovering a rating shows how much of it is signal.</p>
+    <p><b>The scale.</b> Raw ratings pile up: the middle half of members sat within <b>46 points</b> of one another while a few outliers ran from 455 to 2288, which makes the number useless for telling most people apart. The shrunk ratings are therefore mapped onto a normal curve <b>by rank</b>, so order is preserved exactly while the pack spreads evenly, so equal rating gaps mean equal differences in standing. 1500 is the median member; ±150 is roughly the 84th/16th percentile. This gives up the literal "expected score against a 1500-rated market" reading, which the shrunk rating no longer supported anyway.</p>
+    <p><b>People, not seats.</b> Someone who moves between offices, such as a senator appointed to the cabinet or a representative elected to the Senate, is one trader with one rating. Every role they filed under is listed on their profile.</p>
+    <p><b>Sharp calls 🚩.</b> A trade is flagged a <i>sharp call</i> when it beat the S&amp;P by 15%+ within about a month of the disclosure: fast, decisive correctness of the kind non-public information tends to produce (e.g. a Department of Energy official selling an energy stock right before it slid). The 🚩 next to a name counts how many they've made. Fast wins also come from skill, luck, or public news, so a flag is a reason to look closer rather than a finding of wrongdoing.</p>
+    <p><b>Data flow.</b> <code>build_leaderboard.py</code> (run in GitHub Actions) pulls the open <a href="https://github.com/kadoa-org/congress-trading-monitor">Congress Trading Monitor</a> dataset, covering House, Senate, and executive-branch filings, computes the ELO, and writes <code>data.json</code> + <code>data.js</code>. This page fetches <code>data.json</code> when hosted (Reload pulls the latest), falling back to <code>data.js</code> for local opens or synthetic sample data.</p>
   </details>
 
   <div class="foot" id="foot">Prototype · showing synthetic sample data until a real dataset is present.</div>
@@ -292,12 +513,12 @@ function applyState(res){
   const b=document.getElementById("badge"), upd=document.getElementById("updated"), foot=document.getElementById("foot");
   if(IS_REAL){
     b.textContent="Live data · "+DATA.length+" members";
-    b.style.color="var(--win)"; b.style.borderColor="rgba(63,185,80,.4)"; b.style.background="rgba(63,185,80,.14)";
+    b.classList.add("live");
     upd.textContent = res.generated ? ("Updated "+new Date(res.generated).toLocaleString()) : "";
     foot.textContent = "Live vs-S&P ELO · data from the Congress Trading Monitor open dataset, rebuilt daily.";
   } else {
     b.textContent="Sample data · prototype";
-    b.style.color=""; b.style.borderColor=""; b.style.background="";
+    b.classList.remove("live");
     upd.textContent="";
     foot.textContent="Prototype · showing synthetic sample data until a real dataset is present.";
   }
@@ -306,10 +527,56 @@ function applyState(res){
 }
 
 // ---------- rendering ----------
-const PARTY_NAME={D:"DEM",R:"Rep"};
+const PARTY_NAME={D:"DEM",R:"REP",I:"IND"};
 function partyName(p){return PARTY_NAME[p]||"Unlisted";}
-function partyCls(p){return (p==="D"||p==="R")?p:"U";}
+function partyCls(p){return (p==="D"||p==="R"||p==="I")?p:"U";}
+/* Executive-branch filers are appointees, not elected officials — they have no
+   party at all. Showing their agency is both accurate and more informative. */
+function affilHtml(m){
+  if(m.chamber==="Executive"){
+    const ag=m.agency||"Executive branch";
+    return `<span class="pill A" title="${esc(m.office||"")}">${esc(shortAgency(ag))}</span>`;
+  }
+  const st=m.state?` <span class="st">${esc(m.state)}</span>`:"";
+  return `<span class="pill ${partyCls(m.party)}">${partyName(m.party)}</span>${st}`;
+}
+const AGENCY_SHORT={
+  "Department of":"Dept.","Office of the":"Off.","Office of":"Off.",
+  "Executive Office of the President":"White House","White House Office":"White House",
+  "Administration":"Admin.","Commission":"Comm.","Securities and Exchange":"SEC",
+};
+function shortAgency(a){
+  let out=a;
+  for(const [k,v] of Object.entries(AGENCY_SHORT)) out=out.split(k).join(v);
+  return out.length>26?out.slice(0,25)+"…":out;
+}
+function esc(v){return String(v==null?"":v).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function activeBadge(a){ return a===true?'<span class="stat cur">Current</span>':a===false?'<span class="stat fmr">Former</span>':''; }
+/* Tenure is knowable for Congress (bioguide) and for presidents/VPs (term dates),
+   but not for cabinet secretaries or agency heads — no free dataset lists them.
+   Rather than guess from trading activity (which would label an official who
+   stopped trading as "Former"), say plainly when they last filed. */
+function statusHtml(m){
+  if(m.active===true||m.active===false) return activeBadge(m.active);
+  if(!m.last_trade) return '<span class="stat unk" title="Tenure not available for executive-branch appointees">Tenure n/a</span>';
+  return `<span class="stat unk" title="No public dataset lists appointee tenure, so this is the date of their most recent disclosed trade, not proof they have left.">Last filed ${monthYear(m.last_trade)}</span>`;
+}
+/* Reliability is n/(n+k): how much of this rating is skill rather than luck,
+   measured by splitting each member's decisions in half and correlating the two
+   independent ratings. Shown in words because the number invites false
+   precision. */
+function relWord(r){
+  if(r>=0.85) return "High";
+  if(r>=0.65) return "Good";
+  if(r>=0.40) return "Low";
+  return "Very low";
+}
+function relCls(r){ return r>=0.65?"ok":r>=0.40?"warn":"bad"; }
+function monthYear(iso){
+  if(!iso) return "";
+  const d=new Date(iso+"T00:00:00");
+  return d.toLocaleDateString(undefined,{year:"numeric",month:"short"});
+}
 function avatarHtml(photo,name,cls){
   const init=((name||"?").trim()[0]||"?").toUpperCase();
   const ph=cls==="pav"?"pavph":"avph";
@@ -344,7 +611,7 @@ function renderFlagged(){
   const covEl=document.getElementById("fCoverage");
   if(covEl) covEl.textContent=(range==="all"&&DATA_EARLIEST)?("Sharpest calls since "+new Date(DATA_EARLIEST).toLocaleDateString(undefined,{year:"numeric",month:"short"})):"";
   const more=document.getElementById("fMore"), less=document.getElementById("fLess");
-  if(!FLAGGED.length){ listEl.innerHTML='<span style="color:var(--muted)">No flagged trades yet — rebuild the data.</span>'; if(more)more.style.display="none"; if(less)less.style.display="none"; return; }
+  if(!FLAGGED.length){ listEl.innerHTML='<span style="color:var(--muted)">No flagged trades yet. Rebuild the data.</span>'; if(more)more.style.display="none"; if(less)less.style.display="none"; return; }
   const cb=document.getElementById("fconfonly");
   let base=(cb&&cb.checked)?FLAGGED.filter(t=>t.conflict):FLAGGED;
   if(range==="recent"){ const cutoff=Date.now()-365*864e5; base=base.filter(t=>new Date(t.date).getTime()>=cutoff); }
@@ -355,29 +622,77 @@ function sortFlagged(arr){
     ? (new Date(b.date)-new Date(a.date)) || (b.excess-a.excess)
     : (b.excess-a.excess) || (new Date(b.date)-new Date(a.date)));
 }
-function detailHtml(m){
-  const tt=(m.top_trades||[]);
-  const chips = tt.length ? tt.map(t=>{
-    const side=t.side==="sell"?"SELL":"BUY";
-    const sign=t.excess>=0?"+":"";
-    const cls=t.excess>=0?"pos":"neg";
-    const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short"}):"";
-    const flag=t.sharp?" 🚩":"";
-    return `<span class="tt">${side} <b>${t.ticker}</b> <span class="${cls}">${sign}${Number(t.excess).toFixed(0)}%</span>${flag} <span class="s">${d}</span></span>`;
-  }).join("") : "";
-  const trades = chips ? `Biggest trades vs the market — the ones carrying this rating: ${chips}` : "No graded trades to show.";
-  const cm=(m.committees||[]);
-  const comm = cm.length ? `<div class="comm"><b>Committees:</b> ${cm.join(" · ")}</div>` : "";
-  return `<div>${trades}</div>${comm}`;
+
+/* ---------- micro-visuals for the leaderboard ----------
+   Hand-rolled SVG again: 349 rows of tiny charts is exactly the case where a
+   charting library's per-instance overhead would hurt, and these inherit the
+   page palette for free. */
+
+/* A rating trajectory, small enough to sit inside a table cell. */
+function microSpark(curve, w, h){
+  if(!curve || curve.length<2) return `<svg class="msp" width="${w}" height="${h}"></svg>`;
+  const vs=curve.map(p=>p[1]);
+  let lo=Math.min(1500,...vs), hi=Math.max(1500,...vs);
+  const pad=Math.max((hi-lo)*0.1,8); lo-=pad; hi+=pad;
+  const X=i=>(i/(curve.length-1))*(w-2)+1;
+  const Y=v=>h-1-((v-lo)/(hi-lo))*(h-2);
+  const pts=curve.map((p,i)=>`${X(i).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(" ");
+  const end=vs[vs.length-1];
+  const cls=end>=1500?"up":"down";
+  return `<svg class="msp ${cls}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+    <line class="base" x1="0" y1="${Y(1500).toFixed(1)}" x2="${w}" y2="${Y(1500).toFixed(1)}"/>
+    <polyline points="${pts}"/>
+    <circle cx="${X(curve.length-1).toFixed(1)}" cy="${Y(end).toFixed(1)}" r="1.7"/>
+  </svg>`;
 }
+
+/* DW-NOMINATE: a member's roll-call voting placed on one liberal-conservative
+   axis. Drawn rather than printed, because the sign and the distance from
+   centre are the readable part, not three decimal places. */
+function ideoLabel(v){
+  const a=Math.abs(v);
+  const side=v<0?"liberal":"conservative";
+  if(a<0.15) return "centrist";
+  if(a<0.35) return "moderate "+side;
+  if(a<0.60) return side;
+  return "strongly "+side;
+}
+function ideoCell(m){
+  const v=m.ideology;
+  if(v==null) return '<span class="dimz" title="DW-NOMINATE covers members of Congress only, since it is built from roll-call votes.">n/a</span>';
+  const w=54,h=13,half=w/2,mag=Math.min(Math.abs(v),1)*half;
+  const pos=v>=0;
+  return `<span class="ideo" title="DW-NOMINATE ${v>0?"+":""}${v.toFixed(2)} (${ideoLabel(v)}), from their roll-call voting record">
+    <svg class="dvb ideobar" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+      <rect class="${pos?"r":"d"}" x="${pos?half:half-mag}" y="1" width="${mag.toFixed(1)}" height="${h-2}"/>
+      <line class="zero" x1="${half}" y1="0" x2="${half}" y2="${h}"/>
+    </svg></span>`;
+}
+function bsBars(m){
+  const row=(label,n,pct,cls)=>{
+    if(!n) return `<div class="bsrow"><span class="bsl">${label}</span><span class="bsn dimz">—</span></div>`;
+    return `<div class="bsrow" title="${n} ${label==='B'?'buy':'sell'} decision${n===1?'':'s'}, ${pct.toFixed(0)}% beat the market">
+      <span class="bsl">${label}</span>
+      <span class="bsbar"><i class="${cls}" style="width:${Math.max(2,Math.min(pct,100)).toFixed(0)}%"></i></span>
+      <span class="bsn">${pct.toFixed(0)}%</span></div>`;
+  };
+  return row("B", m.n_buys||0, Number(m.buy_winrate||0), "buyf")
+       + row("S", m.n_sells||0, Number(m.sell_winrate||0), "sellf");
+}
+
 function render(){
   const chamber=document.getElementById("chamber").value;
   const party=document.getElementById("party").value;
   const mint=+document.getElementById("mintrades").value;
   const q=(document.getElementById("search").value||"").trim().toLowerCase();
+  const serving=document.getElementById("serving").value;
   let rows=DATA.filter(m=>
     (chamber==="All"||m.chamber===chamber) &&
-    (party==="All" ? true : (party==="U" ? (m.party!=="D"&&m.party!=="R") : m.party===party)) &&
+    (serving==="all" ? true
+      : serving==="current" ? m.active===true
+      : serving==="former" ? m.active===false
+      : m.active==null) &&
+    (party==="All" ? true : (party==="U" ? !["D","R","I"].includes(m.party) : m.party===party)) &&
     (!q || (m.name||"").toLowerCase().includes(q)) &&
     m.matches>=mint);
   rows.sort((a,b)=>{let av=a[sortKey],bv=b[sortKey];
@@ -389,17 +704,20 @@ function render(){
   body.innerHTML=vis.map((m,i)=>`
     <tr class="mrow ${i===0&&sortKey==='elo'&&sortDir===-1?'top1':''}" data-id="${m.id||''}">
       <td class="rank">${i+1}</td>
-      <td class="name">${avatarHtml(m.photo,m.name,'av')}${m.name} ${activeBadge(m.active)}${m.sharp?`<span class="flag" title="${m.sharp} sharp call${m.sharp>1?'s':''}: beat the market 15%+ within a month of the trade — flagged for scrutiny, not proof">🚩${m.sharp}</span>`:''}</td>
-      <td><span class="pill ${partyCls(m.party)}">${partyName(m.party)}</span></td>
-      <td>${m.chamber}</td>
-      <td class="elo">${m.elo}</td>
+      <td class="name"><div class="mcell">${avatarHtml(m.photo,m.name,'av')}<div class="mtxt">
+        <div class="mname">${m.name} ${m.sharp?`<span class="flag" title="${m.sharp} sharp call${m.sharp>1?'s':''}: beat the market 15%+ within a month of the trade">🚩${m.sharp}</span>`:''}</div>
+        <div class="msub">${m.chamber} ${statusHtml(m)}</div>
+      </div></div></td>
+      <td class="affil">${affilHtml(m)}</td>
+      <td class="elo" title="${relWord(m.reliability)} confidence, ${m.matches} decisions (reliability ${Number(m.reliability).toFixed(2)}).">
+        <div class="ecell"><span class="enum">${m.elo}</span>${microSpark(m.curve,54,17)}</div></td>
       <td class="num">${m.matches}</td>
-      <td class="num">${m.wins}–${m.losses}–${m.ties}</td>
-      <td class="num">${Number(m.winrate).toFixed(0)}%</td>
-      <td class="num">${m.n_buys||0} · ${Number(m.buy_winrate||0).toFixed(0)}%</td>
-      <td class="num">${m.n_sells||0} · ${Number(m.sell_winrate||0).toFixed(0)}%</td>
-      <td>${fmtPct(m.avgexcess)}</td>
-    </tr>`).join("")||`<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:26px">No members match these filters.</td></tr>`;
+      <td class="num" title="${m.wins}W ${m.losses}L ${m.ties}T, bare win rate ${Number(m.winrate).toFixed(0)}%">${Number(m.score!=null?m.score:m.winrate).toFixed(0)}%<div class="wlt">${m.wins}–${m.losses}–${m.ties}</div></td>
+      <td class="bs">${bsBars(m)}</td>
+      <td class="num">${fmtPct(m.avgexcess)}</td>
+      <td class="num ideotd">${ideoCell(m)}</td>
+      <td class="num">${m.late?`<span class="late" title="${Number(m.late_rate).toFixed(0)}% of their decisions were disclosed after the 45-day deadline${m.median_days_to_file!=null?`; median filing lag ${Math.round(m.median_days_to_file)} days`:""}">${m.late}</span>`:'<span class="dimz">0</span>'}</td>
+    </tr>`).join("")||`<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:26px">No members match these filters.</td></tr>`;
   const mb=document.getElementById("moreMembers"), lb=document.getElementById("lessMembers");
   if(mb){ if(total>shownMembers){ mb.style.display=""; mb.textContent=`Show more (${total-shownMembers} more)`; } else { mb.style.display="none"; } }
   if(lb){ lb.style.display = shownMembers>20 ? "" : "none"; }
@@ -419,9 +737,9 @@ document.querySelectorAll("#tbl th").forEach(th=>{
     shownMembers=20; render();
   });
 });
-function rerender(){shownMembers=20;render();}
+function rerender(){shownMembers=20;render();syncHash();}
 document.getElementById("sortsel").addEventListener("change",e=>{sortKey=e.target.value==="trades"?"matches":e.target.value;sortDir=-1;rerender();});
-["chamber","party"].forEach(id=>document.getElementById(id).addEventListener("change",rerender));
+["chamber","party","serving"].forEach(id=>document.getElementById(id).addEventListener("change",rerender));
 document.getElementById("search").addEventListener("input",rerender);
 document.getElementById("mintrades").addEventListener("input",e=>{document.getElementById("mtv").textContent=e.target.value;rerender();});
 document.getElementById("moreMembers").addEventListener("click",()=>{shownMembers+=20;render();});
@@ -450,37 +768,119 @@ document.getElementById("flaggedwrap").addEventListener("click",e=>{
 });
 
 // ---------- routing ----------
+const BASE_TITLE = "Congressional Trading ELO";
+/* Hash routing means the browser never changes the title on its own, so every
+   profile would otherwise be bookmarked under the same name. */
+function setTitle(extra){
+  document.title = extra ? `${extra} · ${BASE_TITLE}` : BASE_TITLE;
+}
 function showView(v){
   document.getElementById("view-board").style.display = v==="board"?"":"none";
   document.getElementById("view-sharp").style.display = v==="sharp"?"":"none";
   document.getElementById("view-member").style.display = v==="member"?"":"none";
   document.getElementById("view-clusters").style.display = v==="clusters"?"":"none";
   document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("active", a.dataset.view===v));
+  if(v==="board") syncHash();
   window.scrollTo({top:0});
 }
-function route(){
+const FILTER_IDS=["search","chamber","party","serving","mintrades","sortsel"];
+/* A filtered view is a thing people want to send to someone ("look at the
+   Senate sorted by late filings"), so the controls round-trip through the URL. */
+/* Captured before the user touches anything, so only the controls actually
+   changed end up in the URL — a plain visit keeps a clean address. */
+const FILTER_DEFAULTS={};
+FILTER_IDS.forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) FILTER_DEFAULTS[id]=el.value;
+});
+function filtersToHash(){
+  const q=new URLSearchParams();
+  FILTER_IDS.forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    if(el.value!==FILTER_DEFAULTS[id]) q.set(id, el.value);
+  });
+  return q.toString();
+}
+function applyFiltersFromHash(qs){
+  const q=new URLSearchParams(qs||"");
+  let any=false;
+  FILTER_IDS.forEach(id=>{
+    if(!q.has(id)) return;
+    const el=document.getElementById(id); if(!el) return;
+    el.value=q.get(id); any=true;
+  });
+  if(q.has("mintrades")){
+    const mtv=document.getElementById("mtv");
+    if(mtv) mtv.textContent=document.getElementById("mintrades").value;
+  }
+  if(q.has("sortsel")){
+    const v=document.getElementById("sortsel").value;
+    sortKey = v==="trades" ? "matches" : v; sortDir=-1;
+  }
+  return any;
+}
+let suppressHash=false;
+function syncHash(){
+  if(suppressHash) return;
   const h=(location.hash||"").replace(/^#\/?/,"");
+  if(h.indexOf("member/")===0) return;      // never clobber a profile link
+  const qs=filtersToHash();
+  const base=h.split("?")[0];
+  const next="#"+(base?base:"")+(qs?"?"+qs:"");
+  if(next!==location.hash){ suppressHash=true; history.replaceState(null,"",next); suppressHash=false; }
+}
+
+function route(){
+  const raw=(location.hash||"").replace(/^#\/?/,"");
+  const [h,qs]=raw.split("?");
+  if(qs && h.indexOf("member/")!==0 && applyFiltersFromHash(qs)) render();
   if(h.indexOf("member/")===0){ showView("member"); renderMember(decodeURIComponent(h.slice(7))); }
-  else if(h==="sharpest"){ showView("sharp"); }
-  else if(h==="clusters"){ showView("clusters"); }
-  else { showView("board"); }
+  else if(h==="sharpest"){ showView("sharp"); setTitle("Sharpest trades"); }
+  else if(h==="clusters"){ showView("clusters"); setTitle("Trade clusters"); }
+  else { showView("board"); setTitle(""); }
 }
 function clusterHtml(c){
   const fmt=(s,withYear)=>new Date(s).toLocaleDateString(undefined,withYear?{year:"numeric",month:"short",day:"numeric"}:{month:"short",day:"numeric"});
   const dr=c.start===c.end?fmt(c.start,true):`${fmt(c.start,false)}–${fmt(c.end,true)}`;
-  const mem=(c.trades||[]).map(t=>`<a class="clink" href="#member/${t.id}">${t.name}</a> <span class="${t.side==='sell'?'sell':'buy'}">${t.side==='sell'?'sold':'bought'}</span>${t.sharp?' 🚩':''}`).join(" · ");
+  const mem=(c.trades||[]).map(t=>`<a class="clink" href="#member/${t.id}">${t.name}</a>${t.sharp?' 🚩':''}`).join(" · ");
   return `<div class="fitem" style="cursor:default;display:block">
-    <div class="fname"><b>${c.n_members} members</b> traded <b>${c.company||c.ticker} (${c.ticker})</b>${c.sector?` <span class="fch">· ${c.sector}</span>`:''}</div>
+    <div class="fname"><b>${c.n_members} members</b> <span class="${c.side==='sell'?'sell':'buy'}">${c.side==='sell'?'SOLD':'BOUGHT'}</span> <b>${c.company||c.ticker} (${c.ticker})</b>${c.sector?` <span class="fch">· ${c.sector}</span>`:''}</div>
     <div class="fperf">${dr}${c.n_sharp?` · <span class="pos">${c.n_sharp} sharp</span>`:''}</div>
     <div class="fcomm" style="-webkit-line-clamp:unset;display:block;margin-top:6px">${mem}</div>
   </div>`;
 }
+let cSort="date", shownClusters=40;
 function renderClusters(){
   const el=document.getElementById("view-clusters"); if(!el) return;
-  const items=(CLUSTERS||[]).map(clusterHtml).join("")||'<p class="sub">No clusters yet — rebuild the data.</p>';
+  const all=(CLUSTERS||[]).slice();
+  all.sort(cSort==="date"
+    ? (a,b)=> (b.end<a.end?-1:b.end>a.end?1:0) || (b.n_members-a.n_members)
+    : (a,b)=> (b.n_members-a.n_members) || (b.end<a.end?-1:b.end>a.end?1:0));
+  const vis=all.slice(0,shownClusters);
+  const items=vis.map(clusterHtml).join("")||'<p class="sub">No clusters yet. Rebuild the data.</p>';
+  const more=all.length>shownClusters
+    ? `<button class="reload" id="cMore">Show 40 more (${all.length-shownClusters} left)</button>` : "";
+  const less=shownClusters>40?`<button class="reload" id="cLess">Show less</button>`:"";
   el.innerHTML=`<h2 style="font-size:19px;margin:0 0 4px">👥 Trade clusters</h2>
-    <p class="sub" style="margin:0 0 16px">Moments when <b>three or more members</b> traded the same stock within ~10 days of each other — coordinated timing or shared information. Ranked by how many piled in. Click a name for their profile.</p>
-    ${items}`;
+    <p class="sub" style="margin:0 0 14px">Moments when <b>three or more members traded the same stock the same way</b> inside a week, all buying or all selling. Click a name for their profile.</p>
+    <div style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:0 0 12px">
+      <div class="ctl" style="max-width:200px">
+        <label>Sort</label>
+        <select id="csort">
+          <option value="date"${cSort==="date"?" selected":""}>Most recent</option>
+          <option value="size"${cSort==="size"?" selected":""}>Most members</option>
+        </select>
+      </div>
+      <p class="src" style="margin:0 0 8px">${all.length} clusters · showing ${vis.length}</p>
+    </div>
+    ${items}
+    <div style="display:flex;gap:8px;margin-top:8px">${more}${less}</div>`;
+  const sel=document.getElementById("csort");
+  if(sel) sel.addEventListener("change",()=>{cSort=sel.value;shownClusters=40;renderClusters();});
+  const mb=document.getElementById("cMore");
+  if(mb) mb.addEventListener("click",()=>{shownClusters+=40;renderClusters();});
+  const lb=document.getElementById("cLess");
+  if(lb) lb.addEventListener("click",()=>{shownClusters=40;renderClusters();});
 }
 window.addEventListener("hashchange", route);
 
@@ -489,8 +889,162 @@ async function renderMember(id){
   el.innerHTML='<a class="back" href="#board">← Back to leaderboard</a><p class="sub">Loading…</p>';
   let m=null;
   try{ const r=await fetch("member/"+encodeURIComponent(id)+".json?t="+Date.now(),{cache:"no-store"}); if(r.ok) m=await r.json(); }catch(e){}
-  if(!m){ el.innerHTML='<a class="back" href="#board">← Back to leaderboard</a><p class="sub" style="margin-top:14px">Profile not available yet — rebuild the data.</p>'; return; }
+  if(!m){ setTitle("Profile not found"); el.innerHTML='<a class="back" href="#board">← Back to leaderboard</a><p class="sub" style="margin-top:14px">Profile not available yet. Rebuild the data.</p>'; return; }
+  setTitle(m.name);
   el.innerHTML=memberHtml(m);
+}
+
+/* ---- 1. copy a link to this profile ----
+   The URL already deep-links (hash routing), but nothing in the UI signalled
+   that, so there was no obvious way to share a member. */
+document.addEventListener("click", function(ev){
+  const b = ev.target.closest(".copylink");
+  if(!b) return;
+  const url = location.href;
+  const done = ok => {
+    b.textContent = ok ? "Link copied" : "Press Ctrl+C";
+    b.classList.add("copied");
+    setTimeout(()=>{ b.textContent="Copy link"; b.classList.remove("copied"); }, 1800);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(()=>done(true), ()=>fallback());
+  } else fallback();
+  function fallback(){
+    /* clipboard API needs a secure context — file:// and plain http get this */
+    const t=document.createElement("textarea");
+    t.value=url; t.setAttribute("readonly","");
+    t.style.cssText="position:fixed;top:-1000px";
+    document.body.appendChild(t); t.select();
+    let ok=false;
+    try{ ok=document.execCommand("copy"); }catch(e){}
+    document.body.removeChild(t); done(ok);
+  }
+});
+
+/* ---------- rating history chart ----------
+   Hand-rolled SVG: a chart library would be a 200KB dependency for one line,
+   and inline SVG inherits the page's palette for free. `curve` is the
+   [date, rating] pair recorded after every scored trade by the builder. */
+function eloChart(curve, opts){
+  const o = Object.assign({w:720, h:180, pad:{t:12,r:46,b:20,l:8}}, opts||{});
+  if(!curve || curve.length < 2) return "";
+  const vals = curve.map(p=>p[1]);
+  // Always frame the 1500 market line, so "above/below the market" reads visually.
+  let lo = Math.min(1500, ...vals), hi = Math.max(1500, ...vals);
+  const span = Math.max(hi-lo, 40), padv = span*0.12;
+  lo -= padv; hi += padv;
+  const iw = o.w - o.pad.l - o.pad.r, ih = o.h - o.pad.t - o.pad.b;
+  const X = i => o.pad.l + (i/(curve.length-1))*iw;
+  const Y = v => o.pad.t + (1 - (v-lo)/(hi-lo))*ih;
+
+  const pts  = curve.map((p,i)=>`${X(i).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(" ");
+  const area = `${o.pad.l},${Y(1500).toFixed(1)} ${pts} ${(o.pad.l+iw).toFixed(1)},${Y(1500).toFixed(1)}`;
+  const y1500 = Y(1500).toFixed(1);
+
+  // A few horizontal gridlines at round ratings
+  const stepGuess = (hi-lo)/4;
+  const step = [10,20,25,50,100,200,250,500].find(x=>x>=stepGuess) || 500;
+  let gl = "";
+  for(let v=Math.ceil(lo/step)*step; v<=hi; v+=step){
+    if(Math.abs(v-1500) < step*0.35) continue;     // don't crowd the market line
+    const y=Y(v).toFixed(1);
+    gl += `<line class="grid" x1="${o.pad.l}" y1="${y}" x2="${o.pad.l+iw}" y2="${y}"/>`
+        + `<text class="lbl" x="${o.pad.l+iw+5}" y="${(+y+3).toFixed(1)}">${v}</text>`;
+  }
+  const first = curve[0][0].slice(0,7), last = curve[curve.length-1][0].slice(0,7);
+  /* Hover geometry travels with the SVG so the readout can map a mouse position
+     back to a data point without re-deriving the scales. */
+  const meta = {x0:o.pad.l, iw:iw, n:curve.length, pts:curve};
+  return `<svg class="spark" viewBox="0 0 ${o.w} ${o.h}" preserveAspectRatio="none" role="img"
+      data-chart='${JSON.stringify(meta).replace(/'/g,"&#39;")}'
+      aria-label="Rating history from ${first} to ${last}">
+    <g class="hover" style="display:none">
+      <line class="hl" y1="${o.pad.t}" y2="${o.pad.t+ih}"/>
+      <circle class="hd" r="3"/>
+    </g>
+    ${gl}
+    <polygon class="area" points="${area}"/>
+    <line class="mkt" x1="${o.pad.l}" y1="${y1500}" x2="${o.pad.l+iw}" y2="${y1500}"/>
+    <text class="lbl" x="${o.pad.l+iw+5}" y="${(+y1500+3).toFixed(1)}">1500</text>
+    <polyline class="line" points="${pts}"/>
+    <text class="lbl" x="${o.pad.l+2}" y="${o.h-6}">${first}</text>
+    <text class="lbl" x="${o.pad.l+iw}" y="${o.h-6}" text-anchor="end">${last}</text>
+  </svg>`;
+}
+
+/* One delegated listener for the whole page: the chart is re-rendered on every
+   profile view, so binding per-instance would leak handlers. */
+document.addEventListener("mousemove", function(ev){
+  const svg = ev.target.closest ? ev.target.closest("svg.spark") : null;
+  const out = document.getElementById("chartread");
+  if(!svg){ document.querySelectorAll("svg.spark .hover").forEach(g=>g.style.display="none");
+            if(out) out.classList.remove("on"); return; }
+  let meta; try{ meta = JSON.parse(svg.getAttribute("data-chart")); }catch(e){ return; }
+  const box = svg.getBoundingClientRect();
+  const vb = svg.viewBox.baseVal;
+  /* the SVG is stretched to the container, so convert px -> viewBox units */
+  const vx = (ev.clientX - box.left) / box.width * vb.width;
+  const t = Math.max(0, Math.min(1, (vx - meta.x0) / meta.iw));
+  const i = Math.round(t * (meta.n - 1));
+  const pt = meta.pts[i];
+  if(!pt) return;
+  const poly = svg.querySelector("polyline.line");
+  const coords = poly.getAttribute("points").trim().split(/\s+/)[i];
+  if(!coords) return;
+  const [cx, cy] = coords.split(",").map(Number);
+  const g = svg.querySelector(".hover");
+  g.style.display = "";
+  g.querySelector(".hl").setAttribute("x1", cx);
+  g.querySelector(".hl").setAttribute("x2", cx);
+  g.querySelector(".hd").setAttribute("cx", cx);
+  g.querySelector(".hd").setAttribute("cy", cy);
+  if(out){
+    out.classList.add("on");
+    const d = new Date(pt[0]+"T00:00:00");
+    /* curve points carry the decision that produced them: [date, rating, ticker, side, excess] */
+    const tk = pt[2], side = pt[3], ex = pt[4];
+    const trade = tk
+      ? ` · <span class="${side==="sell"?"sell":"buy"}">${side==="sell"?"SOLD":"BOUGHT"}</span> <b class="tkr">${tk}</b>`
+        + (ex!=null?` <span class="${ex>=0?"pos":"neg"}">${ex>=0?"+":""}${Number(ex).toFixed(1)}% vs S&amp;P</span>`:"")
+      : "";
+    out.innerHTML = `<b>${Math.round(pt[1])}</b> on ${d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}`
+      + ` · decision ${i+1} of ${meta.n}${trade}`;
+  }
+});
+
+function eloChartBlock(m){
+  const c = m.curve || [];
+  if(c.length < 2) return "";
+  const end = c[c.length-1][1], peak = Math.max(...c.map(p=>p[1])), trough = Math.min(...c.map(p=>p[1]));
+  const vs = end >= 1500
+    ? `finished <b>${Math.round(end-1500)} points above</b> the market`
+    : `finished <b>${Math.round(1500-end)} points below</b> the market`;
+  return `<div class="psec"><h3>Rating history</h3>
+    <div class="sparkwrap">
+      <div class="chartread" id="chartread">Hover the line to read a date and rating</div>
+      ${eloChart(c)}
+      <div class="sparkcap">Rating after each of ${m.matches} scored trades, ${vs}.
+        Peak ${Math.round(peak)} · low ${Math.round(trough)}.
+        The dashed line is the S&amp;P 500 at a fixed 1500.</div>
+    </div></div>`;
+}
+
+function money(n){
+  const a=Math.abs(n);
+  if(a>=1e9) return "$"+(n/1e9).toFixed(1)+"B";
+  if(a>=1e6) return "$"+(n/1e6).toFixed(1)+"M";
+  if(a>=1e3) return "$"+Math.round(n/1e3)+"K";
+  return "$"+Math.round(n);
+}
+/* The STOCK Act discloses a bracket per trade, never an exact figure, so the
+   only honest summary is the range. The midpoint is shown as the conventional
+   point estimate, not as a fact. */
+function volLine(m){
+  if(!m.vol_hi) return "";
+  return `<p class="src" style="margin:10px 0 0">Disclosed value of these trades:
+    <b>${money(m.vol_lo)} – ${money(m.vol_hi)}</b>
+    (midpoint estimate ${money(m.vol_mid)}). Amounts are filed as ranges, so the
+    true total sits somewhere inside that band.</p>`;
 }
 function memberHtml(m){
   const av=avatarHtml(m.photo,m.name,'pav');
@@ -499,24 +1053,66 @@ function memberHtml(m){
   const secTop=Object.entries(secCount).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([s,n])=>`<span class="chip">${s} · ${n}</span>`).join("");
   const cm=(m.committees||[]);
   const commHtml=cm.length?cm.map(c=>`<span class="chip">${c}</span>`).join(""):`<span class="chip dim">Not a current member</span>`;
-  const sharpBadge=m.sharp?`<span class="flag">🚩 ${m.sharp} sharp call${m.sharp>1?'s':''}</span>`:"";
-  const confStr=m.conflicts?`<span class="conf">⚠️ ${m.conflicts} trade${m.conflicts>1?'s':''} in a committee's sector${m.sharp_conflicts?` (${m.sharp_conflicts} sharp)`:''}.</span>`:"";
-  const extraLine=confStr?`<div class="pmeta2">${confStr}</div>`:"";
   const rows=(m.trades||[]).map(t=>{
     const d=t.date?new Date(t.date).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"";
     const co=t.company?`${t.company} (${t.ticker})`:t.ticker;
     const exn=Number(t.ex30!=null?t.ex30:t.excess);
-    return `<tr><td class="num nw">${d}</td><td class="nw ${t.side==='sell'?'sell':'buy'}">${t.side==="sell"?"Sell":"Buy"}</td><td class="co">${co}</td><td class="nw">${t.sector||"—"}</td><td class="nw ${exn>=0?'pos':'neg'}">${exn>=0?'+':''}${exn.toFixed(0)}%</td><td class="nw">${t.sharp?'🚩':''}${t.conflict?' ⚠️':''}</td></tr>`;
+    return `<tr><td class="num nw">${d}</td><td class="nw ${t.side==='sell'?'sell':'buy'}">${t.side==="sell"?"Sell":"Buy"}</td><td class="co">${co}</td><td class="nw">${t.sector||"—"}</td><td class="nw ${exn>=0?'pos':'neg'}">${exn>=0?'+':''}${exn.toFixed(0)}%</td><td class="nw">${t.sharp?'🚩':''}${t.conflict?' ⚠️':''}${t.late?`<span title="Filed ${t.days_to_file!=null?Math.round(t.days_to_file)+' days':'late'} after the trade. The STOCK Act allows 45">⏰</span>`:''}</td></tr>`;
   }).join("");
-  return `<a class="back" href="#board">← Back to leaderboard</a>
-    <div class="phead">${av}<div>
-      <div class="pname">${m.name} <span class="pill ${partyCls(m.party)}">${partyName(m.party)}</span> ${activeBadge(m.active)}</div>
-      <div class="pmeta">${m.chamber} · ELO <b>${m.elo}</b> · ${m.wins}–${m.losses}–${m.ties} (${Number(m.winrate).toFixed(0)}% vs S&amp;P) ${sharpBadge}</div>
-      <div class="pmeta2">Buys: ${m.n_buys} (${Number(m.buy_winrate).toFixed(0)}% beat market) · Sells: ${m.n_sells} (${Number(m.sell_winrate).toFixed(0)}% beat market)</div>
-      ${extraLine}
+  /* One person can hold several offices over time (a senator who becomes a
+     cabinet secretary, a representative who moves to the Senate). Their trades
+     are one record, but every role they filed under is listed. */
+  const roles = (m.roles||[]);
+  const roleTxt = r => r.chamber==="Executive"
+    ? [r.office, r.agency].filter(Boolean).map(esc).join(", ")
+    : [r.chamber==="House"?"U.S. Representative":"U.S. Senator", r.state].filter(Boolean).map(esc).join(" · ");
+  const role = roles.length
+    ? roles.map(r=>`<span class="rolechip"><b>${roleTxt(r)}</b> ${r.first.slice(0,4)}–${r.last.slice(0,4)} · ${r.trades} decision${r.trades===1?"":"s"}</span>`).join("")
+    : (m.chamber==="Executive"
+        ? [m.office, m.agency].filter(Boolean).map(esc).join(" · ")
+        : esc(m.chamber));
+  const stats = [
+    {k:"ELO rating", v:m.elo, big:true, cls:m.elo>=1500?"pos":"neg",
+     sub:m.reliability!=null
+       ? `${relWord(m.reliability)} confidence · ${m.matches} decisions`
+       : ""},
+    {k:"Record", v:`${m.wins}–${m.losses}–${m.ties}`, sub:"W–L–T"},
+    {k:"Score % vs S&amp;P", v:`${Number(m.score!=null?m.score:m.winrate).toFixed(0)}%`,
+     sub:"win = 1, tie = ½"},
+    {k:"Buys", v:`${m.n_buys}`, sub:`${Number(m.buy_winrate).toFixed(0)}% beat market`},
+    {k:"Sells", v:`${m.n_sells}`, sub:`${Number(m.sell_winrate).toFixed(0)}% beat market`},
+  ];
+  if(m.sharp) stats.push({k:"Sharp calls", v:`🚩 ${m.sharp}`, cls:"warn",
+    sub:"beat market 15%+ in a month"});
+  if(m.conflicts) stats.push({k:"Committee sector", v:`⚠️ ${m.conflicts}`, cls:"warn",
+    sub:m.sharp_conflicts?`${m.sharp_conflicts} of them sharp`:"trades in an overseen sector"});
+  if(m.late) stats.push({k:"Filed late", v:`⏰ ${m.late}`, cls:"warn",
+    sub:`${Number(m.late_rate).toFixed(0)}% of trades`});
+  if(m.first_trade) stats.push({k:"Trades span",
+    v:`${m.first_trade.slice(0,4)}–${m.last_trade.slice(0,4)}`,
+    sub:`last filed ${monthYear(m.last_trade)}`});
+  if(m.median_days_to_file!=null) stats.push({k:"Median filing lag",
+    v:`${Math.round(m.median_days_to_file)}d`, sub:"45-day legal limit"});
+  const statHtml = stats.map(x=>`<div class="stbox">
+      <div class="stk">${x.k}</div>
+      <div class="stv ${x.cls||""} ${x.big?"big":""}">${x.v}</div>
+      ${x.sub?`<div class="sts">${x.sub}</div>`:""}
+    </div>`).join("");
+  return `<div class="pbar">
+      <a class="back" href="#board">← Back to leaderboard</a>
+      <button class="reload copylink" type="button" title="Copy a direct link to this profile">Copy link</button>
+    </div>
+    <div class="phead">${av}<div class="pid">
+      <div class="pname">${m.name}</div>
+      <div class="ptags">${affilHtml(m)} ${statusHtml(m)}</div>
+      <div class="prole">${role}</div>
+      ${roles.length>1?'<div class="rolenote">Trades from both roles are combined into one rating.</div>':""}
     </div></div>
+    <div class="statgrid">${statHtml}</div>
+    ${volLine(m)}
     <div class="psec"><h3>Current committees</h3><div class="chips">${commHtml}</div></div>
     ${secTop?`<div class="psec"><h3>Most-traded sectors</h3><div class="chips">${secTop}</div></div>`:""}
+    ${eloChartBlock(m)}
     <div class="psec"><h3>All scored trades (${(m.trades||[]).length})</h3>
       <div style="overflow:auto"><table class="ptbl"><thead><tr><th>Date</th><th>Side</th><th>Company</th><th>Sector</th><th>vs S&amp;P</th><th>Flags</th></tr></thead><tbody>${rows}</tbody></table></div>
     </div>`;
@@ -525,5 +1121,6 @@ function memberHtml(m){
 // ---------- init ----------
 (async()=>{ applyState(await loadData()); render(); route(); })();
 </script>
+
 </body>
 </html>

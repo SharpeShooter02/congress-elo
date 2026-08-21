@@ -27,12 +27,26 @@ Notes
 * Tune the knobs in the CONFIG block below.
 """
 
-import json, sys, time, math, datetime as dt
+import csv, io, json, re, statistics, sys, time, math, datetime as dt
 from pathlib import Path
 
 # ----------------------------- CONFIG -----------------------------
 HOLDING_DAYS   = 30      # trading days held before measuring the trade's return
-K              = 32      # ELO sensitivity
+# ELO sensitivity. At the classic chess value of 32 a single decision moved a
+# rating by up to 32*4.5 = 144 points, so the published number was dominated by
+# whatever happened most recently: it correlated 0.85 with a member's LAST 50
+# decisions but only 0.61 with their whole record, and the median career swung
+# 668 points from peak to trough. That is also why average excess return looked
+# unrelated to the rating -- one is a full-sample mean, the other was a
+# recency-weighted random walk.
+#
+# Measured by odd/even split-half correlation over every member with 20+
+# decisions, effective reliability by K:
+#     K=32 -> 0.62      K=16 -> 0.72      K=10 -> 0.77
+#     K=8  -> 0.79      K=4  -> 0.83
+# while agreement with the full-record score peaks around K=8-12 (0.76) and
+# falls away below that as the rating stops responding to evidence at all.
+K              = 8       # ELO sensitivity
 MOV_CAP        = 4.5     # max margin-of-victory multiplier (keeps ~5–50% excesses distinct; trims only extreme outliers)
 MARKET_ELO     = 1500    # fixed rating of the S&P 500 opponent
 ELO_DIV        = 700     # rating scale: larger = more spread top-to-bottom (chess = 400)
@@ -51,6 +65,61 @@ W_SINCE = 0.05   # only over the full (multi-year) holding period
 EXCESS_CAP = 50.0  # clamp each horizon's excess before blending, so a multi-year hold's
                    # giant "since" return can't dominate the rating despite its low weight
 WEIGHT_BY_AMOUNT = False
+# Repeat trades in the same stock and direction inside this window are one
+# DECISION, not several. A member buying the same stock across four filings in a
+# week made one call; scoring it four times let a single decision dominate the
+# rating. 7 days = one trading week: it absorbs the same-day/next-day spike (by
+# far the largest, and plainly one decision split across filing line items)
+# without reaching into monthly accumulation, which really is a repeated choice.
+DECISION_WINDOW_DAYS = 7
+# Herding: distinct members trading the same stock the SAME WAY inside this
+# many days. Matched to the decision window above so both mean 'one trading
+# week' rather than two different notions of 'around the same time'.
+CLUSTER_WINDOW_DAYS = 7
+CLUSTER_MIN_MEMBERS = 3
+# --- reliability weighting -------------------------------------------------
+# A rating built on 12 decisions is mostly luck; one built on 900 is mostly
+# skill. Measured by splitting each member's decisions into odd/even halves and
+# correlating the two independent ratings, the full-length reliability of this
+# system fits the standard n/(n+k) form at k~27 with K=8. (Per-bucket estimates
+# scatter, so treat 27 as an order of magnitude, not a precise constant. It was
+# 67 while K was 32 -- a noisier rating needs far heavier shrinking.)
+#
+# Shrinking alone would squash everyone toward 1500 and destroy the spread that
+# makes the number readable, so the shrunk ratings are then rescaled back out to
+# the spread of the raw ones. Ranking is therefore driven by RELIABLE
+# differences, while the axis stays as wide as before.
+SHRINK_K = 27
+RESCALE_AFTER_SHRINK = True
+# Spread of the published ratings.
+#
+# The raw distribution is extremely peaked: the middle half of members sat
+# within 46 rating points of each other while a handful of outliers ran from 455
+# to 2288. Simply multiplying the spread up inflates the outliers and leaves the
+# pack indistinguishable, which is the opposite of what the number is for.
+#
+# So the shrunk ratings are mapped onto a normal curve BY RANK: the ordering is
+# preserved exactly, but the population is spread evenly, so equal rating gaps
+# mean equal differences in standing. 1500 is the median member and +/-150 is
+# roughly the 84th/16th percentile. This trades away the literal "expected score
+# against a 1500 opponent" reading of an ELO, which the raw K=8 rating no longer
+# supported anyway once it was shrunk.
+RESCALE_TARGET_SD = 150
+RANK_NORMALISE = True
+# Funds whose return is, by construction, the benchmark itself. Scoring them as
+# "beat the S&P" is circular -- a guaranteed tie that only adds noise. Sector and
+# single-country funds are NOT excluded: those are genuine directional bets.
+BROAD_MARKET_TICKERS = {
+    # S&P 500 trackers (ETF + mutual fund share classes)
+    "SPY", "IVV", "VOO", "SPLG", "SPTM", "RSP", "IVW", "IVE", "SPYG", "SPYV",
+    "VFIAX", "VFINX", "FXAIX", "SWPPX", "PREIX", "SPFIX", "VINIX",
+    # total US market
+    "VTI", "ITOT", "SCHB", "VTSAX", "VTSMX", "FSKAX", "FZROX", "SWTSX",
+    # large-cap / Russell 1000 core (effectively the same book of stocks)
+    "IWB", "IWF", "IWD", "VONG", "VONV", "VV", "MGC",
+    # levered or inverse S&P: return is a fixed multiple of the benchmark
+    "SH", "SDS", "SPXU", "SPXS", "UPRO", "SSO", "SPUU",
+}
 TAG_PARTY      = True    # look up party from congress-legislators (best-effort)
 OUT_JS         = Path(__file__).with_name("data.js")
 OUT_JSON       = Path(__file__).with_name("data.json")
@@ -66,6 +135,17 @@ KADOA_FILERS_URL = "https://raw.githubusercontent.com/kadoa-org/congress-trading
 # excess-vs-market return already computed per trade ({id} = a filer id).
 KADOA_FILER_URL  = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data/filer/{id}.json"
 LEG_URL          = "https://unitedstates.github.io/congress-legislators/legislators-current.json"
+# Former members too — otherwise everyone who has left Congress shows as "Unlisted".
+LEG_HIST_URL     = "https://unitedstates.github.io/congress-legislators/legislators-historical.json"
+# Presidents and vice presidents, with exact term dates -- the only part of the
+# executive branch for which office tenure is available as free structured data.
+EXEC_URL         = "https://unitedstates.github.io/congress-legislators/executive.json"
+# DW-NOMINATE from Voteview (UCLA): every member of Congress placed on a single
+# liberal-conservative axis derived purely from their roll-call votes. Keyless,
+# one CSV, and keyed by bioguide id. Only the ideology score is used; the file
+# also carries birth years and similar personal details, which have nothing to do
+# with how someone trades and are deliberately left alone.
+VOTEVIEW_URL     = "https://voteview.com/static/data/out/members/HSall_members.csv"
 # Committee assignments (current members), keyed by bioguide id — no scraping.
 COMMITTEES_URL           = "https://unitedstates.github.io/congress-legislators/committees-current.json"
 COMMITTEE_MEMBERSHIP_URL = "https://unitedstates.github.io/congress-legislators/committee-membership-current.json"
@@ -211,6 +291,51 @@ def normalize_rows(rows, chamber):
     return out
 
 
+def merge_duplicate_filers(filers):
+    """kadoa's filer directory lists a few members TWICE: once properly (with a
+    photo_url, hence a bioguide id, a party and a state) and once as a bare stub
+    parsed off a filing header -- 'John J McGuire III' alongside 'John McGuire',
+    'M. Michael Rounds' alongside 'Mike Rounds'. Left alone, each pair splits one
+    person's record across two leaderboard rows, and the stub half shows as
+    "Unlisted" because it carries no party.
+
+    Returns {stub_id: canonical_filer} for stubs whose surname matches exactly one
+    complete filer in the same chamber. A stub matching zero or several is left
+    alone -- merging the wrong two people is worse than showing a duplicate.
+    """
+    complete, stubs = [], []
+    for f in filers:
+        chamber = sval(f.get("chamber")).lower()
+        if chamber not in ("house", "senate"):
+            continue                              # executive filers have no photos anyway
+        (complete if sval(f.get("photo_url")) else stubs).append(f)
+
+    by_surname = {}
+    for f in complete:
+        parts = norm_name(extract_name(f)).split()
+        if not parts: continue
+        by_surname.setdefault((parts[-1], sval(f.get("chamber")).lower()), []).append(f)
+
+    alias = {}
+    for st in stubs:
+        parts = norm_name(extract_name(st)).split()
+        if not parts: continue
+        cands = by_surname.get((parts[-1], sval(st.get("chamber")).lower()), [])
+        if len(cands) != 1:
+            continue
+        canon = cands[0]
+        # If both name a state they must agree.
+        s1, s2 = sval(st.get("state")), sval(canon.get("state"))
+        if s1 and s2 and s1 != s2:
+            continue
+        alias[sval(st.get("id"))] = canon
+    if alias:
+        for k, v in alias.items():
+            log(f"[dedup] {k} -> {sval(v.get('id'))}")
+    log(f"[dedup] merged {len(alias)} duplicate filer stub(s)")
+    return alias
+
+
 def load_trades():
     # 1. Enumerate every filer (House, Senate, and executive branch — current & former)
     log("[trades] loading filer directory")
@@ -218,11 +343,16 @@ def load_trades():
         filers = fetch_json(KADOA_FILERS_URL, "kadoa_filers.json")
     except Exception as e:
         sys.exit(f"Could not load filer directory: {e}")
+    alias = merge_duplicate_filers(filers)
     roster = []
     for f in filers:
         fid = sval(f.get("id"))
         if not fid:
             continue
+        # A duplicate stub still has to be DOWNLOADED under its own id (that is
+        # where its trades live) but is attributed to the canonical record, so the
+        # two halves replay as one person in chronological order.
+        canon = alias.get(fid)
         chamber = sval(f.get("chamber")).lower()
         branch  = sval(f.get("branch")).lower()
         if chamber in ("house", "senate"):
@@ -233,14 +363,22 @@ def load_trades():
             pre = fid.split("_", 1)[0]
             label = {"house": "House", "senate": "Senate",
                      "oge": "Executive"}.get(pre, pre.capitalize() or "Other")
-        roster.append((fid, f, label))
+        roster.append((fid, canon or f, label))
     log(f"[trades] {len(roster)} filers to pull (House + Senate + Executive, current & former)")
 
     # 2. Pull each filer's full history; score off kadoa's own excess-vs-market return
     trades = []
     for i, (fid, f, label) in enumerate(roster, 1):
+        # fid = where the trades are fetched from; cid = who they are attributed to
+        # (they differ only for the merged duplicate stubs).
+        cid   = sval(f.get("id")) or fid
         name  = extract_name(f)
         party = sval(f.get("party"))
+        # Executive-branch filers have no party, but they DO have an agency and a
+        # job title — far more useful for reading a conflict than "Unlisted".
+        agency = sval(f.get("agency"))
+        office = sval(f.get("office"))
+        state  = sval(f.get("state"))
         try:
             doc = fetch_json(KADOA_FILER_URL.format(id=fid), f"filer_{fid}.json")
         except Exception as e:
@@ -262,13 +400,23 @@ def load_trades():
             rsince = fnum(row.get("ret_since"))
             if r30 is None and r1y is None and rsince is None:
                 continue
+            amt_lo = fnum(row.get("amount_range_low"))
+            amt_hi = fnum(row.get("amount_range_high"))
+            # STOCK Act discloses a bracket, never an exact figure. The midpoint
+            # is the conventional point estimate; the spread is kept so the UI can
+            # be honest about how wide it is.
+            amt_mid = (amt_lo + amt_hi) / 2 if (amt_lo is not None and amt_hi is not None) else None
             trades.append({
+                "is_late": 1 if row.get("is_late") else 0,
+                "days_to_file": fnum(row.get("days_to_file")),
+                "amt_lo": amt_lo, "amt_hi": amt_hi, "amt_mid": amt_mid,
                 "name": name or extract_name(row), "chamber": label,
                 "party": party, "ticker": clean_ticker(sval(row.get("ticker"))) or "",
                 "side": side, "date": tdate,
                 "amount": sval(row.get("amount_range_label")) or sval(row.get("amount")),
                 "ret30": r30, "ret1y": r1y, "retsince": rsince,
-                "photo": photo, "bioguide": bg, "fid": fid,
+                "photo": photo, "bioguide": bg, "fid": cid,
+                "agency": agency, "office": office, "state": state,
                 "company": clip(sval(row.get("asset_name")).split("(")[0].split("[")[0]),
             })
         if i % 40 == 0:
@@ -342,28 +490,135 @@ def ret_over_window(series, entry_date, hold):
 
 
 # --------------------------- party --------------------------------
+def pstdev(xs):
+    if len(xs) < 2: return 0.0
+    mu = sum(xs) / len(xs)
+    return math.sqrt(sum((x - mu) ** 2 for x in xs) / len(xs))
+
+
+def median(xs):
+    if not xs: return None
+    xs = sorted(xs); n = len(xs)
+    return round(xs[n // 2] if n % 2 else (xs[n // 2 - 1] + xs[n // 2]) / 2, 1)
+
+
+def downsample(curve, n=60):
+    """Thin an ELO curve to at most n points for the sparklines. Always keeps the
+       first and last point so the start (1500) and the final rating are exact."""
+    if not curve: return []
+    if len(curve) <= n: return curve
+    step = (len(curve) - 1) / (n - 1)
+    idx = sorted({int(round(i * step)) for i in range(n)} | {0, len(curve) - 1})
+    return [curve[i] for i in idx]
+
+
 def load_party_map():
-    if not TAG_PARTY: return {}
-    try:
-        legs = fetch_json(LEG_URL, "legislators.json", max_age_h=24*30)
-    except Exception as e:
-        log(f"[party] skip ({e})"); return {}
-    m = {}
+    """Party lookup for every member of Congress, current AND former.
+
+    Returns {"bg": {bioguide: party}, "nm": {name: (party, {states})}}.
+
+    The bioguide map is exact and always trusted. The name map is a fallback and
+    is deliberately conservative:
+      * a name key shared by legislators of DIFFERENT parties is dropped rather
+        than guessed -- a wrong party label is worse than an honest "Unlisted";
+      * each surviving key carries the set of states its legislators served, so a
+        surname-only match can be state-verified before it is trusted.
+    The second rule matters because kadoa's filer directory contains people who
+    are not members of Congress at all (a corporate officer filing through the
+    Senate eFD system, say). Without a state check, a common surname would hand
+    such a filer a confident and completely fictional party.
+    """
+    if not TAG_PARTY: return {"bg": {}, "nm": {}}
+    legs = []
+    for url, cache, age in ((LEG_URL, "legislators.json", 24 * 30),
+                            (LEG_HIST_URL, "legislators_historical.json", 24 * 90)):
+        try:
+            legs += fetch_json(url, cache, max_age_h=age) or []
+        except Exception as e:
+            log(f"[party] skip {cache} ({e})")
+
+    bg = {}
+    cand = {}          # name key -> {"p": {parties}, "s": {states}}
     for l in legs:
-        nm = l.get("name", {})
-        party = (l.get("terms", [{}])[-1].get("party") or "")[:1]  # D/R/I
-        last = (nm.get("last") or "").lower()
-        full = f"{nm.get('first','')} {nm.get('last','')}".lower().strip()
-        if last: m.setdefault(last, party)
-        if full: m[full] = party
-    return m
+        terms = l.get("terms") or [{}]
+        party = (terms[-1].get("party") or "")[:1]      # D / R / I / other
+        if not party: continue
+        b = (l.get("id") or {}).get("bioguide")
+        if b: bg[b] = party
+        states = {sval(t.get("state")) for t in terms if t.get("state")}
+        n = l.get("name", {})
+        first, last = (n.get("first") or ""), (n.get("last") or "")
+        keys = {n.get("official_full") or "", f"{first} {last}"}
+        if n.get("nickname"): keys.add(f"{n['nickname']} {last}")
+        if last: keys.add(last)                         # surname-only fallback key
+        for k in keys:
+            k = norm_name(k)
+            if not k: continue
+            e = cand.setdefault(k, {"p": set(), "s": set(), "b": set()})
+            e["p"].add(party); e["s"] |= states
+            if b: e["b"].add(b)
+
+    nm = {k: (next(iter(v["p"])), v["s"],
+               next(iter(v["b"])) if len(v["b"]) == 1 else "")
+          for k, v in cand.items() if len(v["p"]) == 1}
+    log(f"[party] {len(bg)} bioguide + {len(nm)} name entries "
+        f"({len(cand) - len(nm)} ambiguous names dropped)")
+    return {"bg": bg, "nm": nm}
 
 
-def match_party(name, pmap):
-    n = name.lower()
-    if n in pmap: return pmap[n]
-    last = n.split()[-1] if n.split() else n
-    return pmap.get(last, "")
+def norm_name(n):
+    """Lowercase and strip punctuation, honorifics, middle initials and
+       suffixes, so 'A. Mitchell McConnell', 'Mitch McConnell' and
+       'McConnell, A. Mitchell' all normalize to the same key."""
+    n = (n or "").lower().replace(",", " ")
+    n = re.sub(r"\b[a-z]\.", " ", n)                    # middle initials
+    n = re.sub(r"[^a-z ]", " ", n)                      # remaining punctuation
+    n = re.sub(r"\b(hon|mr|mrs|ms|dr|rep|sen|senator|representative)\b", " ", n)
+    n = re.sub(r"\b(jr|sr|ii|iii|iv)\b", " ", n)        # generational suffixes
+    return re.sub(r"\s+", " ", n).strip()
+
+
+def match_party(name, pmap, bioguide="", state=""):
+    """Resolve a party, in descending order of confidence:
+
+       1. bioguide id  -- exact, always trusted;
+       2. full name    -- strong evidence on its own;
+       3. surname only -- trusted ONLY if the filer's state matches a state that
+          legislator actually served, since a bare surname is weak evidence and
+          not every filer in the source data is a member of Congress.
+    """
+    bg = (pmap or {}).get("bg", {})
+    nm = (pmap or {}).get("nm", {})
+    if bioguide and bioguide in bg:
+        return bg[bioguide]
+
+    hit = _match_legislator(name, nm, state)
+    return hit[0] if hit else ""
+
+
+def _match_legislator(name, nm, state=""):
+    """Shared name resolution for both party and bioguide. Returns the matched
+       (party, states, bioguide) tuple, or None."""
+    n = norm_name(name)
+    parts = n.split()
+    keys = [n]
+    if len(parts) > 2:
+        keys.append(f"{parts[0]} {parts[-1]}")
+    for key in keys:
+        if key in nm:
+            return nm[key]
+    # Surname alone is weak evidence, so require the state to corroborate it.
+    if parts and parts[-1] in nm:
+        entry = nm[parts[-1]]
+        if state and state in entry[1]:
+            return entry
+    return None
+
+
+def match_bioguide(name, pmap, state=""):
+    """Best-effort bioguide id for a filer that arrived without one."""
+    hit = _match_legislator(name, (pmap or {}).get("nm", {}), state)
+    return hit[2] if hit else ""
 
 
 def load_committees():
@@ -408,6 +663,89 @@ def load_ticker_sectors():
                 out[sym] = {"sector": sval(r.get("sector")), "industry": sval(r.get("industry"))}
     log(f"[sectors] {len(out)} tickers with sector/industry")
     return out
+
+
+def load_ideology():
+    """bioguide -> DW-NOMINATE first dimension, from the member's most recent
+       Congress. Roughly -1 (most liberal) to +1 (most conservative)."""
+    cache = CACHE_DIR / "voteview.json"
+    if cache.exists() and (time.time() - cache.stat().st_mtime) < 24 * 30 * 3600:
+        try:
+            return json.loads(cache.read_text())
+        except Exception:
+            pass
+    try:
+        log(f"  downloading {VOTEVIEW_URL} ...")
+        r = requests.get(VOTEVIEW_URL, timeout=120,
+                         headers={"User-Agent": "elo-leaderboard/1.0"})
+        r.raise_for_status()
+        rows = list(csv.DictReader(io.StringIO(r.text)))
+    except Exception as e:
+        log(f"[ideology] skip ({e})")
+        return {}
+    best = {}
+    for row in rows:
+        bg = (row.get("bioguide_id") or "").strip()
+        dim = (row.get("nominate_dim1") or "").strip()
+        if not bg or not dim:
+            continue
+        try:
+            cong, val = int(row["congress"]), float(dim)
+        except ValueError:
+            continue
+        if bg not in best or cong > best[bg][0]:
+            best[bg] = (cong, round(val, 3))
+    out = {bg: v for bg, (_, v) in best.items()}
+    cache.write_text(json.dumps(out))
+    log(f"[ideology] {len(out)} members scored (DW-NOMINATE)")
+    return out
+
+
+def load_executives():
+    """Presidents and VPs -> {name key: {"party", "terms": [(start, end, type)]}}.
+
+    Cabinet secretaries and agency heads are NOT in any free structured dataset,
+    so this covers only the top of the executive branch. Everyone else is handled
+    by reporting when they last filed rather than by guessing at their tenure.
+    """
+    try:
+        ex = fetch_json(EXEC_URL, "executive.json", max_age_h=24 * 30)
+    except Exception as e:
+        log(f"[exec] skip ({e})"); return {}
+    out = {}
+    for p in ex or []:
+        n = p.get("name", {})
+        terms = [(sval(t.get("start")), sval(t.get("end")), sval(t.get("type")))
+                 for t in (p.get("terms") or []) if t.get("start")]
+        if not terms: continue
+        party = ((p.get("terms") or [{}])[-1].get("party") or "")[:1]
+        keys = {f"{n.get('first','')} {n.get('last','')}", n.get("official_full") or ""}
+        if n.get("nickname"): keys.add(f"{n['nickname']} {n.get('last','')}")
+        for k in keys:
+            k = norm_name(k)
+            if not k: continue
+            e = out.setdefault(k, {"party": party, "terms": []})
+            e["terms"] += terms
+    log(f"[exec] {len(out)} president/VP name keys")
+    return out
+
+
+def exec_status(name, execs, today_iso):
+    """(is_currently_serving, party, role) for a president/VP, or None."""
+    hit = execs.get(norm_name(name))
+    if not hit:
+        parts = norm_name(name).split()
+        if len(parts) > 2:
+            hit = execs.get(f"{parts[0]} {parts[-1]}")
+    if not hit: return None
+    cur, role = False, ""
+    for start, end, typ in hit["terms"]:
+        if start <= today_iso and (not end or today_iso < end):
+            cur, role = True, typ
+    if not role:
+        role = sorted(hit["terms"])[-1][2]
+    label = {"prez": "President", "viceprez": "Vice President"}.get(role, role)
+    return (cur, hit["party"], label)
 
 
 def load_current_bioguides():
@@ -517,18 +855,72 @@ def build():
         scored.append({**t, "excess": sum(w * e for w, e in comps) / wsum, "ex30": ex30})
     log(f"[elo] scored trades: {len(scored)}")
 
+    # ---- drop benchmark-tracking funds ----
+    before = len(scored)
+    scored = [t for t in scored
+              if (t.get("ticker") or "").upper() not in BROAD_MARKET_TICKERS]
+    log(f"[elo] dropped {before - len(scored)} broad-market index trades "
+        f"({len(BROAD_MARKET_TICKERS)} tickers excluded as circular)")
+
+    # ---- collapse repeat trades into single decisions ----
+    scored.sort(key=lambda t: t["date"])
+    groups, index = {}, {}
+    for t in scored:
+        key = (t["name"], t["chamber"], (t.get("ticker") or "").upper(), t["side"])
+        g = index.get(key)
+        if g is not None and (t["date"] - groups[g]["anchor"]).days <= DECISION_WINDOW_DAYS:
+            groups[g]["items"].append(t)
+        else:
+            g = len(groups)
+            groups[g] = {"anchor": t["date"], "items": [t]}
+            index[key] = g
+
+    def collapse(items):
+        """One decision from several filings: the earliest date (when the call was
+           actually made), size-summed, and an excess averaged over the filings.
+           Averaging rather than summing keeps a decision worth ONE match."""
+        items = sorted(items, key=lambda x: x["date"])
+        base = dict(items[0])
+        n = len(items)
+        base["excess"] = sum(x["excess"] for x in items) / n
+        ex30 = [x["ex30"] for x in items if x.get("ex30") is not None]
+        base["ex30"] = sum(ex30) / len(ex30) if ex30 else None
+        base["is_late"] = 1 if any(x.get("is_late") for x in items) else 0
+        dtf = [x["days_to_file"] for x in items if x.get("days_to_file") is not None]
+        base["days_to_file"] = max(dtf) if dtf else None
+        for k in ("amt_lo", "amt_hi", "amt_mid"):
+            vals = [x[k] for x in items if x.get(k) is not None]
+            base[k] = sum(vals) if vals else None
+        base["n_filings"] = n
+        return base
+
+    collapsed = [collapse(g["items"]) for g in groups.values()]
+    collapsed.sort(key=lambda t: t["date"])
+    log(f"[elo] {len(scored)} trades -> {len(collapsed)} decisions "
+        f"(window {DECISION_WINDOW_DAYS}d)")
+    scored = collapsed
+
     members = {}
     def M(name, chamber, party=""):
-        key = (name, chamber)
+        # Keyed by PERSON, not by seat: someone who moves from the Senate to a
+        # cabinet post is one trader with one rating, not two half-records.
+        # Each role they held is tracked separately for display.
+        key = norm_name(name)
         if key not in members:
-            members[key] = {"name": name, "chamber": chamber,
-                            "party": party or match_party(name, pmap),
+            members[key] = {"name": name, "chamber": chamber, "roles": {},
+                            "party": party,   # resolved after the replay, once bioguide is known
                             "elo": 1500.0, "wins": 0, "losses": 0, "ties": 0,
                             "matches": 0, "sumExcess": 0.0,
                             "nb": 0, "bw": 0, "bsum": 0.0,   # buys:  count, wins, sum eff
                             "ns": 0, "sw": 0, "ssum": 0.0,   # sells: count, wins, sum eff
                             "sharp": 0, "conf": 0, "sconf": 0, "trades": [],
-                            "photo": "", "bioguide": "", "id": ""}
+                            "first_trade": "", "last_trade": "",
+                            "late": 0, "dtf": [],            # late filings, days-to-file
+                            "vol_lo": 0.0, "vol_hi": 0.0, "vol_mid": 0.0,
+                            "photo": "", "bioguide": "", "id": "",
+                            "agency": "", "office": "", "state": "",
+                            # (date, rating) after every scored trade -> sparkline
+                            "curve": []}
         return members[key]
 
     committees = load_committees()
@@ -538,15 +930,45 @@ def build():
     flagged = []   # individual sharp-call trades, for the "sketchiest trades" lists
     all_tr = []    # every trade (for cluster / herding detection)
 
-    def is_active(chamber, bioguide):
-        # None for executive branch (no "seat" concept); True/False for Congress
-        return (bioguide in current_bg) if chamber in ("House", "Senate") else None
+    execs = load_executives()
+    today_iso = dt.date.today().isoformat()
+
+    def is_active(chamber, bioguide, name=""):
+        """True/False for Congress (exact, via bioguide) and for presidents/VPs
+           (exact, via term dates). None for every other executive appointee --
+           their tenure simply is not available, and inferring it from trading
+           activity would mark an official who stopped trading as 'Former'."""
+        if chamber in ("House", "Senate"):
+            return bioguide in current_bg
+        st = exec_status(name, execs, today_iso)
+        return st[0] if st else None
 
     for t in scored:
         m = M(t["name"], t["chamber"], t.get("party", ""))
+        iso0 = t["date"].isoformat()
+        r = m["roles"].setdefault(t["chamber"], {
+            "chamber": t["chamber"], "office": "", "agency": "", "state": "",
+            "first": iso0, "last": iso0, "trades": 0, "bioguide": ""})
+        r["trades"] += 1
+        r["first"] = min(r["first"], iso0)
+        r["last"] = max(r["last"], iso0)
+        for k in ("office", "agency", "state", "bioguide"):
+            if not r[k] and t.get(k): r[k] = t[k]
+        # The person's headline role is whichever one they filed under most recently.
+        if iso0 >= m["last_trade"]:
+            m["chamber"] = t["chamber"]
         if not m["photo"] and t.get("photo"): m["photo"] = t["photo"]
         if not m["bioguide"] and t.get("bioguide"): m["bioguide"] = t["bioguide"]
         if not m["id"] and t.get("fid"): m["id"] = t["fid"]
+        for k in ("agency", "office", "state"):
+            if not m[k] and t.get(k): m[k] = t[k]
+        iso = t["date"].isoformat()
+        if not m["first_trade"] or iso < m["first_trade"]: m["first_trade"] = iso
+        if iso > m["last_trade"]: m["last_trade"] = iso
+        m["late"] += t.get("is_late", 0)
+        if t.get("days_to_file") is not None: m["dtf"].append(t["days_to_file"])
+        for src, dst in (("amt_lo", "vol_lo"), ("amt_hi", "vol_hi"), ("amt_mid", "vol_mid")):
+            if t.get(src) is not None: m[dst] += t[src]
         eff = t["excess"] if t["side"] == "buy" else -t["excess"]  # sells win when stock lags
         S = 1.0 if eff > TIE_BAND_PCT else (0.0 if eff < -TIE_BAND_PCT else 0.5)
         E = 1.0 / (1.0 + 10 ** ((MARKET_ELO - m["elo"]) / ELO_DIV))
@@ -557,6 +979,8 @@ def build():
         m["ties"]   += S == 0.5
         m["matches"] += 1
         m["sumExcess"] += eff          # direction-adjusted, so avg matches win rate
+        m["curve"].append([t["date"].isoformat(), round(m["elo"], 1),
+                           t.get("ticker") or "", t["side"], round(eff, 1)])
         if t["side"] == "buy":
             m["nb"] += 1; m["bw"] += S == 1.0; m["bsum"] += eff
         else:
@@ -577,7 +1001,7 @@ def build():
             m["sharp"] += 1
             flagged.append({
                 "name": t["name"], "id": t.get("fid", ""), "party": t.get("party", ""),
-                "chamber": t["chamber"], "active": is_active(t["chamber"], t.get("bioguide", "")),
+                "chamber": t["chamber"], "active": is_active(t["chamber"], t.get("bioguide", ""), t["name"]),
                 "photo": t.get("photo", ""), "ticker": t.get("ticker", "") or "—",
                 "company": t.get("company", ""),
                 "sector": sector, "industry": si.get("industry", ""),
@@ -590,6 +1014,8 @@ def build():
             "ticker": t.get("ticker", "") or "—", "company": t.get("company", ""),
             "sector": sector, "excess": round(eff, 1),
             "ex30": round(eff30, 1) if eff30 is not None else None, "sharp": is_sharp,
+            "late": bool(t.get("is_late")), "days_to_file": t.get("days_to_file"),
+            "amt_lo": t.get("amt_lo"), "amt_hi": t.get("amt_hi"),
             "conflict": conflict, "conflict_committee": conf_com,
         })
         tkc = t.get("ticker", "") or ""
@@ -602,6 +1028,76 @@ def build():
         if not m["id"]:
             m["id"] = slugify(m["name"] + "-" + m["chamber"])
 
+    # Party is resolved here, not at member creation, because the bioguide id is
+    # only known after we have seen a trade. Executive-branch filers genuinely
+    # have no party (an agency administrator is not elected) -- they are labelled
+    # by agency in the UI instead, so do not try to guess one for them.
+    ideology = load_ideology()
+    for m in members.values():
+        m["ideology"] = ideology.get(m.get("bioguide") or "", None)
+    scored_ideo = sum(1 for m in members.values() if m["ideology"] is not None)
+    log(f"[ideology] matched {scored_ideo}/{len(members)} members")
+
+    unresolved = []
+    for m in members.values():
+        if m["chamber"] not in ("House", "Senate"):
+            st = exec_status(m["name"], execs, today_iso)
+            if st:
+                # A president or VP: party and office are known exactly.
+                m["party"] = m["party"] or st[1]
+                m["office"] = m["office"] or st[2]
+            continue
+        if not m.get("bioguide"):
+            m["bioguide"] = match_bioguide(m["name"], pmap, m.get("state", ""))
+        if m["party"] not in ("D", "R", "I"):
+            m["party"] = match_party(m["name"], pmap, m.get("bioguide", ""),
+                                     m.get("state", ""))
+        if m["party"] and m["party"] not in ("D", "R", "I"):
+            m["party"] = "I"                # historical third parties -> Independent
+        if m["party"] not in ("D", "R", "I"):
+            unresolved.append(m["name"])
+    if unresolved:
+        log(f"[party] still unresolved ({len(unresolved)}): {', '.join(sorted(unresolved)[:20])}")
+    else:
+        log("[party] every member of Congress resolved")
+
+    # ---- reliability weighting: shrink toward 1500, then restore the spread ----
+    rated = [m for m in members.values() if m["matches"] >= MIN_TRADES]
+    for m in rated:
+        m["elo_raw"] = m["elo"]
+        m["reliability"] = m["matches"] / (m["matches"] + SHRINK_K)
+        m["elo_shrunk"] = 1500.0 + (m["elo_raw"] - 1500.0) * m["reliability"]
+
+    if RANK_NORMALISE and len(rated) > 1:
+        order = sorted(rated, key=lambda m: m["elo_shrunk"])
+        nd = statistics.NormalDist(1500.0, RESCALE_TARGET_SD)
+        n_rated = len(order)
+        for rank, m in enumerate(order):
+            # mid-rank plotting position keeps the extremes off the infinite tails
+            m["elo"] = nd.inv_cdf((rank + 0.5) / n_rated)
+        log(f"[elo] reliability weighting: k={SHRINK_K}, rank-normalised to "
+            f"mean 1500 / SD {RESCALE_TARGET_SD}")
+    else:
+        scale = 1.0
+        if RESCALE_AFTER_SHRINK and len(rated) > 1:
+            sd_shr = pstdev([m["elo_shrunk"] for m in rated])
+            if sd_shr > 0:
+                scale = RESCALE_TARGET_SD / sd_shr
+        for m in rated:
+            m["elo"] = 1500.0 + (m["elo_shrunk"] - 1500.0) * scale
+        log(f"[elo] reliability weighting: k={SHRINK_K}, rescale x{scale:.2f}")
+
+    for m in rated:
+        # The sparkline has to land on the member's published rating, so the
+        # whole path is scaled by whatever factor the final mapping applied to
+        # them, with the reliability of the moment folded in. A member sitting
+        # exactly at 1500 has no factor to derive, and needs none.
+        gap = m["elo_shrunk"] - 1500.0
+        f = (m["elo"] - 1500.0) / gap if abs(gap) > 1e-9 else 0.0
+        m["curve"] = [[d, round(1500.0 + (v - 1500.0) * (i + 1) / (i + 1 + SHRINK_K) * f, 1),
+                       tk, sd, ex]
+                      for i, (d, v, tk, sd, ex) in enumerate(m["curve"])]
+
     out = []
     for m in members.values():
         if m["matches"] < MIN_TRADES: continue
@@ -611,6 +1107,9 @@ def build():
             "matches": m["matches"], "wins": int(m["wins"]),
             "losses": int(m["losses"]), "ties": int(m["ties"]),
             "winrate": round(m["wins"] / m["matches"] * 100, 1),
+            # What the ELO actually optimises: a tie is half a win, not a loss.
+            # Reporting bare wins/total contradicts the rating sitting beside it.
+            "score": round((m["wins"] + 0.5 * m["ties"]) / m["matches"] * 100, 1),
             "avgexcess": round(m["sumExcess"] / m["matches"], 2),
             "n_buys": m["nb"],
             "buy_winrate": round(m["bw"] / m["nb"] * 100, 1) if m["nb"] else 0,
@@ -622,8 +1121,19 @@ def build():
             "conflicts": m["conf"], "sharp_conflicts": m["sconf"],
             "luck_odds": luck_odds(int(m["wins"]), int(m["losses"])),
             "id": m["id"],
-            "active": is_active(m["chamber"], m["bioguide"]),
+            "active": is_active(m["chamber"], m["bioguide"], m["name"]),
             "photo": m["photo"],
+            "agency": m["agency"], "office": m["office"], "state": m["state"],
+            "first_trade": m["first_trade"], "last_trade": m["last_trade"],
+            "late": m["late"],
+            "late_rate": round(m["late"] / m["matches"] * 100, 1) if m["matches"] else 0,
+            "median_days_to_file": median(m["dtf"]),
+            "vol_lo": round(m["vol_lo"]), "vol_hi": round(m["vol_hi"]),
+            "vol_mid": round(m["vol_mid"]),
+            "roles": sorted(m["roles"].values(), key=lambda r: r["first"]),
+            "reliability": round(m["reliability"], 3),
+            "ideology": m.get("ideology"),
+            "curve": downsample(m["curve"]),
         })
     out.sort(key=lambda x: -x["elo"])
 
@@ -633,15 +1143,30 @@ def build():
         if m["matches"] < MIN_TRADES: continue
         prof = {
             "id": m["id"], "name": m["name"], "party": m["party"], "chamber": m["chamber"],
-            "active": is_active(m["chamber"], m["bioguide"]), "photo": m["photo"],
+            "active": is_active(m["chamber"], m["bioguide"], m["name"]), "photo": m["photo"],
             "elo": round(m["elo"]), "matches": m["matches"],
             "wins": int(m["wins"]), "losses": int(m["losses"]), "ties": int(m["ties"]),
-            "winrate": round(m["wins"] / m["matches"] * 100, 1), "sharp": m["sharp"],
+            "winrate": round(m["wins"] / m["matches"] * 100, 1),
+            # What the ELO actually optimises: a tie is half a win, not a loss.
+            # Reporting bare wins/total contradicts the rating sitting beside it.
+            "score": round((m["wins"] + 0.5 * m["ties"]) / m["matches"] * 100, 1),
+            "sharp": m["sharp"],
             "conflicts": m["conf"], "sharp_conflicts": m["sconf"],
             "luck_odds": luck_odds(int(m["wins"]), int(m["losses"])),
             "n_buys": m["nb"], "buy_winrate": round(m["bw"] / m["nb"] * 100, 1) if m["nb"] else 0,
             "n_sells": m["ns"], "sell_winrate": round(m["sw"] / m["ns"] * 100, 1) if m["ns"] else 0,
             "committees": committees.get(m["bioguide"], []),
+            "agency": m["agency"], "office": m["office"], "state": m["state"],
+            "first_trade": m["first_trade"], "last_trade": m["last_trade"],
+            "late": m["late"],
+            "late_rate": round(m["late"] / m["matches"] * 100, 1) if m["matches"] else 0,
+            "median_days_to_file": median(m["dtf"]),
+            "vol_lo": round(m["vol_lo"]), "vol_hi": round(m["vol_hi"]),
+            "vol_mid": round(m["vol_mid"]),
+            "roles": sorted(m["roles"].values(), key=lambda r: r["first"]),
+            "reliability": round(m["reliability"], 3),
+            "ideology": m.get("ideology"),
+            "curve": downsample(m["curve"], 240),
             "trades": sorted(m["trades"], key=lambda x: x["date"], reverse=True),
         }
         (member_dir / (m["id"] + ".json")).write_text(json.dumps(prof))
@@ -660,25 +1185,60 @@ def build():
     earliest = min((t["date"] for t in scored), default=None)
     earliest_iso = earliest.isoformat() if earliest else ""
 
-    # cluster / herding detection: same ticker traded by >=3 distinct members within ~10 days
-    buckets = {}
+    # ---- cluster / herding detection ----
+    # Rewritten to fix three things. It bucketed by calendar date // 10, so two
+    # trades a day apart could land either side of a fixed boundary and never
+    # cluster; it listed a member once per trade, so one person could fill a
+    # "cluster"; and it mixed buys with sells, so three people disagreeing with
+    # each other counted the same as three people piling in together.
+    #
+    # Now: clusters are per (ticker, DIRECTION), found with a sliding window of
+    # CLUSTER_WINDOW_DAYS, and each member counts exactly once.
+    by_key = {}
     for tr in all_tr:
-        buckets.setdefault((tr["ticker"], tr["d"].toordinal() // 10), []).append(tr)
+        by_key.setdefault((tr["ticker"], tr["side"]), []).append(tr)
+
     clusters = []
-    for (tk, _), trs in buckets.items():
-        ids = {x["id"] for x in trs}
-        if len(ids) < 3:
-            continue
+    for (tk, side), trs in by_key.items():
         trs.sort(key=lambda x: x["d"])
-        clusters.append({
-            "ticker": tk, "company": trs[0]["company"], "sector": trs[0]["sector"],
-            "start": trs[0]["d"].isoformat(), "end": trs[-1]["d"].isoformat(),
-            "n_members": len(ids), "n_sharp": sum(1 for x in trs if x["sharp"]),
-            "trades": [{"name": x["name"], "id": x["id"], "side": x["side"],
-                        "date": x["d"].isoformat(), "sharp": x["sharp"]} for x in trs],
-        })
-    clusters.sort(key=lambda c: (c["n_members"], c["end"]), reverse=True)
-    clusters = clusters[:120]
+        pool = list(trs)
+        while len(pool) >= CLUSTER_MIN_MEMBERS:
+            # Pick the densest window: the one covering the most DISTINCT members.
+            best = None
+            for i, anchor in enumerate(pool):
+                window = [x for x in pool[i:]
+                          if (x["d"] - anchor["d"]).days <= CLUSTER_WINDOW_DAYS]
+                members = {x["id"] or x["name"] for x in window}
+                if best is None or len(members) > len(best[1]):
+                    best = (window, members)
+            window, members = best
+            if len(members) < CLUSTER_MIN_MEMBERS:
+                break
+            # One entry per member: earliest trade, and their sharp flag if any.
+            first_by = {}
+            for x in window:
+                key = x["id"] or x["name"]
+                if key not in first_by or x["d"] < first_by[key]["d"]:
+                    first_by[key] = x
+                if x["sharp"]:
+                    first_by[key] = {**first_by[key], "sharp": True}
+            entries = sorted(first_by.values(), key=lambda x: x["d"])
+            clusters.append({
+                "ticker": tk, "company": entries[0]["company"],
+                "sector": entries[0]["sector"], "side": side,
+                "start": entries[0]["d"].isoformat(),
+                "end": entries[-1]["d"].isoformat(),
+                "n_members": len(entries),
+                "n_sharp": sum(1 for x in entries if x["sharp"]),
+                "trades": [{"name": x["name"], "id": x.get("id", ""), "side": side,
+                            "date": x["d"].isoformat(), "sharp": bool(x["sharp"])}
+                           for x in entries],
+            })
+            used = {id(x) for x in window}
+            pool = [x for x in pool if id(x) not in used]
+
+    clusters.sort(key=lambda c: (c["end"], c["n_members"]), reverse=True)
+    clusters = clusters[:600]
     log(f"[clusters] {len(clusters)} herding clusters")
 
     meta = {"generated": generated, "earliest": earliest_iso}
