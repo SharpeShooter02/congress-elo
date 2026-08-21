@@ -43,10 +43,14 @@
     position:sticky;top:0;z-index:20;}
   .masthead .mh{max-width:1080px;margin:0 auto;padding:11px 16px;
     display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
-  .masthead .brand{font-family:var(--disp);font-weight:800;font-size:16.8px;
+  /* On the main site the title sits inside .greedy-nav, so it inherits that
+     nav's button chrome. Reproduced here so both read as a raised button. */
+  .masthead .brand{font-family:var(--disp);font-weight:800;font-size:12.8px;
     letter-spacing:.05em;text-transform:uppercase;color:var(--accent-dark);
-    text-decoration:none;}
-  .masthead .brand:hover{background:var(--mark)}
+    text-decoration:none;padding:5.1px 10.2px;
+    border:3px outset var(--panel2);background:var(--panel2);}
+  .masthead .brand:hover{background:var(--mark);border-style:outset}
+  .masthead .brand:active{border-style:inset}
   .mhnav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
   .mhnav a{font-family:var(--disp);font-weight:600;font-size:12.8px;letter-spacing:.05em;
     text-transform:uppercase;color:var(--txt);text-decoration:none;padding:5.1px 10.2px;
