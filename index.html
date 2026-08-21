@@ -18,7 +18,7 @@
     --bg:#dcdfe4; --panel:#eef0f3; --panel2:#e2e6ea;
     --line:#9aa3b0; --line-dark:#6f7783;
     --txt:#1c2128; --muted:#59616d;
-    --accent:#2f6690; --accent-dark:#14425f; --visited:#6b3f8f;
+    --accent:#2f6690; --accent-dark:#14425f;
     --hi:#ffffff; --lo:#8b929c; --mark:#fff4b8;
     --win:#1a7a33; --loss:#b3261e; --amber:#8a5a00;
     --dem:#2f5fb0; --rep:#b03a3f; --ind:#6b3f8f;
@@ -34,20 +34,24 @@
     font:14px/1.6 var(--body);}
   ::selection{background:var(--accent);color:#fff}
 
-  /* ---- masthead: title bar, matching the main site ---- */
-  .masthead{background:var(--panel);border:3px outset var(--panel2);border-top:0;
+  /* ---- masthead: title bar ----
+     Kept numerically in step with the .masthead / .site-title / .greedy-nav
+     rules in the main site's assets/css/main.scss. The two bars are built by
+     different systems (Minimal Mistakes there, hand-written here), so the
+     values are duplicated deliberately -- change both together. */
+  .masthead{background:var(--panel);border:3px outset var(--panel2);
     position:sticky;top:0;z-index:20;}
-  .masthead .mh{max-width:1080px;margin:0 auto;padding:9px 16px;
+  .masthead .mh{max-width:1080px;margin:0 auto;padding:11px 16px;
     display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
-  .masthead .brand{font-family:var(--disp);font-weight:800;font-size:15px;
+  .masthead .brand{font-family:var(--disp);font-weight:800;font-size:16.8px;
     letter-spacing:.05em;text-transform:uppercase;color:var(--accent-dark);
     text-decoration:none;}
   .masthead .brand:hover{background:var(--mark)}
   .mhnav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
-  .mhnav a{font-family:var(--disp);font-weight:600;font-size:12px;letter-spacing:.05em;
-    text-transform:uppercase;color:var(--txt);text-decoration:none;padding:5px 11px;
+  .mhnav a{font-family:var(--disp);font-weight:600;font-size:12.8px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--txt);text-decoration:none;padding:5.1px 10.2px;
     border:3px outset var(--panel2);background:var(--panel2);}
-  .mhnav a:hover{background:var(--accent);color:#fff}
+  .mhnav a:hover,.mhnav a:focus{background:var(--accent);color:#fff;border-style:outset}
   .mhnav a:active{border-style:inset}
 
   .wrap{max-width:1080px;margin:0 auto;padding:22px 16px 60px;}
@@ -58,7 +62,6 @@
   .sub{color:var(--txt);margin:0 0 16px;max-width:820px;font-size:13.5px;}
   .src{color:var(--muted);font-size:11.5px;margin:0 0 16px;line-height:1.6;}
   a{color:var(--accent);text-decoration:underline}
-  a:visited{color:var(--visited)}
   a:hover{color:var(--accent-dark);background:var(--mark)}
   .src a{color:var(--muted)}
   b,strong{color:#000}
@@ -225,7 +228,15 @@
     white-space:nowrap;color:var(--txt)}
   .msub{font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;
     gap:5px;font-family:var(--disp);letter-spacing:.05em;text-transform:uppercase}
-  .msub .stat{font-size:8.5px;padding:0 5px}
+  /* Tag first, chamber second, so the tag sits at a fixed x on every row.
+     Current / Former share one box so they stack in a straight column and the
+     chamber text after them lines up too. The dashed "Last filed ..." tags are
+     far longer and only ever appear on Executive rows, so they opt out and
+     grow instead of forcing a 130px gutter on all 288 House and Senate rows. */
+  .msub .stat{font-size:8.5px;padding:0 5px;min-width:54px;text-align:center;
+    box-sizing:border-box;flex:none}
+  .msub .stat.unk{min-width:0}
+  .msub .chm{flex:none}
   tr.mrow:hover .mname{color:var(--accent-dark);text-decoration:underline}
 
   .ecell{display:flex;align-items:center;justify-content:flex-end;gap:7px}
@@ -344,8 +355,8 @@
 
   <nav class="tabs" id="tabs">
     <a href="#board" data-view="board" class="active">Leaderboard</a>
-    <a href="#sharpest" data-view="sharp">🚩 Sharpest trades</a>
-    <a href="#clusters" data-view="clusters">👥 Clusters</a>
+    <a href="#sharpest" data-view="sharp">Sharpest trades</a>
+    <a href="#clusters" data-view="clusters">Clusters</a>
   </nav>
 
   <div id="view-board">
@@ -421,7 +432,7 @@
 
   <div id="view-sharp" style="display:none">
   <div id="flaggedwrap" style="margin-top:30px">
-    <h2 style="font-size:19px;margin:0 0 4px">🚩 Sharpest trades</h2>
+    <h2 style="font-size:19px;margin:0 0 4px">Sharpest trades</h2>
     <p class="sub" style="margin:0 0 14px">The individual trades that beat the market 15%+ within a month of being <b>placed</b>, shown with the member, what the company does, and their current committees.</p>
     <div style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:0 0 12px">
       <div class="ctl" style="max-width:200px">
@@ -706,7 +717,7 @@ function render(){
       <td class="rank">${i+1}</td>
       <td class="name"><div class="mcell">${avatarHtml(m.photo,m.name,'av')}<div class="mtxt">
         <div class="mname">${m.name} ${m.sharp?`<span class="flag" title="${m.sharp} sharp call${m.sharp>1?'s':''}: beat the market 15%+ within a month of the trade">🚩${m.sharp}</span>`:''}</div>
-        <div class="msub">${m.chamber} ${statusHtml(m)}</div>
+        <div class="msub">${statusHtml(m)}<span class="chm">${m.chamber}</span></div>
       </div></div></td>
       <td class="affil">${affilHtml(m)}</td>
       <td class="elo" title="${relWord(m.reliability)} confidence, ${m.matches} decisions (reliability ${Number(m.reliability).toFixed(2)}).">
@@ -861,7 +872,7 @@ function renderClusters(){
   const more=all.length>shownClusters
     ? `<button class="reload" id="cMore">Show 40 more (${all.length-shownClusters} left)</button>` : "";
   const less=shownClusters>40?`<button class="reload" id="cLess">Show less</button>`:"";
-  el.innerHTML=`<h2 style="font-size:19px;margin:0 0 4px">👥 Trade clusters</h2>
+  el.innerHTML=`<h2 style="font-size:19px;margin:0 0 4px">Trade clusters</h2>
     <p class="sub" style="margin:0 0 14px">Moments when <b>three or more members traded the same stock the same way</b> inside a week, all buying or all selling. Click a name for their profile.</p>
     <div style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:0 0 12px">
       <div class="ctl" style="max-width:200px">
