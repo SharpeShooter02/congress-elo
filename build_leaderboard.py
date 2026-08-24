@@ -220,11 +220,35 @@ def parse_date(s):
     return None
 
 
+# Tickers that changed after the trade was filed. The disclosure names the
+# symbol as it stood on the trade date, so a lookup today finds nothing and the
+# trade is silently dropped -- and these are exactly the acquisitions and
+# rebrandings that make a trade worth looking at.
+TICKER_ALIASES = {
+    "FB": "META", "SQ": "XYZ", "TWTR": "X-DELISTED", "ATVI": "ATVI-DELISTED",
+    "UTX": "RTX", "ANTM": "ELV", "RTN": "RTX", "FISV": "FI",
+    "WLTW": "WTW", "CERN": "CERN-DELISTED", "XLNX": "XLNX-DELISTED",
+    "ABMD": "ABMD-DELISTED", "PXD": "PXD-DELISTED", "HZNP": "HZNP-DELISTED",
+    "SIVB": "SIVB-DELISTED", "FRC": "FRC-DELISTED", "CTXS": "CTXS-DELISTED",
+    "NLSN": "NLSN-DELISTED", "VMW": "VMW-DELISTED", "SPLK": "SPLK-DELISTED",
+    "RE": "EG", "FBHS": "FBIN", "DRE": "DRE-DELISTED", "INFO": "INFO-DELISTED",
+    "MRO": "MRO-DELISTED", "STOR": "STOR-DELISTED", "PEAK": "DOC",
+}
+
+
 def clean_ticker(tk):
+    """Normalise a disclosed symbol to the form price sources use.
+
+    Share-class dots are the big one: filings write BRK.B, Yahoo wants BRK-B.
+    This used to reject anything containing a dot outright, which threw away 272
+    Berkshire trades on punctuation alone.
+    """
     if not tk: return None
     tk = tk.strip().upper()
-    if tk in ("", "--", "N/A", "NONE"): return None
-    if any(c in tk for c in " /."): return None   # skip odd/non-equity tickers
+    if tk in ("", "--", "N/A", "NONE", "NA", "-"): return None
+    if " " in tk or "/" in tk: return None        # not a single symbol
+    tk = tk.replace(".", "-")                     # BRK.B -> BRK-B
+    if not re.fullmatch(r"[A-Z][A-Z0-9-]{0,9}", tk): return None
     return tk
 
 
@@ -366,8 +390,23 @@ def load_trades():
         roster.append((fid, canon or f, label))
     log(f"[trades] {len(roster)} filers to pull (House + Senate + Executive, current & former)")
 
-    # 2. Pull each filer's full history; score off kadoa's own excess-vs-market return
+    # Company-name -> ticker index, so rows that arrive with an asset name but no
+    # symbol can still be resolved. Both sources are already cached for sectors,
+    # so this costs nothing extra.
+    _sectors = load_ticker_sectors()
+    name_idx = build_name_index(_sectors)
+    known_syms = set(_sectors)
+
+    # 2. Pull each filer's full history. Returns come from kadoa where it has
+    #    them and are computed from prices later where it does not.
     trades = []
+    # Disclosed rows per filer, counted before any filtering, so a profile can
+    # say "31 of 41 disclosed trades scored" instead of quietly presenting a
+    # partial record as a complete one.
+    disclosed = {}
+    n_named = 0      # ticker recovered from the asset name
+    n_nonequity = 0  # bonds, munis, cash -- correctly unscoreable
+    n_unresolved = 0
     for i, (fid, f, label) in enumerate(roster, 1):
         # fid = where the trades are fetched from; cid = who they are attributed to
         # (they differ only for the merged duplicate stubs).
@@ -393,12 +432,41 @@ def load_trades():
             tdate = parse_date(sval(row.get("transaction_date")) or sval(row.get("date")))
             if not (side and tdate): continue
             if tdate.isoformat() < START_DATE: continue
+            disclosed[cid] = disclosed.get(cid, 0) + 1
             # kadoa's return snapshots for this trade (percent): ~30-day, ~1-year,
             # and since the trade to today. Keep whichever are available.
             r30    = fnum(row.get("ret_30d"))
             r1y    = fnum(row.get("ret_1y"))
             rsince = fnum(row.get("ret_since"))
-            if r30 is None and r1y is None and rsince is None:
+
+            asset = sval(row.get("asset_name"))
+            tk = clean_ticker(sval(row.get("ticker")))
+            if not tk:
+                # A quarter of recent rows carry an ordinary company name and no
+                # symbol. Bonds and cash genuinely have no equity to price; the
+                # rest are common stocks the upstream feed failed to resolve.
+                if NON_EQUITY.search(asset):
+                    n_nonequity += 1
+                    continue
+                tk = name_idx.get(norm_company(asset))
+                if not tk:
+                    # Some rows put the bare ticker in the name field and leave
+                    # the ticker column empty ("FAS", "NVDA").
+                    cand = clean_ticker(asset.strip())
+                    if cand and cand in known_syms:
+                        tk = cand
+                if tk:
+                    n_named += 1
+                else:
+                    n_unresolved += 1
+                    continue
+            tk = TICKER_ALIASES.get(tk, tk)
+            if tk.endswith("-DELISTED"):
+                # Renamed into an acquirer or wound up: no continuous price
+                # series exists, so the trade cannot be scored either way.
+                n_unresolved += 1
+                continue
+            if r30 is None and r1y is None and rsince is None and not tk:
                 continue
             amt_lo = fnum(row.get("amount_range_low"))
             amt_hi = fnum(row.get("amount_range_high"))
@@ -411,7 +479,7 @@ def load_trades():
                 "days_to_file": fnum(row.get("days_to_file")),
                 "amt_lo": amt_lo, "amt_hi": amt_hi, "amt_mid": amt_mid,
                 "name": name or extract_name(row), "chamber": label,
-                "party": party, "ticker": clean_ticker(sval(row.get("ticker"))) or "",
+                "party": party, "ticker": tk or "",
                 "side": side, "date": tdate,
                 "amount": sval(row.get("amount_range_label")) or sval(row.get("amount")),
                 "ret30": r30, "ret1y": r1y, "retsince": rsince,
@@ -422,7 +490,10 @@ def load_trades():
         if i % 40 == 0:
             log(f"  {i}/{len(roster)} filers · {len(trades)} trades so far")
     log(f"[trades] usable trades: {len(trades)}")
-    return trades
+    log(f"[trades] ticker recovered from asset name: {n_named}")
+    log(f"[trades] skipped, non-equity (bonds/munis/cash): {n_nonequity}")
+    log(f"[trades] skipped, ticker unresolved: {n_unresolved}")
+    return trades, disclosed
 
 
 # ------------------------- prices ---------------------------------
@@ -457,6 +528,28 @@ def download_prices(tickers, start, end):
                 prices[t] = df[t].dropna()
         log(f"  {min(i+CHUNK,len(tickers))}/{len(tickers)}")
     return prices
+
+
+def pct_change_over(series, entry_date, days):
+    """Percent return of `series` from the first trading day on/after entry_date
+       to roughly `days` calendar days later. None when the window is not covered.
+
+    Deliberately mirrors spx_window_return so a self-priced trade and the S&P leg
+    it is compared against are measured over the same span.
+    """
+    if series is None or len(series) == 0:
+        return None
+    idx = series.index
+    p0 = idx.searchsorted(pd.Timestamp(entry_date))
+    if p0 >= len(series):
+        return None
+    p1 = idx.searchsorted(pd.Timestamp(entry_date) + pd.Timedelta(days=days))
+    # Only measure a window the data actually spans; clamping to the last bar
+    # would silently turn a 30-day return into a 3-day one.
+    if p1 >= len(series) or p1 <= p0:
+        return None
+    a, b = float(series.iloc[p0]), float(series.iloc[p1])
+    return None if a <= 0 else (b / a - 1.0) * 100.0
 
 
 def spx_window_return(spx, entry_date, days):
@@ -648,6 +741,54 @@ def load_committees():
     return out
 
 
+def build_name_index(sector_rows):
+    """Normalised company name -> ticker, from the exchange listings already
+       cached for sector labels.
+
+    A quarter of recent rows arrive with no ticker at all but a perfectly
+    ordinary company name ("INTUIT INC CMN", "UBER TECHNOLOGIES INC"). Those are
+    common stocks the upstream feed simply failed to resolve, and without a
+    symbol they can never be priced, so they never reach the rating.
+    """
+    idx = {}
+    for sym, meta in sector_rows.items():
+        nm = norm_company(meta.get("name") or "")
+        # First listing wins: the files are ordered NASDAQ, NYSE, AMEX, so a
+        # primary listing beats a foreign or secondary line with the same name.
+        if nm and nm not in idx:
+            idx[nm] = sym
+    return idx
+
+
+_CO_NOISE = re.compile(
+    r"\b(CMN|COM|COMMON STOCK|COMMON SHARES?|CAPITAL STOCK|CLASS [A-Z]{1,2}|CL [A-Z]|"
+    r"ORDINARY SHARES?|AMERICAN DEPOSITARY SHARES?|ADR|ADS|INC|CORP|CORPORATION|"
+    r"COMPANY|CO|LTD|LIMITED|PLC|HLDGS?|HOLDINGS?|GROUP|THE|N V|NV|SA|AG|"
+    r"NEW|REIT|TRUST|UNSOLICITED|PARTNERS|LP)\b")
+
+
+def norm_company(s):
+    s = (s or "").upper()
+    s = s.split("(")[0].split("[")[0]
+    for _ in range(3):        # "CLASS CLASS A" needs more than one pass
+        t = _CO_NOISE.sub(" ", s)
+        if t == s:
+            break
+        s = t
+    s = re.sub(r"[^A-Z0-9 ]", " ", s)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+# Fixed-income and cash instruments have no equity to price and are correctly
+# unscoreable. Recognising them explicitly keeps them out of the "we failed to
+# resolve this" bucket, so the coverage figure means something.
+NON_EQUITY = re.compile(
+    r"MUNI|SCH DIST|SCHOOL DIST|DUE \d|MATURES|RATE/COUPON|B/E|GO BD|REV BD|"
+    r"OBLIG|BOND|DEBENTURE|TREAS|T-BILL|TBILL|US-TBILL|CERTIFICATE OF DEP|"
+    r"MONEY MARKET|SAVINGS|CHECKING|ANNUIT|LIFE INS|MORTGAGE|DEED|FARM|"
+    r"RENTAL|LLC INTEREST|PARTNERSHIP INTEREST|529|IRA CONTRIB", re.I)
+
+
 def load_ticker_sectors():
     """ticker -> {'sector':..., 'industry':...} from public exchange listings."""
     out = {}
@@ -660,7 +801,9 @@ def load_ticker_sectors():
         for r in (rows or []):
             sym = sval(r.get("symbol")).upper()
             if sym:
-                out[sym] = {"sector": sval(r.get("sector")), "industry": sval(r.get("industry"))}
+                out[sym] = {"sector": sval(r.get("sector")),
+                            "industry": sval(r.get("industry")),
+                            "name": sval(r.get("name"))}
     log(f"[sectors] {len(out)} tickers with sector/industry")
     return out
 
@@ -812,7 +955,7 @@ def luck_odds(wins, losses):
 
 # ---------------------------- ELO ---------------------------------
 def build():
-    trades = load_trades()
+    trades, disclosed = load_trades()
     if not trades:
         sys.exit("No trades loaded — check the kadoa filer URLs in CONFIG.")
 
@@ -828,6 +971,57 @@ def build():
         sys.exit(f"Could not fetch S&P 500 benchmark: {e}")
     if isinstance(spx, pd.DataFrame):
         spx = spx.iloc[:, 0]
+
+    # ---- price the trades kadoa could not ----
+    # Roughly a third of disclosed trades arrive with every return field null.
+    # download_prices() existed for this and was never called, so those trades
+    # were dropped on the assumption the price was unavailable -- when in most
+    # cases nobody had looked. The drops are not random either: they cluster on
+    # delisted and acquired names, which is exactly the evidence the rating
+    # wants, so discarding them biases every rating toward survivors.
+    need = sorted({t["ticker"] for t in trades
+                   if t["ticker"]
+                   and t["ret30"] is None and t["ret1y"] is None and t["retsince"] is None})
+    filled = still_missing = 0
+    if need:
+        log(f"[prices] {len(need)} symbols have no return data from the feed; pricing them here")
+        pstart = (min(t["date"] for t in trades
+                      if t["ticker"] in set(need)) - dt.timedelta(days=5)).isoformat()
+        try:
+            px = download_prices(need, pstart, end)
+        except Exception as e:
+            log(f"[prices] self-pricing unavailable ({e}); leaving these trades unscored")
+            px = {}
+        for t in trades:
+            if not (t["ret30"] is None and t["ret1y"] is None and t["retsince"] is None):
+                continue
+            ser = px.get(t["ticker"])
+            if ser is None or len(ser) == 0:
+                still_missing += 1
+                continue
+            got = False
+            # Calendar-day windows, matching how the feed's own snapshots are
+            # defined, so a self-priced trade is scored on the same basis as one
+            # the feed priced.
+            for days, key in ((30, "ret30"), (365, "ret1y")):
+                r = pct_change_over(ser, t["date"], days)
+                if r is not None:
+                    t[key] = r
+                    got = True
+            r = pct_change_over(ser, t["date"], max((dt.date.today() - t["date"]).days, 1))
+            if r is not None:
+                t["retsince"] = r
+                got = True
+            if got:
+                filled += 1
+            else:
+                still_missing += 1
+        log(f"[prices] recovered {filled} trades; {still_missing} still have no price")
+
+    before = len(trades)
+    trades = [t for t in trades
+              if not (t["ret30"] is None and t["ret1y"] is None and t["retsince"] is None)]
+    log(f"[prices] dropped {before - len(trades)} trades with no return data from any source")
 
     # Blend each trade's return snapshots into ONE time-decayed excess over the S&P.
     # Each horizon's excess (return minus the S&P's move over that same window) is
@@ -894,6 +1088,16 @@ def build():
         base["n_filings"] = n
         return base
 
+    # Trades that reached the rating, per person, counted BEFORE merging.
+    # Coverage has to compare like with like: merging four filings of one call
+    # into a single decision is deliberate, losing a trade to a missing price is
+    # not, and reporting "31 of 41" for a member who actually lost 4 and merged 6
+    # would overstate the damage.
+    scored_per_person = {}
+    for t in scored:
+        k = norm_name(t["name"])
+        scored_per_person[k] = scored_per_person.get(k, 0) + 1
+
     collapsed = [collapse(g["items"]) for g in groups.values()]
     collapsed.sort(key=lambda t: t["date"])
     log(f"[elo] {len(scored)} trades -> {len(collapsed)} decisions "
@@ -908,6 +1112,7 @@ def build():
         key = norm_name(name)
         if key not in members:
             members[key] = {"name": name, "chamber": chamber, "roles": {},
+                            "fids": set(),   # every filer stub merged into this person
                             "party": party,   # resolved after the replay, once bioguide is known
                             "elo": 1500.0, "wins": 0, "losses": 0, "ties": 0,
                             "matches": 0, "sumExcess": 0.0,
@@ -960,6 +1165,7 @@ def build():
         if not m["photo"] and t.get("photo"): m["photo"] = t["photo"]
         if not m["bioguide"] and t.get("bioguide"): m["bioguide"] = t["bioguide"]
         if not m["id"] and t.get("fid"): m["id"] = t["fid"]
+        if t.get("fid"): m["fids"].add(t["fid"])
         for k in ("agency", "office", "state"):
             if not m[k] and t.get(k): m[k] = t[k]
         iso = t["date"].isoformat()
@@ -1027,6 +1233,12 @@ def build():
     for m in members.values():          # ensure every member has a stable id
         if not m["id"]:
             m["id"] = slugify(m["name"] + "-" + m["chamber"])
+
+    # Coverage: how much of this person's disclosed record actually reached the
+    # rating. Someone merged from several filer stubs sums all of their sources.
+    for m in members.values():
+        m["disclosed"] = sum(disclosed.get(f, 0) for f in m["fids"]) or None
+        m["scored_trades"] = scored_per_person.get(norm_name(m["name"]), 0) or None
 
     # Party is resolved here, not at member creation, because the bioguide id is
     # only known after we have seen a trade. Executive-branch filers genuinely
@@ -1132,6 +1344,8 @@ def build():
             "vol_mid": round(m["vol_mid"]),
             "roles": sorted(m["roles"].values(), key=lambda r: r["first"]),
             "reliability": round(m["reliability"], 3),
+            "disclosed": m.get("disclosed"),
+            "scored_trades": m.get("scored_trades"),
             "ideology": m.get("ideology"),
             "curve": downsample(m["curve"]),
         })
@@ -1165,6 +1379,8 @@ def build():
             "vol_mid": round(m["vol_mid"]),
             "roles": sorted(m["roles"].values(), key=lambda r: r["first"]),
             "reliability": round(m["reliability"], 3),
+            "disclosed": m.get("disclosed"),
+            "scored_trades": m.get("scored_trades"),
             "ideology": m.get("ideology"),
             "curve": downsample(m["curve"], 240),
             "trades": sorted(m["trades"], key=lambda x: x["date"], reverse=True),
