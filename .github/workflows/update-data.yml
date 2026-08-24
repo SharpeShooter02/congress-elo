@@ -23,6 +23,18 @@ jobs:
         with:
           python-version: "3.11"
 
+      # Every run starts on a fresh runner, so without this the build refetches
+      # all 446 filer files, the rosters, the exchange listings AND ~2,900 price
+      # histories going back to 2012 -- to learn what changed since yesterday.
+      # restore-keys lets a run start from the previous day's cache and top up.
+      - name: Restore data cache
+        uses: actions/cache@v4
+        with:
+          path: _cache
+          key: elo-cache-${{ github.run_id }}
+          restore-keys: |
+            elo-cache-
+
       - name: Install dependencies
         run: pip install yfinance pandas requests
 

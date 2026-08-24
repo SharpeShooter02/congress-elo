@@ -27,7 +27,7 @@ Notes
 * Tune the knobs in the CONFIG block below.
 """
 
-import csv, io, json, re, statistics, sys, time, math, datetime as dt
+import csv, gzip, io, json, re, statistics, sys, time, math, datetime as dt
 from pathlib import Path
 
 # ----------------------------- CONFIG -----------------------------
@@ -497,36 +497,184 @@ def load_trades():
 
 
 # ------------------------- prices ---------------------------------
+PRICE_CACHE_DIR = CACHE_DIR / "prices"
+# How stale a cached series may be before we go back for the tail. Four days
+# covers a normal weekend plus a public holiday, so a Monday run does not refetch
+# everything just because Friday was the last close.
+PRICE_STALE_DAYS = 4
+# Symbols that returned nothing are remembered for this long. Roughly a third of
+# the symbols we ask about are companies since acquired or wound up, and no
+# amount of asking will produce a price for them -- but because a failed fetch
+# caches nothing, they were re-requested on every run forever, which was most of
+# the remaining runtime. Two weeks is short enough that a symbol which starts
+# working (a late listing, a Yahoo fix) is picked up soon enough to matter.
+DEAD_TTL_DAYS = 14
+
+
+def _price_path(t):
+    return PRICE_CACHE_DIR / (t.replace("/", "_").replace("\\", "_") + ".json.gz")
+
+
+def load_cached_prices(t):
+    """Cached daily closes for one ticker as (series, requested_start), or None.
+
+    The requested start is stored alongside the prices and is NOT the same as the
+    first date in them: a company that listed in 2020 has no earlier bars however
+    far back you ask. Without recording what was asked for, a series fetched from
+    2024 looks complete, and a later run needing 2013 reuses it and silently
+    scores every older trade as unpriceable. That cost 124 trades -- almost all
+    of them Berkshire -- before it was caught.
+    """
+    p = _price_path(t)
+    if not p.exists():
+        return None
+    try:
+        with gzip.open(p, "rt", encoding="utf-8") as fh:
+            blob = json.load(fh)
+        px = blob.get("px") or {}
+        if not px:
+            return None
+        ser = pd.Series(px, dtype="float64")
+        ser.index = pd.to_datetime(ser.index)
+        return ser.sort_index(), blob.get("req_start") or "9999-12-31"
+    except Exception:
+        return None
+
+
+def save_cached_prices(t, ser, req_start):
+    if ser is None or len(ser) == 0:
+        return
+    PRICE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        px = {i.strftime("%Y-%m-%d"): round(float(v), 6)
+              for i, v in ser.items() if v == v}     # v == v drops NaN
+        blob = {"req_start": str(req_start)[:10], "px": px}
+        with gzip.open(_price_path(t), "wt", encoding="utf-8") as fh:
+            json.dump(blob, fh, separators=(",", ":"))
+    except Exception as e:
+        log(f"  !! could not cache {t}: {e}")
+
+
+def load_dead_symbols():
+    """{ticker: iso date it last came back empty}."""
+    p = CACHE_DIR / "prices_dead.json"
+    if not p.exists():
+        return {}
+    try:
+        return json.loads(p.read_text())
+    except Exception:
+        return {}
+
+
+def save_dead_symbols(dead):
+    try:
+        (CACHE_DIR / "prices_dead.json").write_text(
+            json.dumps(dead, separators=(",", ":"), sort_keys=True))
+    except Exception as e:
+        log(f"  !! could not write dead-symbol list: {e}")
+
+
+def _yf_batch(chunk, start, end):
+    """Download a batch, falling back to one-at-a-time so a single bad symbol
+       cannot take its 39 neighbours down with it."""
+    out = {}
+    try:
+        df = yf.download(chunk, start=start, end=end, auto_adjust=True,
+                         progress=False, threads=True)["Close"]
+    except Exception as e:
+        log(f"  !! chunk failed ({e}); retrying one-by-one")
+        df = None
+    if df is None:
+        for t in chunk:
+            try:
+                out[t] = yf.download(t, start=start, end=end, auto_adjust=True,
+                                     progress=False)["Close"].dropna()
+            except Exception:
+                pass
+        return out
+    if isinstance(df, pd.Series):
+        out[chunk[0]] = df.dropna()
+    else:
+        for t in df.columns:
+            out[t] = df[t].dropna()
+    return out
+
+
 def download_prices(tickers, start, end):
-    """Return {ticker: pandas Series of adjusted close indexed by date}."""
-    prices = {}
+    """Return {ticker: pandas Series of adjusted close indexed by date}.
+
+    Price history is append-only: the 2012 closes are the same on every run and
+    only the last few days move. Re-fetching fourteen years of daily bars for
+    ~2,900 symbols on every scheduled build costs minutes and teaches us nothing
+    about anything but the tail, so series are cached to disk and only the gap
+    since the last cached close is fetched.
+
+    That also removes a silent failure mode. A rate-limited or timed-out chunk
+    used to leave those symbols unpriced, and their trades were dropped exactly
+    as they were before any of this existed -- so a flaky run published a
+    leaderboard quietly missing a few thousand trades, and the next run put them
+    back. Ratings moved for reasons unrelated to the data. With a cache, a failed
+    fetch falls back to the last good series instead of to nothing.
+    """
     tickers = sorted(set(tickers) | {"^GSPC"})
-    log(f"[prices] downloading {len(tickers)} symbols via yfinance ...")
-    # batch in chunks to be polite / robust
-    CHUNK = 40
-    for i in range(0, len(tickers), CHUNK):
-        chunk = tickers[i:i+CHUNK]
-        try:
-            df = yf.download(chunk, start=start, end=end, auto_adjust=True,
-                             progress=False, threads=True)["Close"]
-        except Exception as e:
-            log(f"  !! chunk failed ({e}); retrying one-by-one")
-            df = None
-        if df is None:
-            for t in chunk:
-                try:
-                    s = yf.download(t, start=start, end=end, auto_adjust=True,
-                                    progress=False)["Close"]
-                    prices[t] = s.dropna()
-                except Exception:
-                    pass
+    prices, need_full, need_tail = {}, [], {}
+    end_d = pd.Timestamp(end).normalize()
+
+    dead = load_dead_symbols()
+    cutoff = (dt.date.today() - dt.timedelta(days=DEAD_TTL_DAYS)).isoformat()
+    dead = {k: v for k, v in dead.items() if v > cutoff}   # let stale entries expire
+    skipped_dead = 0
+
+    for t in tickers:
+        if t in dead:
+            skipped_dead += 1
             continue
-        if isinstance(df, pd.Series):        # single ticker case
-            prices[chunk[0]] = df.dropna()
-        else:
-            for t in df.columns:
-                prices[t] = df[t].dropna()
-        log(f"  {min(i+CHUNK,len(tickers))}/{len(tickers)}")
+        hit = load_cached_prices(t)
+        if hit is None:
+            need_full.append(t)
+            continue
+        ser, req_start = hit
+        if len(ser) == 0 or req_start > str(start)[:10]:
+            # cached from a later date than this run needs: the early bars were
+            # never requested, so the series cannot answer for older trades
+            need_full.append(t)
+            continue
+        prices[t] = ser
+        gap = (end_d - ser.index.max()).days
+        if gap > PRICE_STALE_DAYS:
+            # refetch with a few days of overlap so no bar is missed at the seam
+            need_tail[t] = (ser.index.max() - pd.Timedelta(days=5)).strftime("%Y-%m-%d")
+
+    log(f"[prices] {len(prices)} cached, {len(need_full)} to fetch in full, "
+        f"{len(need_tail)} to top up, {skipped_dead} known dead")
+
+    CHUNK = 40
+    for i in range(0, len(need_full), CHUNK):
+        chunk = need_full[i:i + CHUNK]
+        got = _yf_batch(chunk, start, end)
+        for t in chunk:
+            ser = got.get(t)
+            if ser is not None and len(ser):
+                prices[t] = ser
+                save_cached_prices(t, ser, start)
+            else:
+                dead[t] = dt.date.today().isoformat()
+        log(f"  full {min(i + CHUNK, len(need_full))}/{len(need_full)}")
+
+    tail_syms = sorted(need_tail)
+    for i in range(0, len(tail_syms), CHUNK):
+        chunk = tail_syms[i:i + CHUNK]
+        tstart = min(need_tail[t] for t in chunk)
+        for t, ser in _yf_batch(chunk, tstart, end).items():
+            if not len(ser):
+                continue   # keep the cached series rather than dropping to nothing
+            merged = pd.concat([prices[t], ser])
+            merged = merged[~merged.index.duplicated(keep="last")].sort_index()
+            prices[t] = merged
+            save_cached_prices(t, merged, start)
+        log(f"  tail {min(i + CHUNK, len(tail_syms))}/{len(tail_syms)}")
+
+    save_dead_symbols(dead)
     return prices
 
 
