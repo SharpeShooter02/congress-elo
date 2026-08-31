@@ -47,7 +47,19 @@ HOLDING_DAYS   = 30      # trading days held before measuring the trade's return
 # while agreement with the full-record score peaks around K=8-12 (0.76) and
 # falls away below that as the rating stops responding to evidence at all.
 K              = 8       # ELO sensitivity
-MOV_CAP        = 4.5     # max margin-of-victory multiplier (keeps ~5–50% excesses distinct; trims only extreme outliers)
+# Margin of victory: mov = min((|excess%| / MOV_SCALE) ** MOV_EXP, MOV_CAP).
+# A logarithmic curve (the previous 1+ln(1+x)) compressed the range so hard that a
+# 1% beat carried 56% of the weight of a median 6.7% beat, and a 20% beat only
+# 1.3x the median -- noise and conviction scored almost the same. The power curve
+# is flatter near zero and steeper through the tail: it crosses the old curve at
+# ~8%, so sub-8% moves count LESS and larger ones count MORE. MOV_SCALE is set so
+# the MEAN multiplier over the real trade distribution is unchanged (~2.96),
+# which keeps K = 8 meaning the same thing as before -- only the shape moves.
+# Measured over 42.7k decisions, odd/even split-half reliability is unchanged
+# (0.706), rank correlation with the old curve is 0.97, and 23 of the top 25 hold.
+MOV_SCALE      = 1.6     # excess (in points) that scores a multiplier of 1.0
+MOV_EXP        = 0.7     # <1 still concave, but far less compressed than a log
+MOV_CAP        = 7.5     # binds at ~28.5% excess (1.4% of decisions), trimming outliers
 MARKET_ELO     = 1500    # fixed rating of the S&P 500 opponent
 ELO_DIV        = 700     # rating scale: larger = more spread top-to-bottom (chess = 400)
 TIE_BAND_PCT   = 0.5     # |excess| below this = a tie
@@ -100,11 +112,18 @@ RESCALE_AFTER_SHRINK = True
 #
 # So the shrunk ratings are mapped onto a normal curve BY RANK: the ordering is
 # preserved exactly, but the population is spread evenly, so equal rating gaps
-# mean equal differences in standing. 1500 is the median member and +/-150 is
+# mean equal differences in standing. 1500 is the median member and +/-250 is
 # roughly the 84th/16th percentile. This trades away the literal "expected score
 # against a 1500 opponent" reading of an ELO, which the raw K=8 rating no longer
 # supported anyway once it was shrunk.
-RESCALE_TARGET_SD = 150
+#
+# 250 rather than 150 only for legibility: at 150 a 100-point gap near the median
+# spanned 26% of the chamber, so adjacent ratings looked meaningless. It widens
+# nothing but the axis -- the map is by RANK, so order and reliability are
+# untouched and no member gains evidence by it. Do not push this much further:
+# the extremes are inv_cdf(0.5/n), so at 500 the bottom rating hits ~0 today and
+# goes negative as the roster grows.
+RESCALE_TARGET_SD = 250
 RANK_NORMALISE = True
 # Funds whose return is, by construction, the benchmark itself. Scoring them as
 # "beat the S&P" is circular -- a guaranteed tie that only adds noise. Sector and
@@ -1342,7 +1361,7 @@ def build():
         eff = t["excess"] if t["side"] == "buy" else -t["excess"]  # sells win when stock lags
         S = 1.0 if eff > TIE_BAND_PCT else (0.0 if eff < -TIE_BAND_PCT else 0.5)
         E = 1.0 / (1.0 + 10 ** ((MARKET_ELO - m["elo"]) / ELO_DIV))
-        mov = min(1.0 + math.log(1 + abs(eff)), MOV_CAP)   # margin-of-victory multiplier
+        mov = min((abs(eff) / MOV_SCALE) ** MOV_EXP, MOV_CAP)  # margin-of-victory multiplier
         m["elo"] += K * mov * (S - E)
         m["wins"]   += S == 1.0
         m["losses"] += S == 0.0
