@@ -1296,6 +1296,22 @@ def build():
         st = exec_status(name, execs, today_iso)
         return st[0] if st else None
 
+    # A filer stub can arrive without a bioguide id, and every per-trade lookup
+    # below (sitting/former, committees, jurisdiction conflicts) keys off it --
+    # an empty id silently reads as "not a sitting member". Resolve it per person
+    # BEFORE the replay so the trade cards and the member profile agree.
+    bg_by_person = {}
+    for t in scored:
+        k = norm_name(t["name"])
+        if t.get("bioguide"):
+            bg_by_person.setdefault(k, t["bioguide"])
+    for t in scored:
+        k = norm_name(t["name"])
+        if not t.get("bioguide") and t["chamber"] in ("House", "Senate"):
+            if k not in bg_by_person:
+                bg_by_person[k] = match_bioguide(t["name"], pmap, t.get("state", "")) or ""
+            t["bioguide"] = bg_by_person[k]
+
     for t in scored:
         m = M(t["name"], t["chamber"], t.get("party", ""))
         iso0 = t["date"].isoformat()
@@ -1392,12 +1408,6 @@ def build():
     # only known after we have seen a trade. Executive-branch filers genuinely
     # have no party (an agency administrator is not elected) -- they are labelled
     # by agency in the UI instead, so do not try to guess one for them.
-    ideology = load_ideology()
-    for m in members.values():
-        m["ideology"] = ideology.get(m.get("bioguide") or "", None)
-    scored_ideo = sum(1 for m in members.values() if m["ideology"] is not None)
-    log(f"[ideology] matched {scored_ideo}/{len(members)} members")
-
     unresolved = []
     for m in members.values():
         if m["chamber"] not in ("House", "Senate"):
@@ -1418,8 +1428,16 @@ def build():
             unresolved.append(m["name"])
     if unresolved:
         log(f"[party] still unresolved ({len(unresolved)}): {', '.join(sorted(unresolved)[:20])}")
+
     else:
         log("[party] every member of Congress resolved")
+
+    # After the bioguide backfill above, not before it.
+    ideology = load_ideology()
+    for m in members.values():
+        m["ideology"] = ideology.get(m.get("bioguide") or "", None)
+    scored_ideo = sum(1 for m in members.values() if m["ideology"] is not None)
+    log(f"[ideology] matched {scored_ideo}/{len(members)} members")
 
     # ---- reliability weighting: shrink toward 1500, then restore the spread ----
     rated = [m for m in members.values() if m["matches"] >= MIN_TRADES]
